@@ -113,6 +113,7 @@
         const translations = {
             en: {
                 siteName: 'IBAN.ad',
+                title: 'IBAN Information',
                 ibanInfo: 'IBAN Information',
                 ibanLabel: 'IBAN',
                 nameLabel: 'Account Holder Name',
@@ -128,6 +129,7 @@
             },
             ro: {
                 siteName: 'IBAN.ad',
+                title: 'Informații IBAN',
                 ibanInfo: 'Informații IBAN',
                 ibanLabel: 'IBAN',
                 nameLabel: 'Nume titular cont',
@@ -145,6 +147,7 @@
 
         function setLanguage(lang) {
             const t = translations[lang] || translations.en;
+            document.title = t.title;
             document.getElementById('clear-form-btn').textContent = t.siteName;
             // Localize aria-labels for copy buttons
             document.querySelector('.copy-btn[data-copytarget="iban"]').setAttribute('aria-label', t.copyIban);
