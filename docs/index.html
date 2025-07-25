@@ -41,22 +41,29 @@
     <a id="skip-link" href="#iban-info-title" class="sr-only focus:not-sr-only absolute top-2 left-2 bg-blue-500 text-white px-3 py-1 rounded z-50">Skip to main content</a>
     <div id="a11y-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
     <div class="container mx-auto px-4 py-8 min-h-screen bg-gray-50 text-gray-900 font-sans flex flex-col">
-        <header class="w-full max-w-2xl mx-auto px-4 mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between text-center sm:text-left" aria-label="Site header">
-            <button id="clear-form-btn" type="button" class="block text-4xl font-bold text-primary mb-2 sm:mb-0 focus:outline-none focus:ring-2 focus:ring-primary-dark rounded text-center cursor-pointer" aria-label="Reset form and fields (keep language)">IBAN.ad</button>
-            <div class="flex justify-center sm:justify-end">
-                <label for="lang-select" class="sr-only">Language</label>
-                <div class="relative w-40">
-                    <select id="lang-select" name="lang-select"
-                        class="appearance-none w-full rounded-md border border-gray-300 bg-white text-gray-900 px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-primary-dark transition shadow-sm"
-                        aria-label="Select language">
-                        <option value="en">English</option>
-                        <option value="ro">Română</option>
-                    </select>
-                    <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                        <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-                        </svg>
-                    </span>
+        <header class="mb-12 w-full max-w-2xl mx-auto" aria-label="Site header">
+            <div class="flex flex-col">
+                <div class="flex flex-col sm:flex-row items-center justify-between w-full">
+                    <button id="clear-form-btn" type="button" class="block text-4xl font-bold text-primary mb-2 sm:mb-0 focus:outline-none focus:ring-2 focus:ring-primary-dark rounded text-center cursor-pointer bg-transparent border-none p-0" aria-label="Reset form and fields (keep language)">IBAN.ad</button>
+                    <div class="flex justify-end w-full sm:w-auto mt-2 sm:mt-0">
+                        <label for="lang-select" class="sr-only">Language</label>
+                        <div class="relative w-40">
+                            <select id="lang-select" name="lang-select"
+                                class="appearance-none w-full rounded-md border border-gray-300 bg-white text-gray-900 px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-primary-dark transition shadow-sm"
+                                aria-label="Select language">
+                                <option value="en">English</option>
+                                <option value="ro">Română</option>
+                            </select>
+                            <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                                <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-full">
+                    <p id="site-tagline" class="text-xl text-gray-600 mt-4 text-center w-full">Advertise your IBAN with IBAN.ad – the easiest way for NGOs, freelancers, and clubs to share their bank details for donations, payments, or memberships.</p>
                 </div>
             </div>
         </header>
@@ -113,6 +120,7 @@
         const translations = {
             en: {
                 siteName: 'IBAN.ad',
+                tagline: 'Advertise your IBAN with IBAN.ad – the easiest way for NGOs, freelancers, and clubs to share their bank details for donations, payments, or memberships.',
                 title: 'IBAN Information',
                 ibanInfo: 'IBAN Information',
                 ibanLabel: 'IBAN',
@@ -129,6 +137,7 @@
             },
             ro: {
                 siteName: 'IBAN.ad',
+                tagline: 'Promovează-ți IBAN-ul cu IBAN.ad – cea mai simplă modalitate pentru ONG-uri, freelanceri și cluburi de a-și partaja contul bancar pentru donații, plăți sau cotizații.',
                 title: 'Informații IBAN',
                 ibanInfo: 'Informații IBAN',
                 ibanLabel: 'IBAN',
@@ -149,6 +158,7 @@
             const t = translations[lang] || translations.en;
             document.title = t.title;
             document.getElementById('clear-form-btn').textContent = t.siteName;
+            document.getElementById('site-tagline').textContent = t.tagline;
             // Localize aria-labels for copy buttons
             document.querySelector('.copy-btn[data-copytarget="iban"]').setAttribute('aria-label', t.copyIban);
             document.querySelector('.copy-btn[data-copytarget="name"]').setAttribute('aria-label', t.copyName);
