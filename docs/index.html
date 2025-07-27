@@ -242,6 +242,19 @@
             if (params.has('details')) document.getElementById('details').value = params.get('details') || '';
         }
 
+        // Unified redirect function
+        function redirectToUrl(params, replace = false) {
+            const url = params.toString()
+                ? `${window.location.origin}${window.location.pathname}?${params.toString()}`
+                : `${window.location.origin}${window.location.pathname}`;
+
+            if (replace) {
+                window.location.replace(url);
+            } else {
+                window.location.href = url;
+            }
+        }
+
         // Redirect from old parameter name to new one
         function redirectFromOldParam() {
             const params = new URLSearchParams(window.location.search);
@@ -259,8 +272,7 @@
                 }
 
                 // Redirect to the new URL
-                const newUrl = `${window.location.origin}${window.location.pathname}?${newParams.toString()}`;
-                window.location.replace(newUrl);
+                redirectToUrl(newParams, true);
                 return true; // Indicate that a redirect happened
             }
             return false; // No redirect needed
@@ -290,10 +302,7 @@
             if (ibanVal) params.set('iban', ibanVal);
             if (nameVal) params.set('name', nameVal);
             if (detailsVal) params.set('details', detailsVal);
-            const url = params.toString()
-                ? `${window.location.origin}${window.location.pathname}?${params.toString()}`
-                : `${window.location.origin}${window.location.pathname}`;
-            window.location.href = url;
+            redirectToUrl(params);
         }
         document.getElementById('permalink-btn').addEventListener('click', redirectToPermalink);
         document.getElementById('lang-select').addEventListener('change', function() {
@@ -321,9 +330,10 @@
         document.getElementById('clear-form-btn').addEventListener('click', function() {
             const langVal = document.getElementById('lang-select').value;
             const t = translations[langVal] || translations.en;
-            const url = langVal ? `${window.location.pathname}?lang=${encodeURIComponent(langVal)}` : window.location.pathname;
+            const params = new URLSearchParams();
+            if (langVal) params.set('lang', langVal);
             announceA11y(t.formReset);
-            window.location.href = url;
+            redirectToUrl(params);
         });
 
         // Announce to screen readers
