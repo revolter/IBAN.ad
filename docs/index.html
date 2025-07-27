@@ -89,11 +89,11 @@
                         </div>
                     </div>
                     <div>
-                        <label for="transaction" class="block text-sm font-medium text-gray-700 mb-1">Transaction Details</label>
+                        <label for="details" class="block text-sm font-medium text-gray-700 mb-1">Transaction Details</label>
                         <div class="flex gap-2">
-                            <input type="text" id="transaction" name="transaction" value=""
+                            <input type="text" id="details" name="details" value=""
                                 class="w-full rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark" aria-label="Transaction Details" />
-                            <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 hover:bg-blue-100 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-colors cursor-pointer" data-copytarget="transaction">📋</button>
+                            <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 hover:bg-blue-100 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-colors cursor-pointer" data-copytarget="details">📋</button>
                         </div>
                     </div>
                     <div class="flex justify-end mt-8">
@@ -125,11 +125,11 @@
                 ibanInfo: 'IBAN Information',
                 ibanLabel: 'IBAN',
                 nameLabel: 'Account Holder Name',
-                transactionLabel: 'Transaction Details',
+                detailsLabel: 'Transaction Details',
                 formDesc: 'Readonly form displaying IBAN and related transaction details.',
-                copyIban: 'Copy IBAN',
+                copyIBAN: 'Copy IBAN',
                 copyName: 'Copy Account Holder Name',
-                copyTransaction: 'Copy Transaction Details',
+                copyDetails: 'Copy Transaction Details',
                 permalink: 'Create Permalink',
                 skipToMain: 'Skip to main content',
                 langChanged: 'Language changed to English.',
@@ -142,11 +142,11 @@
                 ibanInfo: 'Informații IBAN',
                 ibanLabel: 'IBAN',
                 nameLabel: 'Nume titular cont',
-                transactionLabel: 'Detalii tranzacție',
+                detailsLabel: 'Detalii tranzacție',
                 formDesc: 'Formular doar pentru citire care afișează IBAN-ul și detaliile tranzacției.',
-                copyIban: 'Copiază IBAN',
+                copyIBAN: 'Copiază IBAN',
                 copyName: 'Copiază numele titularului',
-                copyTransaction: 'Copiază detaliile tranzacției',
+                copyDetails: 'Copiază detaliile tranzacției',
                 permalink: 'Creează link permanent',
                 skipToMain: 'Sari la conținutul principal',
                 langChanged: 'Limba a fost schimbată în română.',
@@ -160,9 +160,9 @@
             document.getElementById('clear-form-btn').textContent = t.siteName;
             document.getElementById('site-tagline').textContent = t.tagline;
             // Localize aria-labels for copy buttons
-            document.querySelector('.copy-btn[data-copytarget="iban"]').setAttribute('aria-label', t.copyIban);
+            document.querySelector('.copy-btn[data-copytarget="iban"]').setAttribute('aria-label', t.copyIBAN);
             document.querySelector('.copy-btn[data-copytarget="name"]').setAttribute('aria-label', t.copyName);
-            document.querySelector('.copy-btn[data-copytarget="transaction"]').setAttribute('aria-label', t.copyTransaction);
+            document.querySelector('.copy-btn[data-copytarget="details"]').setAttribute('aria-label', t.copyDetails);
             // Localize permalink button label and aria-label
             document.getElementById('permalink-btn-label').textContent = t.permalink;
             document.getElementById('permalink-btn').setAttribute('aria-label', t.permalink);
@@ -175,7 +175,7 @@
             document.getElementById('iban-info-title').textContent = t.ibanInfo;
             document.querySelector('label[for="iban"]').textContent = t.ibanLabel;
             document.querySelector('label[for="name"]').textContent = t.nameLabel;
-            document.querySelector('label[for="transaction"]').textContent = t.transactionLabel;
+            document.querySelector('label[for="details"]').textContent = t.detailsLabel;
             document.getElementById('iban-info-desc').textContent = t.formDesc;
         }
 
@@ -227,7 +227,7 @@
                 }
             }
         }
-        ['iban', 'name', 'transaction'].forEach(fieldId => {
+        ['iban', 'name', 'details'].forEach(fieldId => {
             const field = document.getElementById(fieldId);
             if (field) {
                 field.addEventListener('input', () => updateCopyButtonState(fieldId));
@@ -239,10 +239,57 @@
             const params = new URLSearchParams(window.location.search);
             if (params.has('iban')) document.getElementById('iban').value = params.get('iban') || '';
             if (params.has('name')) document.getElementById('name').value = params.get('name') || '';
-            if (params.has('transaction')) document.getElementById('transaction').value = params.get('transaction') || '';
+            if (params.has('details')) document.getElementById('details').value = params.get('details') || '';
         }
-        setFieldsFromParams();
-        ['iban', 'name', 'transaction'].forEach(updateCopyButtonState);
+
+        // Unified redirect function
+        function redirectToUrl(params, replace = false) {
+            const url = params.toString()
+                ? `${window.location.origin}${window.location.pathname}?${params.toString()}`
+                : `${window.location.origin}${window.location.pathname}`;
+
+            if (replace) {
+                window.location.replace(url);
+            } else {
+                window.location.href = url;
+            }
+        }
+
+        // Redirect from old parameter name to new one
+        function redirectFromOldParam() {
+            const params = new URLSearchParams(window.location.search);
+            if (params.has('transaction') && !params.has('details')) {
+                // Create new params with 'details' instead of 'transaction'
+                const newParams = new URLSearchParams();
+
+                // Copy all existing parameters
+                for (const [key, value] of params.entries()) {
+                    if (key === 'transaction') {
+                        newParams.set('details', value);
+                    } else {
+                        newParams.set(key, value);
+                    }
+                }
+
+                // Redirect to the new URL
+                redirectToUrl(newParams, true);
+                return true; // Indicate that a redirect happened
+            }
+            return false; // No redirect needed
+        }
+
+        // Initialize the page
+        (function() {
+            // Check for redirect first
+            if (redirectFromOldParam()) {
+                // If redirect happened, don't continue with field population
+                // The page will reload with the new URL
+                return;
+            }
+
+            setFieldsFromParams();
+            ['iban', 'name', 'details'].forEach(updateCopyButtonState);
+        })();
 
         // Permalink logic
         function redirectToPermalink() {
@@ -250,15 +297,12 @@
             const langVal = document.getElementById('lang-select').value;
             const ibanVal = document.getElementById('iban').value;
             const nameVal = document.getElementById('name').value;
-            const transactionVal = document.getElementById('transaction').value;
+            const detailsVal = document.getElementById('details').value;
             if (langVal) params.set('lang', langVal);
             if (ibanVal) params.set('iban', ibanVal);
             if (nameVal) params.set('name', nameVal);
-            if (transactionVal) params.set('transaction', transactionVal);
-            const url = params.toString()
-                ? `${window.location.origin}${window.location.pathname}?${params.toString()}`
-                : `${window.location.origin}${window.location.pathname}`;
-            window.location.href = url;
+            if (detailsVal) params.set('details', detailsVal);
+            redirectToUrl(params);
         }
         document.getElementById('permalink-btn').addEventListener('click', redirectToPermalink);
         document.getElementById('lang-select').addEventListener('change', function() {
@@ -286,9 +330,10 @@
         document.getElementById('clear-form-btn').addEventListener('click', function() {
             const langVal = document.getElementById('lang-select').value;
             const t = translations[langVal] || translations.en;
-            const url = langVal ? `${window.location.pathname}?lang=${encodeURIComponent(langVal)}` : window.location.pathname;
+            const params = new URLSearchParams();
+            if (langVal) params.set('lang', langVal);
             announceA11y(t.formReset);
-            window.location.href = url;
+            redirectToUrl(params);
         });
 
         // Announce to screen readers
