@@ -105,6 +105,9 @@
             </div>
         </main>
             <footer class="w-full max-w-2xl mx-auto text-center mt-6 pt-8 border-t border-gray-200 text-gray-600">
+                <p id="disclaimer-text" class="text-sm mb-4 text-gray-700 bg-yellow-50 border border-yellow-200 rounded-md p-3">
+                    Disclaimer: This website does not process payments or donations. It only helps you copy IBAN information to use in your banking app or other payment methods for actual transfers.
+                </p>
                 <p>
                     <a href="https://github.com/revolter/IBAN.ad"
                        class="text-blue-600 hover:underline"
@@ -133,7 +136,8 @@
                 permalink: 'Create Permalink',
                 skipToMain: 'Skip to main content',
                 langChanged: 'Language changed to English.',
-                formReset: 'Form has been reset.'
+                formReset: 'Form has been reset.',
+                disclaimer: 'Disclaimer: This website does not process payments or donations. It only helps you copy IBAN information to use in your banking app or other payment methods for actual transfers.'
             },
             ro: {
                 siteName: 'IBAN.ad',
@@ -150,7 +154,8 @@
                 permalink: 'Creează link permanent',
                 skipToMain: 'Sari la conținutul principal',
                 langChanged: 'Limba a fost schimbată în română.',
-                formReset: 'Formularul a fost resetat.'
+                formReset: 'Formularul a fost resetat.',
+                disclaimer: 'Precizare: Acest site nu procesează plăți sau donații. Te ajută doar să copiezi informațiile IBAN pentru a le folosi în aplicația ta bancară sau alte metode de plată pentru transferuri reale.'
             }
         };
 
@@ -177,6 +182,8 @@
             document.querySelector('label[for="name"]').textContent = t.nameLabel;
             document.querySelector('label[for="details"]').textContent = t.detailsLabel;
             document.getElementById('iban-info-desc').textContent = t.formDesc;
+            // Update disclaimer text
+            document.getElementById('disclaimer-text').textContent = t.disclaimer;
         }
 
         document.getElementById('lang-select').addEventListener('change', function(e) {
