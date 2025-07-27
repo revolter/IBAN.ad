@@ -127,7 +127,7 @@
                 nameLabel: 'Account Holder Name',
                 detailsLabel: 'Transaction Details',
                 formDesc: 'Readonly form displaying IBAN and related transaction details.',
-                copyIban: 'Copy IBAN',
+                copyIBAN: 'Copy IBAN',
                 copyName: 'Copy Account Holder Name',
                 copyDetails: 'Copy Transaction Details',
                 permalink: 'Create Permalink',
@@ -144,7 +144,7 @@
                 nameLabel: 'Nume titular cont',
                 detailsLabel: 'Detalii tranzacție',
                 formDesc: 'Formular doar pentru citire care afișează IBAN-ul și detaliile tranzacției.',
-                copyIban: 'Copiază IBAN',
+                copyIBAN: 'Copiază IBAN',
                 copyName: 'Copiază numele titularului',
                 copyDetails: 'Copiază detaliile tranzacției',
                 permalink: 'Creează link permanent',
@@ -160,7 +160,7 @@
             document.getElementById('clear-form-btn').textContent = t.siteName;
             document.getElementById('site-tagline').textContent = t.tagline;
             // Localize aria-labels for copy buttons
-            document.querySelector('.copy-btn[data-copytarget="iban"]').setAttribute('aria-label', t.copyIban);
+            document.querySelector('.copy-btn[data-copytarget="iban"]').setAttribute('aria-label', t.copyIBAN);
             document.querySelector('.copy-btn[data-copytarget="name"]').setAttribute('aria-label', t.copyName);
             document.querySelector('.copy-btn[data-copytarget="details"]').setAttribute('aria-label', t.copyDetails);
             // Localize permalink button label and aria-label
