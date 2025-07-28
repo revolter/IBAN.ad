@@ -142,8 +142,7 @@
                 langChanged: 'Language changed to English.',
                 formReset: 'Form has been reset.',
                 disclaimer: 'Disclaimer: This website does not process payments or donations. It only helps you copy IBAN information to use in your banking app or other payment methods for actual transfers.',
-                nameSuggestion: 'Tip: Avoid special characters (ă, ș, ț, etc.) for maximum compatibility with all banks.',
-                detailsSuggestion: 'Tip: Avoid special characters (ă, ș, ț, etc.) for maximum compatibility with all banks.'
+                specialCharactersSuggestion: 'Tip: Avoid special characters (ă, ș, ț, etc.) for maximum compatibility with all banks.'
             },
             ro: {
                 siteName: 'IBAN.ad',
@@ -162,8 +161,7 @@
                 langChanged: 'Limba a fost schimbată în română.',
                 formReset: 'Formularul a fost resetat.',
                 disclaimer: 'Precizare: Acest site nu procesează plăți sau donații. Te ajută doar să copiezi informațiile IBAN pentru a le folosi în aplicația ta bancară sau alte metode de plată pentru transferuri reale.',
-                nameSuggestion: 'Sfat: Evită caracterele speciale (ă, ș, ț, etc.) pentru compatibilitate maximă cu toate băncile.',
-                detailsSuggestion: 'Sfat: Evită caracterele speciale (ă, ș, ț, etc.) pentru compatibilitate maximă cu toate băncile.'
+                specialCharactersSuggestion: 'Sfat: Evită caracterele speciale (ă, ș, ț, etc.) pentru compatibilitate maximă cu toate băncile.'
             }
         };
 
@@ -192,8 +190,8 @@
             document.getElementById('iban-info-desc').textContent = t.formDesc;
             document.getElementById('disclaimer-text').textContent = t.disclaimer;
             // Localize suggestion texts
-            document.getElementById('name-suggestion').textContent = t.nameSuggestion;
-            document.getElementById('details-suggestion').textContent = t.detailsSuggestion;
+            document.getElementById('name-suggestion').textContent = t.specialCharactersSuggestion;
+            document.getElementById('details-suggestion').textContent = t.specialCharactersSuggestion;
         }
 
         document.getElementById('lang-select').addEventListener('change', function(e) {
