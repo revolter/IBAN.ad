@@ -308,7 +308,7 @@
         })();
 
         // Permalink logic
-        function redirectToPermalink() {
+        function generatePermalinkParams() {
             const params = new URLSearchParams();
             const langVal = document.getElementById('lang-select').value;
             const ibanVal = document.getElementById('iban').value;
@@ -318,32 +318,39 @@
             if (ibanVal) params.set('iban', ibanVal);
             if (nameVal) params.set('name', nameVal);
             if (detailsVal) params.set('details', detailsVal);
-            
-            // Generate the permalink URL
-            const permalinkUrl = params.toString()
+            return params;
+        }
+
+        function generatePermalinkUrl(params) {
+            return params.toString()
                 ? `${window.location.origin}${window.location.pathname}?${params.toString()}`
                 : `${window.location.origin}${window.location.pathname}`;
-            
-            // Get the permalink button for visual feedback
+        }
+
+        function copyToClipboardWithFeedback(url, onSuccess) {
             const btn = document.getElementById('permalink-btn');
-            const original = btn.innerHTML;
-            
-            // Get localized text
+            const langVal = document.getElementById('lang-select').value;
             const t = translations[langVal] || translations.en;
             
-            // Copy to clipboard first, then redirect
-            navigator.clipboard.writeText(permalinkUrl).then(() => {
+            navigator.clipboard.writeText(url).then(() => {
                 // Show success feedback
                 btn.innerHTML = `<span aria-hidden="true">✅</span> <span>${t.permalinkCopied}</span>`;
                 btn.classList.add('bg-green-500');
                 btn.classList.remove('bg-blue-500');
                 
-                // Wait a moment for user to see the feedback, then redirect
-                setTimeout(() => {
-                    redirectToUrl(params);
-                }, 1000);
+                // Wait a moment for user to see the feedback, then execute callback
+                setTimeout(onSuccess, 1000);
             }).catch(() => {
-                // If clipboard fails, just redirect immediately
+                // If clipboard fails, execute callback immediately
+                onSuccess();
+            });
+        }
+
+        function redirectToPermalink() {
+            const params = generatePermalinkParams();
+            const permalinkUrl = generatePermalinkUrl(params);
+            
+            copyToClipboardWithFeedback(permalinkUrl, () => {
                 redirectToUrl(params);
             });
         }
