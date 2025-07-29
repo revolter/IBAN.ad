@@ -87,6 +87,7 @@
                                 class="w-full rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark" aria-label="Account Holder Name" />
                             <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 hover:bg-blue-100 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-colors cursor-pointer" data-copytarget="name">📋</button>
                         </div>
+                        <p id="name-suggestion" class="text-xs text-gray-500 mt-1">Tip: Avoid special characters (ă, ș, ț, etc.) for maximum compatibility with all banks.</p>
                     </div>
                     <div>
                         <label for="details" class="block text-sm font-medium text-gray-700 mb-1">Transaction Details</label>
@@ -95,6 +96,7 @@
                                 class="w-full rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark" aria-label="Transaction Details" />
                             <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 hover:bg-blue-100 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-colors cursor-pointer" data-copytarget="details">📋</button>
                         </div>
+                        <p id="details-suggestion" class="text-xs text-gray-500 mt-1">Tip: Avoid special characters (ă, ș, ț, etc.) for maximum compatibility with all banks.</p>
                     </div>
                     <div class="flex justify-end mt-8">
                         <button type="button" id="permalink-btn" class="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-primary-dark transition-colors font-semibold text-sm cursor-pointer">
@@ -139,7 +141,8 @@
                 skipToMain: 'Skip to main content',
                 langChanged: 'Language changed to English.',
                 formReset: 'Form has been reset.',
-                disclaimer: 'Disclaimer: This website does not process payments or donations. It only helps you copy IBAN information to use in your banking app or other payment methods for actual transfers.'
+                disclaimer: 'Disclaimer: This website does not process payments or donations. It only helps you copy IBAN information to use in your banking app or other payment methods for actual transfers.',
+                specialCharactersSuggestion: 'Tip: Avoid special characters (á, é, ñ, ü, ç, etc.) for maximum compatibility with all banks.'
             },
             ro: {
                 siteName: 'IBAN.ad',
@@ -157,7 +160,8 @@
                 skipToMain: 'Sari la conținutul principal',
                 langChanged: 'Limba a fost schimbată în română.',
                 formReset: 'Formularul a fost resetat.',
-                disclaimer: 'Precizare: Acest site nu procesează plăți sau donații. Te ajută doar să copiezi informațiile IBAN pentru a le folosi în aplicația ta bancară sau alte metode de plată pentru transferuri reale.'
+                disclaimer: 'Precizare: Acest site nu procesează plăți sau donații. Te ajută doar să copiezi informațiile IBAN pentru a le folosi în aplicația ta bancară sau alte metode de plată pentru transferuri reale.',
+                specialCharactersSuggestion: 'Sfat: Evită caracterele speciale (ă, ș, ț, etc.) pentru compatibilitate maximă cu toate băncile.'
             }
         };
 
@@ -185,6 +189,8 @@
             document.querySelector('label[for="details"]').textContent = t.detailsLabel;
             document.getElementById('iban-info-desc').textContent = t.formDesc;
             document.getElementById('disclaimer-text').textContent = t.disclaimer;
+            document.getElementById('name-suggestion').textContent = t.specialCharactersSuggestion;
+            document.getElementById('details-suggestion').textContent = t.specialCharactersSuggestion;
         }
 
         document.getElementById('lang-select').addEventListener('change', function(e) {
