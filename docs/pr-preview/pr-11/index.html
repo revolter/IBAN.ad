@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IBAN Information</title>
+    <meta name="description" content="Advertise your IBAN with IBAN.ad – the easiest way for NGOs, freelancers, and clubs to share their bank details for donations, payments, or memberships.">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script type="text/tailwindjs">
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#007bff',
+                        'primary-dark': '#0056b3',
+                        secondary: '#6c757d',
+                        success: '#28a745',
+                        danger: '#dc3545',
+                        warning: '#ffc107',
+                        info: '#17a2b8'
+                    },
+                    maxWidth: {
+                        'form': '800px'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Remove Safari default arrow */
+        select#lang-select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-position: right 0.75rem center;
+            background-repeat: no-repeat;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans">
+    <a id="skip-link" href="#iban-info-title" class="sr-only focus:not-sr-only absolute top-2 left-2 bg-blue-500 text-white px-3 py-1 rounded z-50">Skip to main content</a>
+    <div id="a11y-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+    <div class="container mx-auto px-4 py-8 min-h-screen bg-gray-50 text-gray-900 font-sans flex flex-col">
+        <header class="mb-12 w-full max-w-2xl mx-auto" aria-label="Site header">
+            <div class="flex flex-col">
+                <div class="flex flex-col sm:flex-row items-center justify-between w-full">
+                    <button id="clear-form-btn" type="button" class="block text-4xl font-bold text-primary mb-2 sm:mb-0 focus:outline-none focus:ring-2 focus:ring-primary-dark rounded text-center cursor-pointer bg-transparent border-none p-0" aria-label="Reset form and fields (keep language)">IBAN.ad</button>
+                    <div class="flex justify-end w-full sm:w-auto mt-2 sm:mt-0">
+                        <label for="lang-select" class="sr-only">Language</label>
+                        <div class="relative w-40">
+                            <select id="lang-select" name="lang-select"
+                                class="appearance-none w-full rounded-md border border-gray-300 bg-white text-gray-900 px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-primary-dark transition shadow-sm"
+                                aria-label="Select language">
+                                <option value="en">English</option>
+                                <option value="ro">Română</option>
+                            </select>
+                            <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                                <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-full">
+                    <p id="site-tagline" class="text-xl text-gray-600 mt-4 text-center w-full">Advertise your IBAN with IBAN.ad – the easiest way for NGOs, freelancers, and clubs to share their bank details for donations, payments, or memberships.</p>
+                </div>
+            </div>
+        </header>
+        <main class="flex-1 flex flex-col justify-center">
+            <div class="w-full max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-4 md:p-6 flex flex-col justify-center" aria-labelledby="iban-info-title">
+                <h1 id="iban-info-title" class="text-2xl font-bold text-primary mb-4">IBAN Information</h1>
+                <form class="space-y-6" aria-describedby="iban-info-desc" autocomplete="off">
+                    <p id="iban-info-desc" class="sr-only">Readonly form displaying IBAN and related transaction details.</p>
+                    <div>
+                        <label for="iban" class="block text-sm font-medium text-gray-700 mb-1">IBAN</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="iban" name="iban" value=""
+                                class="w-full rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark" aria-label="IBAN" />
+                            <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 hover:bg-blue-100 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-colors cursor-pointer" data-copytarget="iban">📋</button>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Account Holder Name</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="name" name="name" value=""
+                                class="w-full rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark" aria-label="Account Holder Name" />
+                            <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 hover:bg-blue-100 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-colors cursor-pointer" data-copytarget="name">📋</button>
+                        </div>
+                        <p id="name-suggestion" class="text-xs text-gray-500 mt-1">Tip: Avoid special characters (ă, ș, ț, etc.) for maximum compatibility with all banks.</p>
+                    </div>
+                    <div>
+                        <label for="details" class="block text-sm font-medium text-gray-700 mb-1">Transaction Details</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="details" name="details" value=""
+                                class="w-full rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark" aria-label="Transaction Details" />
+                            <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 hover:bg-blue-100 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-colors cursor-pointer" data-copytarget="details">📋</button>
+                        </div>
+                        <p id="details-suggestion" class="text-xs text-gray-500 mt-1">Tip: Avoid special characters (ă, ș, ț, etc.) for maximum compatibility with all banks.</p>
+                    </div>
+                    <div class="flex justify-end mt-8">
+                        <button type="button" id="permalink-btn" class="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-primary-dark transition-colors font-semibold text-sm cursor-pointer">
+                            <span aria-hidden="true">🔗</span> <span id="permalink-btn-label">Create Permalink</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="w-full max-w-2xl mx-auto mt-6">
+                <p id="disclaimer-text" class="text-sm mb-4 text-gray-700 bg-yellow-50 border border-yellow-200 rounded-md p-3 text-center">
+                    Disclaimer: This website does not process payments or donations. It only helps you copy IBAN information to use in your banking app or other payment methods for actual transfers.
+                </p>
+            </div>
+        </main>
+            <footer class="w-full max-w-2xl mx-auto text-center mt-6 pt-8 border-t border-gray-200 text-gray-600">
+                <p>
+                    <a href="https://github.com/revolter/IBAN.ad"
+                       class="text-blue-600 hover:underline"
+                       target="_blank"
+                       rel="noopener noreferrer">
+                        GitHub
+                    </a>
+                </p>
+            </footer>
+    </div>
+    <script>
+        // Localization strings
+        const translations = {
+            en: {
+                siteName: 'IBAN.ad',
+                tagline: 'Advertise your IBAN with IBAN.ad – the easiest way for NGOs, freelancers, and clubs to share their bank details for donations, payments, or memberships.',
+                title: 'IBAN Information',
+                ibanInfo: 'IBAN Information',
+                ibanLabel: 'IBAN',
+                nameLabel: 'Account Holder Name',
+                detailsLabel: 'Transaction Details',
+                formDesc: 'Readonly form displaying IBAN and related transaction details.',
+                copyIBAN: 'Copy IBAN',
+                copyName: 'Copy Account Holder Name',
+                copyDetails: 'Copy Transaction Details',
+                permalink: 'Create Permalink',
+                permalinkCopied: 'Copied!',
+                skipToMain: 'Skip to main content',
+                langChanged: 'Language changed to English.',
+                formReset: 'Form has been reset.',
+                disclaimer: 'Disclaimer: This website does not process payments or donations. It only helps you copy IBAN information to use in your banking app or other payment methods for actual transfers.',
+                specialCharactersSuggestion: 'Tip: Avoid special characters (á, é, ñ, ü, ç, etc.) for maximum compatibility with all banks.'
+            },
+            ro: {
+                siteName: 'IBAN.ad',
+                tagline: 'Promovează-ți IBAN-ul cu IBAN.ad – cea mai simplă modalitate pentru ONG-uri, freelanceri și cluburi de a-și partaja contul bancar pentru donații, plăți sau cotizații.',
+                title: 'Informații IBAN',
+                ibanInfo: 'Informații IBAN',
+                ibanLabel: 'IBAN',
+                nameLabel: 'Nume titular cont',
+                detailsLabel: 'Detalii tranzacție',
+                formDesc: 'Formular doar pentru citire care afișează IBAN-ul și detaliile tranzacției.',
+                copyIBAN: 'Copiază IBAN',
+                copyName: 'Copiază numele titularului',
+                copyDetails: 'Copiază detaliile tranzacției',
+                permalink: 'Creează link permanent',
+                permalinkCopied: 'Copiat!',
+                skipToMain: 'Sari la conținutul principal',
+                langChanged: 'Limba a fost schimbată în română.',
+                formReset: 'Formularul a fost resetat.',
+                disclaimer: 'Precizare: Acest site nu procesează plăți sau donații. Te ajută doar să copiezi informațiile IBAN pentru a le folosi în aplicația ta bancară sau alte metode de plată pentru transferuri reale.',
+                specialCharactersSuggestion: 'Sfat: Evită caracterele speciale (ă, ș, ț, etc.) pentru compatibilitate maximă cu toate băncile.'
+            }
+        };
+
+        function setLanguage(lang) {
+            const t = translations[lang] || translations.en;
+            document.title = t.title;
+            document.getElementById('clear-form-btn').textContent = t.siteName;
+            document.getElementById('site-tagline').textContent = t.tagline;
+            // Localize aria-labels for copy buttons
+            document.querySelector('.copy-btn[data-copytarget="iban"]').setAttribute('aria-label', t.copyIBAN);
+            document.querySelector('.copy-btn[data-copytarget="name"]').setAttribute('aria-label', t.copyName);
+            document.querySelector('.copy-btn[data-copytarget="details"]').setAttribute('aria-label', t.copyDetails);
+            // Localize permalink button label and aria-label
+            document.getElementById('permalink-btn-label').textContent = t.permalink;
+            document.getElementById('permalink-btn').setAttribute('aria-label', t.permalink);
+            // Update <html lang=...>
+            document.documentElement.setAttribute('lang', lang);
+            // Localize skip to main content link
+            document.getElementById('skip-link').textContent = t.skipToMain;
+            // Announce language change for screen readers
+            announceA11y(t.langChanged);
+            document.getElementById('iban-info-title').textContent = t.ibanInfo;
+            document.querySelector('label[for="iban"]').textContent = t.ibanLabel;
+            document.querySelector('label[for="name"]').textContent = t.nameLabel;
+            document.querySelector('label[for="details"]').textContent = t.detailsLabel;
+            document.getElementById('iban-info-desc').textContent = t.formDesc;
+            document.getElementById('disclaimer-text').textContent = t.disclaimer;
+            document.getElementById('name-suggestion').textContent = t.specialCharactersSuggestion;
+            document.getElementById('details-suggestion').textContent = t.specialCharactersSuggestion;
+        }
+
+        document.getElementById('lang-select').addEventListener('change', function(e) {
+            setLanguage(e.target.value);
+        });
+
+        // Set default language
+        setLanguage(document.getElementById('lang-select').value);
+
+        // Copy to clipboard logic for all fields
+        function copyWithFeedback(btn, value) {
+            navigator.clipboard.writeText(value).then(() => {
+                const original = btn.innerHTML;
+                btn.innerHTML = '✅';
+                btn.classList.add('bg-green-100','text-green-700');
+                btn.classList.remove('bg-gray-200','text-gray-700');
+                setTimeout(() => {
+                    btn.innerHTML = original;
+                    btn.classList.remove('bg-green-100','text-green-700');
+                    btn.classList.add('bg-gray-200','text-gray-700');
+                }, 1200);
+            });
+        }
+        document.querySelectorAll('.copy-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const targetId = btn.getAttribute('data-copytarget');
+                const el = document.getElementById(targetId);
+                let value = '';
+                if (el) {
+                    value = el.value;
+                }
+                copyWithFeedback(btn, value);
+            });
+        });
+
+        // Disable copy buttons when fields are empty
+        function updateCopyButtonState(fieldId) {
+            const field = document.getElementById(fieldId);
+            const btn = document.querySelector(`.copy-btn[data-copytarget="${fieldId}"]`);
+            if (btn) {
+                btn.disabled = !field.value.trim();
+                if (btn.disabled) {
+                    btn.classList.add('opacity-50', 'cursor-not-allowed');
+                    btn.classList.remove('hover:bg-blue-100', 'cursor-pointer');
+                } else {
+                    btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    btn.classList.add('hover:bg-blue-100', 'cursor-pointer');
+                }
+            }
+        }
+        ['iban', 'name', 'details'].forEach(fieldId => {
+            const field = document.getElementById(fieldId);
+            if (field) {
+                field.addEventListener('input', () => updateCopyButtonState(fieldId));
+            }
+        });
+
+        // Populate fields from query params
+        function setFieldsFromParams() {
+            const params = new URLSearchParams(window.location.search);
+            if (params.has('iban')) document.getElementById('iban').value = params.get('iban') || '';
+            if (params.has('name')) document.getElementById('name').value = params.get('name') || '';
+            if (params.has('details')) document.getElementById('details').value = params.get('details') || '';
+        }
+
+        // Unified redirect function
+        function redirectToUrl(params, replace = false) {
+            const url = params.toString()
+                ? `${window.location.origin}${window.location.pathname}?${params.toString()}`
+                : `${window.location.origin}${window.location.pathname}`;
+
+            if (replace) {
+                window.location.replace(url);
+            } else {
+                window.location.href = url;
+            }
+        }
+
+        // Redirect from old parameter name to new one
+        function redirectFromOldParam() {
+            const params = new URLSearchParams(window.location.search);
+            if (params.has('transaction') && !params.has('details')) {
+                // Create new params with 'details' instead of 'transaction'
+                const newParams = new URLSearchParams();
+
+                // Copy all existing parameters
+                for (const [key, value] of params.entries()) {
+                    if (key === 'transaction') {
+                        newParams.set('details', value);
+                    } else {
+                        newParams.set(key, value);
+                    }
+                }
+
+                // Redirect to the new URL
+                redirectToUrl(newParams, true);
+                return true; // Indicate that a redirect happened
+            }
+            return false; // No redirect needed
+        }
+
+        // Initialize the page
+        (function() {
+            // Check for redirect first
+            if (redirectFromOldParam()) {
+                // If redirect happened, don't continue with field population
+                // The page will reload with the new URL
+                return;
+            }
+
+            setFieldsFromParams();
+            ['iban', 'name', 'details'].forEach(updateCopyButtonState);
+        })();
+
+        // Permalink logic
+        function generatePermalinkParams() {
+            const params = new URLSearchParams();
+            const langVal = document.getElementById('lang-select').value;
+            const ibanVal = document.getElementById('iban').value;
+            const nameVal = document.getElementById('name').value;
+            const detailsVal = document.getElementById('details').value;
+            if (langVal) params.set('lang', langVal);
+            if (ibanVal) params.set('iban', ibanVal);
+            if (nameVal) params.set('name', nameVal);
+            if (detailsVal) params.set('details', detailsVal);
+            return params;
+        }
+
+        function generatePermalinkUrl(params) {
+            return params.toString()
+                ? `${window.location.origin}${window.location.pathname}?${params.toString()}`
+                : `${window.location.origin}${window.location.pathname}`;
+        }
+
+        function copyToClipboardWithFeedback(url, onSuccess) {
+            const btn = document.getElementById('permalink-btn');
+            const langVal = document.getElementById('lang-select').value;
+            const t = translations[langVal] || translations.en;
+            
+            navigator.clipboard.writeText(url).then(() => {
+                // Show success feedback
+                btn.innerHTML = `<span aria-hidden="true">✅</span> <span>${t.permalinkCopied}</span>`;
+                btn.classList.add('bg-green-500');
+                btn.classList.remove('bg-blue-500');
+                
+                // Wait a moment for user to see the feedback, then execute callback
+                setTimeout(onSuccess, 1000);
+            }).catch(() => {
+                // If clipboard fails, execute callback immediately
+                onSuccess();
+            });
+        }
+
+        function redirectToPermalink() {
+            const params = generatePermalinkParams();
+            const permalinkUrl = generatePermalinkUrl(params);
+            
+            copyToClipboardWithFeedback(permalinkUrl, () => {
+                redirectToUrl(params);
+            });
+        }
+        document.getElementById('permalink-btn').addEventListener('click', redirectToPermalink);
+        document.getElementById('lang-select').addEventListener('change', function() {
+            const params = new URLSearchParams(window.location.search);
+            const newLang = document.getElementById('lang-select').value;
+            if (params.get('lang') !== newLang) {
+                redirectToPermalink();
+            }
+        });
+
+        // On page load, set language from query param if present
+        (function() {
+            const params = new URLSearchParams(window.location.search);
+            if (params.has('lang')) {
+                const lang = params.get('lang');
+                const langSelect = document.getElementById('lang-select');
+                if (langSelect && langSelect.value !== lang) {
+                    langSelect.value = lang;
+                    setLanguage(lang);
+                }
+            }
+        })();
+
+        // Clear form and keep language when clicking the site name
+        document.getElementById('clear-form-btn').addEventListener('click', function() {
+            const langVal = document.getElementById('lang-select').value;
+            const t = translations[langVal] || translations.en;
+            const params = new URLSearchParams();
+            if (langVal) params.set('lang', langVal);
+            announceA11y(t.formReset);
+            redirectToUrl(params);
+        });
+
+        // Announce to screen readers
+        function announceA11y(message) {
+            const announcer = document.getElementById('a11y-announcer');
+            if (announcer) {
+                announcer.textContent = '';
+                setTimeout(() => { announcer.textContent = message; }, 50);
+            }
+        }
+    </script>
+</body>
+</html>
