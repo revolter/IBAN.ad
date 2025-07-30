@@ -370,7 +370,9 @@
                 const lang = params.get('lang');
                 const langSelect = document.getElementById('lang-select');
                 if (langSelect && langSelect.value !== lang) {
-                    langSelect.value = lang;
+                    // Use the requested language if supported, otherwise default to English
+                    const supportedLang = translations[lang] ? lang : 'en';
+                    langSelect.value = supportedLang;
                     setLanguage(lang);
                 }
             }
