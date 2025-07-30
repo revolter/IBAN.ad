@@ -125,7 +125,7 @@
     <script>
         // Localization strings
         const DEFAULT_LANGUAGE = 'en';
-        const translations = {
+        const TRANSLATIONS = {
             en: {
                 siteName: 'IBAN.ad',
                 tagline: 'Advertise your IBAN with IBAN.ad – the easiest way for NGOs, freelancers, and clubs to share their bank details for donations, payments, or memberships.',
@@ -169,7 +169,7 @@
         };
 
         function setLanguage(lang) {
-            const t = translations[lang] || translations[DEFAULT_LANGUAGE];
+            const t = TRANSLATIONS[lang] || TRANSLATIONS[DEFAULT_LANGUAGE];
             document.title = t.title;
             document.getElementById('clear-form-btn').textContent = t.siteName;
             document.getElementById('site-tagline').textContent = t.tagline;
@@ -331,7 +331,7 @@
         function copyToClipboardWithFeedback(url, onSuccess) {
             const btn = document.getElementById('permalink-btn');
             const langVal = document.getElementById('lang-select').value;
-            const t = translations[langVal] || translations[DEFAULT_LANGUAGE];
+            const t = TRANSLATIONS[langVal] || TRANSLATIONS[DEFAULT_LANGUAGE];
             
             navigator.clipboard.writeText(url).then(() => {
                 // Show success feedback
@@ -372,7 +372,7 @@
                 const langSelect = document.getElementById('lang-select');
                 if (langSelect && langSelect.value !== lang) {
                     // Use the requested language if supported, otherwise default to the default language
-                    const supportedLang = translations[lang] ? lang : DEFAULT_LANGUAGE;
+                    const supportedLang = TRANSLATIONS[lang] ? lang : DEFAULT_LANGUAGE;
                     langSelect.value = supportedLang;
                     setLanguage(lang);
                 }
@@ -382,7 +382,7 @@
         // Clear form and keep language when clicking the site name
         document.getElementById('clear-form-btn').addEventListener('click', function() {
             const langVal = document.getElementById('lang-select').value;
-            const t = translations[langVal] || translations[DEFAULT_LANGUAGE];
+            const t = TRANSLATIONS[langVal] || TRANSLATIONS[DEFAULT_LANGUAGE];
             const params = new URLSearchParams();
             if (langVal) params.set('lang', langVal);
             announceA11y(t.formReset);
