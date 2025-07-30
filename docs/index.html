@@ -138,6 +138,7 @@
                 copyName: 'Copy Account Holder Name',
                 copyDetails: 'Copy Transaction Details',
                 permalink: 'Create Permalink',
+                permalinkCopied: 'Copied!',
                 skipToMain: 'Skip to main content',
                 langChanged: 'Language changed to English.',
                 formReset: 'Form has been reset.',
@@ -157,6 +158,7 @@
                 copyName: 'Copiază numele titularului',
                 copyDetails: 'Copiază detaliile tranzacției',
                 permalink: 'Creează link permanent',
+                permalinkCopied: 'Copiat!',
                 skipToMain: 'Sari la conținutul principal',
                 langChanged: 'Limba a fost schimbată în română.',
                 formReset: 'Formularul a fost resetat.',
@@ -306,7 +308,7 @@
         })();
 
         // Permalink logic
-        function redirectToPermalink() {
+        function generatePermalinkParams() {
             const params = new URLSearchParams();
             const langVal = document.getElementById('lang-select').value;
             const ibanVal = document.getElementById('iban').value;
@@ -316,7 +318,41 @@
             if (ibanVal) params.set('iban', ibanVal);
             if (nameVal) params.set('name', nameVal);
             if (detailsVal) params.set('details', detailsVal);
-            redirectToUrl(params);
+            return params;
+        }
+
+        function generatePermalinkUrl(params) {
+            return params.toString()
+                ? `${window.location.origin}${window.location.pathname}?${params.toString()}`
+                : `${window.location.origin}${window.location.pathname}`;
+        }
+
+        function copyToClipboardWithFeedback(url, onSuccess) {
+            const btn = document.getElementById('permalink-btn');
+            const langVal = document.getElementById('lang-select').value;
+            const t = translations[langVal] || translations.en;
+            
+            navigator.clipboard.writeText(url).then(() => {
+                // Show success feedback
+                btn.innerHTML = `<span aria-hidden="true">✅</span> <span>${t.permalinkCopied}</span>`;
+                btn.classList.add('bg-green-500');
+                btn.classList.remove('bg-blue-500');
+                
+                // Wait a moment for user to see the feedback, then execute callback
+                setTimeout(onSuccess, 1000);
+            }).catch(() => {
+                // If clipboard fails, execute callback immediately
+                onSuccess();
+            });
+        }
+
+        function redirectToPermalink() {
+            const params = generatePermalinkParams();
+            const permalinkUrl = generatePermalinkUrl(params);
+            
+            copyToClipboardWithFeedback(permalinkUrl, () => {
+                redirectToUrl(params);
+            });
         }
         document.getElementById('permalink-btn').addEventListener('click', redirectToPermalink);
         document.getElementById('lang-select').addEventListener('change', function() {
