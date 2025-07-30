@@ -168,8 +168,12 @@
             }
         };
 
+        function getTranslations(lang) {
+            return TRANSLATIONS[lang] || TRANSLATIONS[DEFAULT_LANGUAGE];
+        }
+
         function setLanguage(lang) {
-            const t = TRANSLATIONS[lang] || TRANSLATIONS[DEFAULT_LANGUAGE];
+            const t = getTranslations(lang);
             document.title = t.title;
             document.getElementById('clear-form-btn').textContent = t.siteName;
             document.getElementById('site-tagline').textContent = t.tagline;
@@ -331,7 +335,7 @@
         function copyToClipboardWithFeedback(url, onSuccess) {
             const btn = document.getElementById('permalink-btn');
             const langVal = document.getElementById('lang-select').value;
-            const t = TRANSLATIONS[langVal] || TRANSLATIONS[DEFAULT_LANGUAGE];
+            const t = getTranslations(langVal);
             
             navigator.clipboard.writeText(url).then(() => {
                 // Show success feedback
@@ -382,7 +386,7 @@
         // Clear form and keep language when clicking the site name
         document.getElementById('clear-form-btn').addEventListener('click', function() {
             const langVal = document.getElementById('lang-select').value;
-            const t = TRANSLATIONS[langVal] || TRANSLATIONS[DEFAULT_LANGUAGE];
+            const t = getTranslations(langVal);
             const params = new URLSearchParams();
             if (langVal) params.set('lang', langVal);
             announceA11y(t.formReset);
