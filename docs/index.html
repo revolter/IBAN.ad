@@ -124,7 +124,8 @@
     </div>
     <script>
         // Localization strings
-        const translations = {
+        const DEFAULT_LANGUAGE = 'en';
+        const TRANSLATIONS = {
             en: {
                 siteName: 'IBAN.ad',
                 tagline: 'Advertise your IBAN with IBAN.ad – the easiest way for NGOs, freelancers, and clubs to share their bank details for donations, payments, or memberships.',
@@ -167,8 +168,12 @@
             }
         };
 
+        function getTranslations(lang) {
+            return TRANSLATIONS[lang] || TRANSLATIONS[DEFAULT_LANGUAGE];
+        }
+
         function setLanguage(lang) {
-            const t = translations[lang] || translations.en;
+            const t = getTranslations(lang);
             document.title = t.title;
             document.getElementById('clear-form-btn').textContent = t.siteName;
             document.getElementById('site-tagline').textContent = t.tagline;
@@ -330,7 +335,7 @@
         function copyToClipboardWithFeedback(url, onSuccess) {
             const btn = document.getElementById('permalink-btn');
             const langVal = document.getElementById('lang-select').value;
-            const t = translations[langVal] || translations.en;
+            const t = getTranslations(langVal);
             
             navigator.clipboard.writeText(url).then(() => {
                 // Show success feedback
@@ -370,7 +375,9 @@
                 const lang = params.get('lang');
                 const langSelect = document.getElementById('lang-select');
                 if (langSelect && langSelect.value !== lang) {
-                    langSelect.value = lang;
+                    // Use the requested language if supported, otherwise default to the default language
+                    const supportedLang = TRANSLATIONS[lang] ? lang : DEFAULT_LANGUAGE;
+                    langSelect.value = supportedLang;
                     setLanguage(lang);
                 }
             }
@@ -379,7 +386,7 @@
         // Clear form and keep language when clicking the site name
         document.getElementById('clear-form-btn').addEventListener('click', function() {
             const langVal = document.getElementById('lang-select').value;
-            const t = translations[langVal] || translations.en;
+            const t = getTranslations(langVal);
             const params = new URLSearchParams();
             if (langVal) params.set('lang', langVal);
             announceA11y(t.formReset);
