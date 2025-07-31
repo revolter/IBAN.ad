@@ -36,29 +36,7 @@
             background-repeat: no-repeat;
         }
         
-        /* Tooltip styles */
-        .tooltip-container {
-            position: relative;
-        }
-        
-        .tooltip {
-            position: absolute;
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #333;
-            color: white;
-            padding: 6px 10px;
-            border-radius: 4px;
-            font-size: 14px;
-            white-space: nowrap;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-            z-index: 1000;
-            margin-bottom: 5px;
-        }
-        
+        /* Tooltip arrow - requires custom CSS as Tailwind doesn't have built-in arrow utilities */
         .tooltip::after {
             content: '';
             position: absolute;
@@ -66,12 +44,7 @@
             left: 50%;
             transform: translateX(-50%);
             border: 5px solid transparent;
-            border-top-color: #333;
-        }
-        
-        .tooltip.show {
-            opacity: 1;
-            visibility: visible;
+            border-top-color: #374151;
         }
     </style>
 </head>
@@ -115,9 +88,9 @@
                         <div class="flex gap-2">
                             <input type="text" id="iban" name="iban" value=""
                                 class="w-full rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark" aria-label="IBAN" />
-                            <div class="tooltip-container">
+                            <div class="relative">
                                 <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 hover:bg-blue-100 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-colors cursor-pointer" data-copytarget="iban">📋</button>
-                                <div class="tooltip" id="tooltip-iban">Copied!</div>
+                                <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 invisible transition-opacity duration-300 z-50 mb-1" id="tooltip-iban">Copied!</div>
                             </div>
                         </div>
                     </div>
@@ -126,9 +99,9 @@
                         <div class="flex gap-2">
                             <input type="text" id="name" name="name" value=""
                                 class="w-full rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark" aria-label="Account Holder Name" />
-                            <div class="tooltip-container">
+                            <div class="relative">
                                 <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 hover:bg-blue-100 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-colors cursor-pointer" data-copytarget="name">📋</button>
-                                <div class="tooltip" id="tooltip-name">Copied!</div>
+                                <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 invisible transition-opacity duration-300 z-50 mb-1" id="tooltip-name">Copied!</div>
                             </div>
                         </div>
                         <p id="name-suggestion" class="text-xs text-gray-500 mt-1">Tip: Avoid special characters (ă, ș, ț, etc.) for maximum compatibility with all banks.</p>
@@ -138,19 +111,19 @@
                         <div class="flex gap-2">
                             <input type="text" id="details" name="details" value=""
                                 class="w-full rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark" aria-label="Transaction Details" />
-                            <div class="tooltip-container">
+                            <div class="relative">
                                 <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 hover:bg-blue-100 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-colors cursor-pointer" data-copytarget="details">📋</button>
-                                <div class="tooltip" id="tooltip-details">Copied!</div>
+                                <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 invisible transition-opacity duration-300 z-50 mb-1" id="tooltip-details">Copied!</div>
                             </div>
                         </div>
                         <p id="details-suggestion" class="text-xs text-gray-500 mt-1">Tip: Avoid special characters (ă, ș, ț, etc.) for maximum compatibility with all banks.</p>
                     </div>
                     <div class="flex justify-end mt-8">
-                        <div class="tooltip-container">
+                        <div class="relative">
                             <button type="button" id="permalink-btn" class="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-primary-dark transition-colors font-semibold text-sm cursor-pointer">
                                 <span aria-hidden="true">🔗</span> <span id="permalink-btn-label">Create Permalink</span>
                             </button>
-                            <div class="tooltip" id="tooltip-permalink">Copied!</div>
+                            <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 invisible transition-opacity duration-300 z-50 mb-1" id="tooltip-permalink">Copied!</div>
                         </div>
                     </div>
                 </form>
@@ -268,9 +241,11 @@
         function showTooltip(tooltipId) {
             const tooltip = document.getElementById(tooltipId);
             if (tooltip) {
-                tooltip.classList.add('show');
+                tooltip.classList.remove('opacity-0', 'invisible');
+                tooltip.classList.add('opacity-100', 'visible');
                 setTimeout(() => {
-                    tooltip.classList.remove('show');
+                    tooltip.classList.remove('opacity-100', 'visible');
+                    tooltip.classList.add('opacity-0', 'invisible');
                 }, 2000);
             }
         }
