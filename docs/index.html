@@ -35,6 +35,44 @@
             background-position: right 0.75rem center;
             background-repeat: no-repeat;
         }
+        
+        /* Tooltip styles */
+        .tooltip-container {
+            position: relative;
+        }
+        
+        .tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            z-index: 1000;
+            margin-bottom: 5px;
+        }
+        
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 5px solid transparent;
+            border-top-color: #333;
+        }
+        
+        .tooltip.show {
+            opacity: 1;
+            visibility: visible;
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-900 font-sans">
@@ -77,7 +115,10 @@
                         <div class="flex gap-2">
                             <input type="text" id="iban" name="iban" value=""
                                 class="w-full rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark" aria-label="IBAN" />
-                            <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 hover:bg-blue-100 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-colors cursor-pointer" data-copytarget="iban">📋</button>
+                            <div class="tooltip-container">
+                                <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 hover:bg-blue-100 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-colors cursor-pointer" data-copytarget="iban">📋</button>
+                                <div class="tooltip" id="tooltip-iban">Copied!</div>
+                            </div>
                         </div>
                     </div>
                     <div>
@@ -85,7 +126,10 @@
                         <div class="flex gap-2">
                             <input type="text" id="name" name="name" value=""
                                 class="w-full rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark" aria-label="Account Holder Name" />
-                            <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 hover:bg-blue-100 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-colors cursor-pointer" data-copytarget="name">📋</button>
+                            <div class="tooltip-container">
+                                <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 hover:bg-blue-100 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-colors cursor-pointer" data-copytarget="name">📋</button>
+                                <div class="tooltip" id="tooltip-name">Copied!</div>
+                            </div>
                         </div>
                         <p id="name-suggestion" class="text-xs text-gray-500 mt-1">Tip: Avoid special characters (ă, ș, ț, etc.) for maximum compatibility with all banks.</p>
                     </div>
@@ -94,14 +138,20 @@
                         <div class="flex gap-2">
                             <input type="text" id="details" name="details" value=""
                                 class="w-full rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark" aria-label="Transaction Details" />
-                            <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 hover:bg-blue-100 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-colors cursor-pointer" data-copytarget="details">📋</button>
+                            <div class="tooltip-container">
+                                <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 hover:bg-blue-100 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-colors cursor-pointer" data-copytarget="details">📋</button>
+                                <div class="tooltip" id="tooltip-details">Copied!</div>
+                            </div>
                         </div>
                         <p id="details-suggestion" class="text-xs text-gray-500 mt-1">Tip: Avoid special characters (ă, ș, ț, etc.) for maximum compatibility with all banks.</p>
                     </div>
                     <div class="flex justify-end mt-8">
-                        <button type="button" id="permalink-btn" class="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-primary-dark transition-colors font-semibold text-sm cursor-pointer">
-                            <span aria-hidden="true">🔗</span> <span id="permalink-btn-label">Create Permalink</span>
-                        </button>
+                        <div class="tooltip-container">
+                            <button type="button" id="permalink-btn" class="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-primary-dark transition-colors font-semibold text-sm cursor-pointer">
+                                <span aria-hidden="true">🔗</span> <span id="permalink-btn-label">Create Permalink</span>
+                            </button>
+                            <div class="tooltip" id="tooltip-permalink">Copied!</div>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -140,6 +190,7 @@
                 copyDetails: 'Copy Transaction Details',
                 permalink: 'Create Permalink',
                 permalinkCopied: 'Copied!',
+                copied: 'Copied!',
                 skipToMain: 'Skip to main content',
                 langChanged: 'Language changed to English.',
                 formReset: 'Form has been reset.',
@@ -160,6 +211,7 @@
                 copyDetails: 'Copiază detaliile tranzacției',
                 permalink: 'Creează link permanent',
                 permalinkCopied: 'Copiat!',
+                copied: 'Copiat!',
                 skipToMain: 'Sari la conținutul principal',
                 langChanged: 'Limba a fost schimbată în română.',
                 formReset: 'Formularul a fost resetat.',
@@ -184,6 +236,11 @@
             // Localize permalink button label and aria-label
             document.getElementById('permalink-btn-label').textContent = t.permalink;
             document.getElementById('permalink-btn').setAttribute('aria-label', t.permalink);
+            // Localize tooltip text
+            document.getElementById('tooltip-iban').textContent = t.copied;
+            document.getElementById('tooltip-name').textContent = t.copied;
+            document.getElementById('tooltip-details').textContent = t.copied;
+            document.getElementById('tooltip-permalink').textContent = t.copied;
             // Update <html lang=...>
             document.documentElement.setAttribute('lang', lang);
             // Localize skip to main content link
@@ -207,18 +264,24 @@
         // Set default language
         setLanguage(document.getElementById('lang-select').value);
 
+        // Unified tooltip notification function
+        function showTooltip(tooltipId) {
+            const tooltip = document.getElementById(tooltipId);
+            if (tooltip) {
+                tooltip.classList.add('show');
+                setTimeout(() => {
+                    tooltip.classList.remove('show');
+                }, 2000);
+            }
+        }
+
         // Copy to clipboard logic for all fields
         function copyWithFeedback(btn, value) {
             navigator.clipboard.writeText(value).then(() => {
-                const original = btn.innerHTML;
-                btn.innerHTML = '✅';
-                btn.classList.add('bg-green-100','text-green-700');
-                btn.classList.remove('bg-gray-200','text-gray-700');
-                setTimeout(() => {
-                    btn.innerHTML = original;
-                    btn.classList.remove('bg-green-100','text-green-700');
-                    btn.classList.add('bg-gray-200','text-gray-700');
-                }, 1200);
+                // Get the tooltip ID based on the button's data-copytarget
+                const targetId = btn.getAttribute('data-copytarget');
+                const tooltipId = `tooltip-${targetId}`;
+                showTooltip(tooltipId);
             });
         }
         document.querySelectorAll('.copy-btn').forEach(btn => {
@@ -333,15 +396,9 @@
         }
 
         function copyToClipboardWithFeedback(url, onSuccess) {
-            const btn = document.getElementById('permalink-btn');
-            const langVal = document.getElementById('lang-select').value;
-            const t = getTranslations(langVal);
-            
             navigator.clipboard.writeText(url).then(() => {
-                // Show success feedback
-                btn.innerHTML = `<span aria-hidden="true">✅</span> <span>${t.permalinkCopied}</span>`;
-                btn.classList.add('bg-green-500');
-                btn.classList.remove('bg-blue-500');
+                // Show tooltip feedback
+                showTooltip('tooltip-permalink');
                 
                 // Wait a moment for user to see the feedback, then execute callback
                 setTimeout(onSuccess, 1000);
