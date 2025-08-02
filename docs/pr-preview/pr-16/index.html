@@ -510,6 +510,15 @@
             const existingCurrencyField = document.getElementById(`currency-${rowIndex}`);
             if (existingCurrencyField) {
                 // This row is already a multi-currency row
+                // Mark it as converted if user clicked the button
+                if (fromUserClick) {
+                    convertedRows.add(rowIndex);
+                    // Hide the add button immediately
+                    const addBtn = document.querySelector(`.add-row-btn[data-row-index="${rowIndex}"]`);
+                    if (addBtn) {
+                        addBtn.style.display = 'none';
+                    }
+                }
                 addNewIbanRow();
                 return;
             }
