@@ -559,6 +559,50 @@
             });
         }
 
+        // Function to update delete button visibility (only show on last row, never on row 0)
+        function updateDeleteButtonVisibility() {
+            // Hide all delete buttons first
+            document.querySelectorAll('.delete-row-btn').forEach(btn => {
+                btn.style.display = 'none';
+            });
+            
+            // Find the last row (highest index)
+            let lastRowIndex = -1;
+            let rowIndex = 1; // Start from 1 since row 0 never has a delete button
+            while (document.querySelector(`.iban-row[data-row-index="${rowIndex}"]`)) {
+                lastRowIndex = rowIndex;
+                rowIndex++;
+            }
+            
+            // Show delete button only on the last row (if it exists and is not row 0)
+            if (lastRowIndex > 0) {
+                const deleteBtn = document.querySelector(`.delete-row-btn[data-row-index="${lastRowIndex}"]`);
+                if (deleteBtn) {
+                    deleteBtn.style.display = 'flex';
+                }
+            }
+        }
+
+        // Function to delete a row
+        function deleteRow(rowIndex) {
+            if (rowIndex === 0) return; // Never delete row 0
+            
+            const row = document.querySelector(`.iban-row[data-row-index="${rowIndex}"]`);
+            if (row) {
+                // Remove from converted rows set
+                convertedRows.delete(rowIndex);
+                
+                // Remove the row from DOM
+                row.remove();
+                
+                // Update delete button visibility
+                updateDeleteButtonVisibility();
+                
+                // Update all button states
+                updateAllAddButtonStates();
+            }
+        }
+
         // Function to add a new IBAN row
         function addNewIbanRow() {
             const container = document.getElementById('iban-rows-container');
@@ -579,10 +623,14 @@
                         <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 hover:bg-blue-100 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-colors cursor-pointer opacity-50 cursor-not-allowed" data-copytarget="iban-${currentRowIndex}" data-row-index="${currentRowIndex}" disabled>📋</button>
                         <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 pointer-events-none transition-all duration-300 z-50 mb-1" id="tooltip-iban-${currentRowIndex}">Copied!</div>
                     </div>
+                    <button type="button" class="delete-row-btn w-[42px] h-[42px] flex items-center justify-center bg-red-200 hover:bg-red-300 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-colors cursor-pointer" data-row-index="${currentRowIndex}" aria-label="Delete row" style="display: none;">🗑️</button>
                 </div>
             `;
             
             container.appendChild(newRow);
+            
+            // Update delete button visibility after adding the new row
+            updateDeleteButtonVisibility();
             
             // Add event listeners for the new fields
             const currencyField = document.getElementById(`currency-${currentRowIndex}`);
@@ -601,11 +649,14 @@
             });
         }
 
-        // Event listener for "+" buttons
+        // Event listener for "+" and delete buttons
         document.addEventListener('click', function(e) {
             if (e.target.classList.contains('add-row-btn')) {
                 const rowIndex = parseInt(e.target.getAttribute('data-row-index'));
                 addCurrencyToRow(rowIndex);
+            } else if (e.target.classList.contains('delete-row-btn')) {
+                const rowIndex = parseInt(e.target.getAttribute('data-row-index'));
+                deleteRow(rowIndex);
             }
         });
         function setFieldsFromParams() {
@@ -645,6 +696,9 @@
                 }
                 rowIndex++;
             }
+            
+            // Update delete button visibility after loading from params
+            updateDeleteButtonVisibility();
         }
 
         // Unified redirect function
@@ -697,6 +751,7 @@
             
             // Update copy and add button states for all existing rows after loading from params
             updateAllAddButtonStates();
+            updateDeleteButtonVisibility();
             let rowIndex = 0;
             while (document.getElementById(`iban-${rowIndex}`) || document.getElementById(`currency-${rowIndex}`)) {
                 updateMultiCurrencyCopyButtonState(rowIndex);
