@@ -353,7 +353,18 @@
             }
         }
 
-        // Update "+" button visibility based on IBAN field content
+        // Helper function to find the last row index
+        function getLastRowIndex() {
+            let lastRowIndex = 0; // Row 0 always exists
+            let rowIndex = 1;
+            while (document.querySelector(`.iban-row[data-row-index="${rowIndex}"]`)) {
+                lastRowIndex = rowIndex;
+                rowIndex++;
+            }
+            return lastRowIndex;
+        }
+
+        // Update "+" button visibility based on IBAN field content (only show on last row)
         function updateAddButtonVisibility(rowIndex) {
             // Check if this row has become a multi-currency row first
             const currencyField = document.getElementById(rowIndex === 0 ? 'currency-0' : `currency-${rowIndex}`);
@@ -364,12 +375,14 @@
                 return;
             }
             
-            // For non-multi-currency rows, check the original IBAN field
+            // Only show add button on the last row
+            const lastRowIndex = getLastRowIndex();
             const ibanField = document.getElementById(rowIndex === 0 ? 'iban' : `iban-${rowIndex}`);
             const addBtn = document.querySelector(`.add-row-btn[data-row-index="${rowIndex}"]`);
             
             if (ibanField && addBtn) {
-                if (ibanField.value.trim()) {
+                // Only show if this is the last row, has content, and hasn't been converted
+                if (rowIndex === lastRowIndex && ibanField.value.trim() && !convertedRows.has(rowIndex)) {
                     addBtn.style.width = '42px';
                     addBtn.style.overflow = 'visible';
                     addBtn.style.pointerEvents = 'auto';
@@ -426,23 +439,29 @@
             return true;
         }
 
-        // Update "+" button visibility for multi-currency rows
+        // Update "+" button visibility for multi-currency rows (only show on last row)
         function updateMultiCurrencyAddButtonVisibility(rowIndex) {
             // Don't show "+" button for rows that have already been converted
             if (convertedRows.has(rowIndex)) {
+                const addBtn = document.querySelector(`.add-row-btn[data-row-index="${rowIndex}"]`);
+                if (addBtn) {
+                    addBtn.style.display = 'none';
+                }
                 return;
             }
             
+            // Only show add button on the last row
+            const lastRowIndex = getLastRowIndex();
             const currencyField = document.getElementById(`currency-${rowIndex}`);
             const ibanField = document.getElementById(`iban-${rowIndex}`);
             const addBtn = document.querySelector(`.add-row-btn[data-row-index="${rowIndex}"]`);
             
             if (currencyField && ibanField && addBtn) {
-                // Check if current row is filled AND all previous rows are filled
+                // Check if current row is filled AND this is the last row
                 const currentRowFilled = currencyField.value.trim() && ibanField.value.trim();
-                const previousRowsFilled = areAllPreviousRowsFilled(rowIndex);
+                const isLastRow = rowIndex === lastRowIndex;
                 
-                if (currentRowFilled && previousRowsFilled) {
+                if (currentRowFilled && isLastRow) {
                     addBtn.style.width = '42px';
                     addBtn.style.overflow = 'visible';
                     addBtn.style.pointerEvents = 'auto';
@@ -574,13 +593,8 @@
                 btn.style.display = 'none';
             });
             
-            // Find the last row (highest index)
-            let lastRowIndex = -1;
-            let rowIndex = 1; // Start from 1 since row 0 never has a delete button
-            while (document.querySelector(`.iban-row[data-row-index="${rowIndex}"]`)) {
-                lastRowIndex = rowIndex;
-                rowIndex++;
-            }
+            // Find the last row using the helper function
+            const lastRowIndex = getLastRowIndex();
             
             // Show delete button only on the last row (if it exists and is not row 0)
             if (lastRowIndex > 0) {
