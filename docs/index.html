@@ -355,19 +355,20 @@
 
         // Update "+" button visibility based on IBAN field content
         function updateAddButtonVisibility(rowIndex) {
+            // Check if this row has become a multi-currency row first
+            const currencyField = document.getElementById(rowIndex === 0 ? 'currency-0' : `currency-${rowIndex}`);
+            
+            if (currencyField) {
+                // This is now a multi-currency row, use the multi-currency logic
+                updateMultiCurrencyAddButtonVisibility(rowIndex);
+                return;
+            }
+            
+            // For non-multi-currency rows, check the original IBAN field
             const ibanField = document.getElementById(rowIndex === 0 ? 'iban' : `iban-${rowIndex}`);
             const addBtn = document.querySelector(`.add-row-btn[data-row-index="${rowIndex}"]`);
             
             if (ibanField && addBtn) {
-                // Check if this row has become a multi-currency row
-                const currencyField = document.getElementById(rowIndex === 0 ? 'currency-0' : `currency-${rowIndex}`);
-                
-                if (currencyField) {
-                    // This is now a multi-currency row, use the multi-currency logic
-                    updateMultiCurrencyAddButtonVisibility(rowIndex);
-                    return;
-                }
-                
                 if (ibanField.value.trim()) {
                     addBtn.style.width = '42px';
                     addBtn.style.overflow = 'visible';
@@ -488,33 +489,40 @@
         });
 
         // Function to add currency field to existing IBAN row
-        function addCurrencyToRow(rowIndex) {
+        function addCurrencyToRow(rowIndex, fromUserClick = true) {
             const row = document.querySelector(`.iban-row[data-row-index="${rowIndex}"]`);
             if (!row) return;
             
             // Check if this row already has a currency field (already converted)
             const existingCurrencyField = document.getElementById(`currency-${rowIndex}`);
             if (existingCurrencyField) {
-                // This row is already a multi-currency row, mark as converted and add a new row
-                convertedRows.add(rowIndex);
-                // Hide the "+" button permanently
-                const addBtn = row.querySelector('.add-row-btn');
-                if (addBtn) {
-                    addBtn.style.display = 'none';
+                // This row is already a multi-currency row
+                if (fromUserClick) {
+                    // Only mark as converted and hide button if this came from user click
+                    convertedRows.add(rowIndex);
+                    // Hide the "+" button permanently
+                    const addBtn = row.querySelector('.add-row-btn');
+                    if (addBtn) {
+                        addBtn.style.display = 'none';
+                    }
                 }
                 addNewIbanRow();
                 return;
             }
             
-            // Mark this row as converted to prevent "+" button from appearing again
-            convertedRows.add(rowIndex);
+            // Only mark this row as converted if this came from user click
+            if (fromUserClick) {
+                convertedRows.add(rowIndex);
+            }
 
             const inputContainer = row.querySelector('.flex.gap-2');
             const ibanField = rowIndex === 0 ? document.getElementById('iban') : document.getElementById(`iban-${rowIndex}`);
             const addBtn = row.querySelector('.add-row-btn');
             
-            // Hide the "+" button permanently using display: none
-            addBtn.style.display = 'none';
+            // Hide the "+" button permanently using display: none only if from user click
+            if (fromUserClick) {
+                addBtn.style.display = 'none';
+            }
             
             // Create currency field
             const currencyField = document.createElement('input');
@@ -671,7 +679,7 @@
                 if (rowIndex === 0) {
                     // First row - add currency to existing IBAN
                     if (params.has(`currency-${rowIndex}`)) {
-                        addCurrencyToRow(0);
+                        addCurrencyToRow(0, false); // false = not from user click
                         document.getElementById(`currency-0`).value = params.get(`currency-0`) || '';
                         if (params.has(`iban-${rowIndex}`)) {
                             document.getElementById(`iban-0`).value = params.get(`iban-0`) || '';
@@ -687,8 +695,7 @@
                     }
                     if (params.has(`currency-${rowIndex}`)) {
                         document.getElementById(`currency-${rowIndex}`).value = params.get(`currency-${rowIndex}`) || '';
-                        // Mark this row as converted since it has a currency field
-                        convertedRows.add(rowIndex);
+                        // Don't mark this row as converted since it's from permalink loading
                     }
                     if (params.has(`iban-${rowIndex}`)) {
                         document.getElementById(`iban-${rowIndex}`).value = params.get(`iban-${rowIndex}`) || '';
