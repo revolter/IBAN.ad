@@ -333,6 +333,9 @@
 
         // Global variable to track next row index
         let nextRowIndex = 1;
+        
+        // Track which rows have been converted to multi-currency
+        const convertedRows = new Set();
 
         // Disable copy buttons when fields are empty and handle "+" button visibility
         function updateCopyButtonState(fieldId) {
@@ -369,6 +372,7 @@
                     addBtn.style.width = '42px';
                     addBtn.style.overflow = 'visible';
                     addBtn.style.pointerEvents = 'auto';
+                    addBtn.style.display = 'flex';
                 } else {
                     addBtn.style.width = '0px';
                     addBtn.style.overflow = 'hidden';
@@ -379,6 +383,11 @@
 
         // Update "+" button visibility for multi-currency rows
         function updateMultiCurrencyAddButtonVisibility(rowIndex) {
+            // Don't show "+" button for rows that have already been converted
+            if (convertedRows.has(rowIndex)) {
+                return;
+            }
+            
             const currencyField = document.getElementById(`currency-${rowIndex}`);
             const ibanField = document.getElementById(`iban-${rowIndex}`);
             const addBtn = document.querySelector(`.add-row-btn[data-row-index="${rowIndex}"]`);
@@ -388,6 +397,7 @@
                     addBtn.style.width = '42px';
                     addBtn.style.overflow = 'visible';
                     addBtn.style.pointerEvents = 'auto';
+                    addBtn.style.display = 'flex';
                 } else {
                     addBtn.style.width = '0px';
                     addBtn.style.overflow = 'hidden';
@@ -431,15 +441,16 @@
         function addCurrencyToRow(rowIndex) {
             const row = document.querySelector(`.iban-row[data-row-index="${rowIndex}"]`);
             if (!row) return;
+            
+            // Mark this row as converted to prevent "+" button from appearing again
+            convertedRows.add(rowIndex);
 
             const inputContainer = row.querySelector('.flex.gap-2');
             const ibanField = rowIndex === 0 ? document.getElementById('iban') : document.getElementById(`iban-${rowIndex}`);
             const addBtn = row.querySelector('.add-row-btn');
             
-            // Hide the "+" button
-            addBtn.style.width = '0px';
-            addBtn.style.overflow = 'hidden';
-            addBtn.style.pointerEvents = 'none';
+            // Hide the "+" button permanently using display: none
+            addBtn.style.display = 'none';
             
             // Create currency field
             const currencyField = document.createElement('input');
@@ -557,6 +568,8 @@
                     }
                     if (params.has(`currency-${rowIndex}`)) {
                         document.getElementById(`currency-${rowIndex}`).value = params.get(`currency-${rowIndex}`) || '';
+                        // Mark this row as converted since it has a currency field
+                        convertedRows.add(rowIndex);
                     }
                     if (params.has(`iban-${rowIndex}`)) {
                         document.getElementById(`iban-${rowIndex}`).value = params.get(`iban-${rowIndex}`) || '';
