@@ -89,7 +89,7 @@
                             <div class="flex gap-2">
                                 <input type="text" id="iban" name="iban" value=""
                                     class="w-full rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark" aria-label="IBAN" />
-                                <button type="button" class="add-row-btn h-[42px] flex items-center justify-center bg-green-200 hover:bg-green-300 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-all duration-200 cursor-pointer" data-row-index="0" aria-label="Add currency field" style="width: 0px; overflow: hidden; pointer-events: none;">➕</button>
+                                <button type="button" class="add-row-btn h-[42px] flex items-center justify-center bg-green-200 hover:bg-green-300 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-all duration-200 cursor-pointer" data-row-index="0" aria-label="Add currency field" style="display: none;">➕</button>
                                 <div class="relative">
                                     <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 hover:bg-blue-100 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-colors cursor-pointer" data-copytarget="iban" data-row-index="0">📋</button>
                                     <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 pointer-events-none transition-all duration-300 z-50 mb-1" id="tooltip-iban">Copied!</div>
@@ -377,6 +377,7 @@
                     addBtn.style.width = '0px';
                     addBtn.style.overflow = 'hidden';
                     addBtn.style.pointerEvents = 'none';
+                    addBtn.style.display = 'none';
                 }
             }
         }
@@ -449,6 +450,7 @@
                     addBtn.style.width = '0px';
                     addBtn.style.overflow = 'hidden';
                     addBtn.style.pointerEvents = 'none';
+                    addBtn.style.display = 'none';
                 }
             }
         }
@@ -566,7 +568,7 @@
                         class="w-20 rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark text-center" aria-label="Currency" />
                     <input type="text" id="iban-${currentRowIndex}" name="iban-${currentRowIndex}" value=""
                         class="w-full rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark" aria-label="IBAN" />
-                    <button type="button" class="add-row-btn h-[42px] flex items-center justify-center bg-green-200 hover:bg-green-300 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-all duration-200 cursor-pointer" data-row-index="${currentRowIndex}" aria-label="Add currency field" style="width: 0px; overflow: hidden; pointer-events: none;">➕</button>
+                    <button type="button" class="add-row-btn h-[42px] flex items-center justify-center bg-green-200 hover:bg-green-300 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-all duration-200 cursor-pointer" data-row-index="${currentRowIndex}" aria-label="Add currency field" style="display: none;">➕</button>
                     <div class="relative">
                         <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 hover:bg-blue-100 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-colors cursor-pointer opacity-50 cursor-not-allowed" data-copytarget="iban-${currentRowIndex}" data-row-index="${currentRowIndex}" disabled>📋</button>
                         <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 pointer-events-none transition-all duration-300 z-50 mb-1" id="tooltip-iban-${currentRowIndex}">Copied!</div>
