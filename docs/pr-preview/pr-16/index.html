@@ -443,15 +443,6 @@
 
         // Update "+" button visibility for multi-currency rows (only show on last row)
         function updateMultiCurrencyAddButtonVisibility(rowIndex) {
-            // Don't show "+" button for rows that have already been converted
-            if (convertedRows.has(rowIndex)) {
-                const addBtn = document.querySelector(`.add-row-btn[data-row-index="${rowIndex}"]`);
-                if (addBtn) {
-                    addBtn.style.display = 'none';
-                }
-                return;
-            }
-            
             // Only show add button on the last row
             const lastRowIndex = getLastRowIndex();
             const currencyField = document.getElementById(`currency-${rowIndex}`);
@@ -463,6 +454,7 @@
                 const currentRowFilled = currencyField.value.trim() && ibanField.value.trim();
                 const isLastRow = rowIndex === lastRowIndex;
                 
+                // Show button if it's the last row and filled, regardless of conversion status
                 if (currentRowFilled && isLastRow) {
                     addBtn.style.width = '42px';
                     addBtn.style.overflow = 'visible';
@@ -518,20 +510,11 @@
             const existingCurrencyField = document.getElementById(`currency-${rowIndex}`);
             if (existingCurrencyField) {
                 // This row is already a multi-currency row
-                if (fromUserClick) {
-                    // Only mark as converted and hide button if this came from user click
-                    convertedRows.add(rowIndex);
-                    // Hide the "+" button permanently
-                    const addBtn = row.querySelector('.add-row-btn');
-                    if (addBtn) {
-                        addBtn.style.display = 'none';
-                    }
-                }
                 addNewIbanRow();
                 return;
             }
             
-            // Only mark this row as converted if this came from user click
+            // Mark this row as converted to track it
             if (fromUserClick) {
                 convertedRows.add(rowIndex);
             }
@@ -540,8 +523,8 @@
             const ibanField = rowIndex === 0 ? document.getElementById('iban') : document.getElementById(`iban-${rowIndex}`);
             const addBtn = row.querySelector('.add-row-btn');
             
-            // Hide the "+" button permanently using display: none only if from user click
-            if (fromUserClick) {
+            // Hide the "+" button temporarily when clicked
+            if (fromUserClick && addBtn) {
                 addBtn.style.display = 'none';
             }
             
