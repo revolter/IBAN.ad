@@ -284,12 +284,19 @@
                 const rowIndex = btn.getAttribute('data-row-index');
                 let value = '';
                 
-                if (rowIndex !== null && rowIndex !== '0') {
-                    // Multi-currency row - combine currency and IBAN
+                if (rowIndex !== null) {
+                    // Check if this is a multi-currency row (has both currency and IBAN fields)
                     const currencyField = document.getElementById(`currency-${rowIndex}`);
                     const ibanField = document.getElementById(`iban-${rowIndex}`);
                     if (currencyField && ibanField) {
+                        // Multi-currency row - combine currency and IBAN
                         value = `${currencyField.value.trim()} ${ibanField.value.trim()}`;
+                    } else {
+                        // Regular field
+                        const el = document.getElementById(targetId);
+                        if (el) {
+                            value = el.value;
+                        }
                     }
                 } else {
                     // Regular field
@@ -314,12 +321,19 @@
                 const rowIndex = e.target.getAttribute('data-row-index');
                 let value = '';
                 
-                if (rowIndex !== null && rowIndex !== '0') {
-                    // Multi-currency row - combine currency and IBAN
+                if (rowIndex !== null) {
+                    // Check if this is a multi-currency row (has both currency and IBAN fields)
                     const currencyField = document.getElementById(`currency-${rowIndex}`);
                     const ibanField = document.getElementById(`iban-${rowIndex}`);
                     if (currencyField && ibanField) {
+                        // Multi-currency row - combine currency and IBAN
                         value = `${currencyField.value.trim()} ${ibanField.value.trim()}`;
+                    } else {
+                        // Regular field
+                        const el = document.getElementById(targetId);
+                        if (el) {
+                            value = el.value;
+                        }
                     }
                 } else {
                     // Regular field
@@ -578,6 +592,9 @@
                 // Update all subsequent row "+" button states when this row changes
                 updateAllAddButtonStates();
             });
+            
+            // Update the copy button state immediately after conversion
+            updateMultiCurrencyCopyButtonState(rowIndex);
         }
 
         // Function to update delete button visibility (only show on last row, never on row 0)
