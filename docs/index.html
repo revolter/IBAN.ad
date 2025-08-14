@@ -85,15 +85,17 @@
                     <p id="iban-info-desc" class="sr-only">Readonly form displaying IBAN and related transaction details.</p>
                     <div id="iban-rows-container">
                         <div class="iban-row" data-row-index="0">
-                            <label for="iban" class="block text-sm font-medium text-gray-700 mb-1">IBAN</label>
+                            <label for="currency-0" class="block text-sm font-medium text-gray-700 mb-1">Currency & IBAN</label>
                             <div class="flex gap-2">
-                                <input type="text" id="iban" name="iban" value=""
+                                <input type="text" id="currency-0" name="currency-0" placeholder="EUR"
+                                    class="w-20 rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark text-center" aria-label="Currency (optional)" />
+                                <input type="text" id="iban-0" name="iban-0" value=""
                                     class="w-full rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark" aria-label="IBAN" />
                                 <div class="flex gap-2">
-                                    <button type="button" class="add-row-btn w-[42px] h-[42px] flex items-center justify-center bg-green-200 hover:bg-green-300 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-all duration-200 cursor-pointer" data-row-index="0" aria-label="Add currency field" style="display: none;">💱</button>
+                                    <button type="button" class="add-row-btn w-[42px] h-[42px] flex items-center justify-center bg-green-200 hover:bg-green-300 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-all duration-200 cursor-pointer" data-row-index="0" aria-label="Add new row" style="display: none;">💱</button>
                                     <div class="relative">
-                                        <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 hover:bg-blue-100 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-colors cursor-pointer" data-copytarget="iban" data-row-index="0">📋</button>
-                                        <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 pointer-events-none transition-all duration-300 z-50 mb-1" id="tooltip-iban">Copied!</div>
+                                        <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 hover:bg-blue-100 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-colors cursor-pointer opacity-50 cursor-not-allowed" data-copytarget="iban-0" data-row-index="0" disabled>📋</button>
+                                        <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 pointer-events-none transition-all duration-300 z-50 mb-1" id="tooltip-iban-0">Copied!</div>
                                     </div>
                                 </div>
                             </div>
@@ -159,7 +161,7 @@
                 tagline: 'Advertise your IBAN with IBAN.ad – the easiest way for NGOs, freelancers, and clubs to share their bank details for donations, payments, or memberships.',
                 title: 'IBAN Information',
                 ibanInfo: 'IBAN Information',
-                ibanLabel: 'IBAN',
+                ibanLabel: 'Currency & IBAN',
                 nameLabel: 'Account Holder Name',
                 detailsLabel: 'Transaction Details',
                 formDesc: 'Readonly form displaying IBAN and related transaction details.',
@@ -180,7 +182,7 @@
                 tagline: 'Promovează-ți IBAN-ul cu IBAN.ad – cea mai simplă modalitate pentru ONG-uri, freelanceri și cluburi de a-și partaja contul bancar pentru donații, plăți sau cotizații.',
                 title: 'Informații IBAN',
                 ibanInfo: 'Informații IBAN',
-                ibanLabel: 'IBAN',
+                ibanLabel: 'Monedă & IBAN',
                 nameLabel: 'Nume titular cont',
                 detailsLabel: 'Detalii tranzacție',
                 formDesc: 'Formular doar pentru citire care afișează IBAN-ul și detaliile tranzacției.',
@@ -208,14 +210,14 @@
             document.getElementById('clear-form-btn').textContent = t.siteName;
             document.getElementById('site-tagline').textContent = t.tagline;
             // Localize aria-labels for copy buttons
-            document.querySelector('.copy-btn[data-copytarget="iban"]').setAttribute('aria-label', t.copyIBAN);
+            document.querySelector('.copy-btn[data-row-index="0"]').setAttribute('aria-label', t.copyIBAN);
             document.querySelector('.copy-btn[data-copytarget="name"]').setAttribute('aria-label', t.copyName);
             document.querySelector('.copy-btn[data-copytarget="details"]').setAttribute('aria-label', t.copyDetails);
             // Localize permalink button label and aria-label
             document.getElementById('permalink-btn-label').textContent = t.permalink;
             document.getElementById('permalink-btn').setAttribute('aria-label', t.permalink);
             // Localize tooltip text
-            document.getElementById('tooltip-iban').textContent = t.copied;
+            document.getElementById('tooltip-iban-0').textContent = t.copied;
             document.getElementById('tooltip-name').textContent = t.copied;
             document.getElementById('tooltip-details').textContent = t.copied;
             document.getElementById('tooltip-permalink').textContent = t.copied;
@@ -226,7 +228,7 @@
             // Announce language change for screen readers
             announceA11y(t.langChanged);
             document.getElementById('iban-info-title').textContent = t.ibanInfo;
-            document.querySelector('label[for="iban"]').textContent = t.ibanLabel;
+            document.querySelector('label[for="currency-0"]').textContent = t.ibanLabel;
             document.querySelector('label[for="name"]').textContent = t.nameLabel;
             document.querySelector('label[for="details"]').textContent = t.detailsLabel;
             document.getElementById('iban-info-desc').textContent = t.formDesc;
@@ -263,13 +265,10 @@
                 const rowIndex = btn.getAttribute('data-row-index');
                 let tooltipId;
                 
-                if (rowIndex !== null && rowIndex !== '0') {
+                if (rowIndex !== null) {
                     tooltipId = `tooltip-iban-${rowIndex}`;
                 } else {
-                    tooltipId = `tooltip-${targetId.replace(/^(iban|currency)-\d+$/, '$1')}`;
-                    if (targetId.startsWith('iban-') || targetId.startsWith('currency-')) {
-                        tooltipId = `tooltip-${targetId}`;
-                    }
+                    tooltipId = `tooltip-${targetId}`;
                 }
                 
                 showTooltip(tooltipId);
@@ -284,12 +283,18 @@
                 const rowIndex = btn.getAttribute('data-row-index');
                 let value = '';
                 
-                if (rowIndex !== null && rowIndex !== '0') {
-                    // Multi-currency row - combine currency and IBAN
+                if (rowIndex !== null) {
+                    // IBAN row - combine currency and IBAN if currency has value
                     const currencyField = document.getElementById(`currency-${rowIndex}`);
                     const ibanField = document.getElementById(`iban-${rowIndex}`);
                     if (currencyField && ibanField) {
-                        value = `${currencyField.value.trim()} ${ibanField.value.trim()}`;
+                        const currencyValue = currencyField.value.trim();
+                        const ibanValue = ibanField.value.trim();
+                        if (currencyValue && ibanValue) {
+                            value = `${currencyValue} ${ibanValue}`;
+                        } else {
+                            value = ibanValue;
+                        }
                     }
                 } else {
                     // Regular field
@@ -314,12 +319,18 @@
                 const rowIndex = e.target.getAttribute('data-row-index');
                 let value = '';
                 
-                if (rowIndex !== null && rowIndex !== '0') {
-                    // Multi-currency row - combine currency and IBAN
+                if (rowIndex !== null) {
+                    // IBAN row - combine currency and IBAN if currency has value
                     const currencyField = document.getElementById(`currency-${rowIndex}`);
                     const ibanField = document.getElementById(`iban-${rowIndex}`);
                     if (currencyField && ibanField) {
-                        value = `${currencyField.value.trim()} ${ibanField.value.trim()}`;
+                        const currencyValue = currencyField.value.trim();
+                        const ibanValue = ibanField.value.trim();
+                        if (currencyValue && ibanValue) {
+                            value = `${currencyValue} ${ibanValue}`;
+                        } else {
+                            value = ibanValue;
+                        }
                     }
                 } else {
                     // Regular field
@@ -335,9 +346,6 @@
 
         // Global variable to track next row index
         let nextRowIndex = 1;
-        
-        // Track which rows have been converted to multi-currency
-        const convertedRows = new Set();
 
         // Disable copy buttons when fields are empty and handle "+" button visibility
         function updateCopyButtonState(fieldId) {
@@ -366,117 +374,15 @@
             return lastRowIndex;
         }
 
-        // Update "+" button visibility based on IBAN field content (only show on last row)
-        function updateAddButtonVisibility(rowIndex) {
-            // Check if this row has become a multi-currency row first
-            const currencyField = document.getElementById(rowIndex === 0 ? 'currency-0' : `currency-${rowIndex}`);
-            
-            if (currencyField) {
-                // This is now a multi-currency row, use the multi-currency logic
-                updateMultiCurrencyAddButtonVisibility(rowIndex);
-                return;
-            }
-            
-            // Only show add button on the last row
-            const lastRowIndex = getLastRowIndex();
-            const ibanField = document.getElementById(rowIndex === 0 ? 'iban' : `iban-${rowIndex}`);
-            const addBtn = document.querySelector(`.add-row-btn[data-row-index="${rowIndex}"]`);
-            
-            if (ibanField && addBtn) {
-                // Only show if this is the last row, has content, and hasn't been converted
-                if (rowIndex === lastRowIndex && ibanField.value.trim() && !convertedRows.has(rowIndex)) {
-                    addBtn.style.width = '42px';
-                    addBtn.style.overflow = 'visible';
-                    addBtn.style.pointerEvents = 'auto';
-                    addBtn.style.display = 'flex';
-                } else {
-                    addBtn.style.width = '0px';
-                    addBtn.style.overflow = 'hidden';
-                    addBtn.style.pointerEvents = 'none';
-                    addBtn.style.display = 'none';
-                }
-            }
-        }
-
-        // Update all "+" button states
-        function updateAllAddButtonStates() {
-            // Update row 0 first
-            updateAddButtonVisibility(0);
-            
-            // Update all subsequent rows
-            let rowIndex = 1;
-            while (document.getElementById(`iban-${rowIndex}`) || document.getElementById(`currency-${rowIndex}`)) {
-                updateMultiCurrencyAddButtonVisibility(rowIndex);
-                rowIndex++;
-            }
-        }
-
-        // Helper function to check if all previous rows are filled
-        function areAllPreviousRowsFilled(rowIndex) {
-            for (let i = 0; i < rowIndex; i++) {
-                const currencyField = document.getElementById(`currency-${i}`);
-                const ibanField = document.getElementById(`iban-${i}`);
-                
-                // For row 0, check if it has been converted to multi-currency
-                if (i === 0) {
-                    if (currencyField) {
-                        // It's a multi-currency row, both fields must be filled
-                        if (!currencyField.value.trim() || !ibanField.value.trim()) {
-                            return false;
-                        }
-                    } else {
-                        // It's still a single IBAN row, only IBAN needs to be filled
-                        const mainIbanField = document.getElementById('iban');
-                        if (!mainIbanField || !mainIbanField.value.trim()) {
-                            return false;
-                        }
-                    }
-                } else {
-                    // For other rows, both currency and IBAN must be filled
-                    if (!currencyField || !ibanField || !currencyField.value.trim() || !ibanField.value.trim()) {
-                        return false;
-                    }
-                }
-            }
-            return true;
-        }
-
-        // Update "+" button visibility for multi-currency rows (only show on last row)
-        function updateMultiCurrencyAddButtonVisibility(rowIndex) {
-            // Only show add button on the last row
-            const lastRowIndex = getLastRowIndex();
-            const currencyField = document.getElementById(`currency-${rowIndex}`);
-            const ibanField = document.getElementById(`iban-${rowIndex}`);
-            const addBtn = document.querySelector(`.add-row-btn[data-row-index="${rowIndex}"]`);
-            
-            if (currencyField && ibanField && addBtn) {
-                // Check if current row is filled AND this is the last row
-                const currentRowFilled = currencyField.value.trim() && ibanField.value.trim();
-                const isLastRow = rowIndex === lastRowIndex;
-                
-                // Show button if it's the last row and filled, regardless of conversion status
-                if (currentRowFilled && isLastRow) {
-                    addBtn.style.width = '42px';
-                    addBtn.style.overflow = 'visible';
-                    addBtn.style.pointerEvents = 'auto';
-                    addBtn.style.display = 'flex';
-                } else {
-                    addBtn.style.width = '0px';
-                    addBtn.style.overflow = 'hidden';
-                    addBtn.style.pointerEvents = 'none';
-                    addBtn.style.display = 'none';
-                }
-            }
-        }
-
-        // Update copy button state for multi-currency rows
-        function updateMultiCurrencyCopyButtonState(rowIndex) {
+        // Update copy button state for IBAN rows (considers both currency and IBAN fields)
+        function updateIbanCopyButtonState(rowIndex) {
             const currencyField = document.getElementById(`currency-${rowIndex}`);
             const ibanField = document.getElementById(`iban-${rowIndex}`);
             const copyBtn = document.querySelector(`.copy-btn[data-row-index="${rowIndex}"]`);
             
             if (currencyField && ibanField && copyBtn) {
-                const shouldEnable = currencyField.value.trim() && ibanField.value.trim();
+                // Enable copy if IBAN has content (currency is optional)
+                const shouldEnable = ibanField.value.trim();
                 copyBtn.disabled = !shouldEnable;
                 if (copyBtn.disabled) {
                     copyBtn.classList.add('opacity-50', 'cursor-not-allowed');
@@ -488,95 +394,107 @@
             }
         }
 
-        ['iban', 'name', 'details'].forEach(fieldId => {
+        // Update "+" button visibility (only show on last row when IBAN field has content)
+        function updateAddButtonVisibility(rowIndex) {
+            const lastRowIndex = getLastRowIndex();
+            const ibanField = document.getElementById(`iban-${rowIndex}`);
+            const addBtn = document.querySelector(`.add-row-btn[data-row-index="${rowIndex}"]`);
+            
+            if (ibanField && addBtn) {
+                // Show only if this is the last row and has IBAN content
+                if (rowIndex === lastRowIndex && ibanField.value.trim()) {
+                    addBtn.style.display = 'flex';
+                } else {
+                    addBtn.style.display = 'none';
+                }
+            }
+        }
+
+        // Update all button states
+        function updateAllButtonStates() {
+            // Update row 0
+            updateIbanCopyButtonState(0);
+            updateAddButtonVisibility(0);
+            
+            // Update all subsequent rows
+            let rowIndex = 1;
+            while (document.getElementById(`iban-${rowIndex}`)) {
+                updateIbanCopyButtonState(rowIndex);
+                updateAddButtonVisibility(rowIndex);
+                rowIndex++;
+            }
+        }
+
+        // Add event listeners for the first row fields
+        const currencyField0 = document.getElementById('currency-0');
+        const ibanField0 = document.getElementById('iban-0');
+        
+        if (currencyField0) {
+            currencyField0.addEventListener('input', () => {
+                updateIbanCopyButtonState(0);
+                updateAllButtonStates();
+            });
+        }
+        
+        if (ibanField0) {
+            ibanField0.addEventListener('input', () => {
+                updateIbanCopyButtonState(0);
+                updateAllButtonStates();
+            });
+        }
+
+        ['name', 'details'].forEach(fieldId => {
             const field = document.getElementById(fieldId);
             if (field) {
                 field.addEventListener('input', () => {
                     updateCopyButtonState(fieldId);
-                    if (fieldId === 'iban') {
-                        // Update all "+" button states when the main IBAN field changes
-                        updateAllAddButtonStates();
-                    }
                 });
             }
         });
 
-        // Function to add currency field to existing IBAN row
-        function addCurrencyToRow(rowIndex, fromUserClick = true) {
-            const row = document.querySelector(`.iban-row[data-row-index="${rowIndex}"]`);
-            if (!row) return;
+        // Function to add a new IBAN row
+        function addNewIbanRow() {
+            const container = document.getElementById('iban-rows-container');
+            const currentRowIndex = nextRowIndex++;
             
-            // Check if this row already has a currency field (already converted)
-            const existingCurrencyField = document.getElementById(`currency-${rowIndex}`);
-            if (existingCurrencyField) {
-                // This row is already a multi-currency row
-                // Mark it as converted if user clicked the button
-                if (fromUserClick) {
-                    convertedRows.add(rowIndex);
-                    // Hide the add button immediately
-                    const addBtn = document.querySelector(`.add-row-btn[data-row-index="${rowIndex}"]`);
-                    if (addBtn) {
-                        addBtn.style.display = 'none';
-                    }
-                }
-                addNewIbanRow();
-                return;
-            }
+            const newRow = document.createElement('div');
+            newRow.className = 'iban-row mt-4';
+            newRow.setAttribute('data-row-index', currentRowIndex);
             
-            // Mark this row as converted to track it
-            if (fromUserClick) {
-                convertedRows.add(rowIndex);
-            }
-
-            const inputContainer = row.querySelector('.flex.gap-2');
-            const ibanField = rowIndex === 0 ? document.getElementById('iban') : document.getElementById(`iban-${rowIndex}`);
-            const addBtn = row.querySelector('.add-row-btn');
+            newRow.innerHTML = `
+                <div class="flex gap-2">
+                    <input type="text" id="currency-${currentRowIndex}" name="currency-${currentRowIndex}" placeholder="EUR"
+                        class="w-20 rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark text-center" aria-label="Currency (optional)" />
+                    <input type="text" id="iban-${currentRowIndex}" name="iban-${currentRowIndex}" value=""
+                        class="w-full rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark" aria-label="IBAN" />
+                    <div class="flex gap-2">
+                        <button type="button" class="add-row-btn w-[42px] h-[42px] flex items-center justify-center bg-green-200 hover:bg-green-300 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-all duration-200 cursor-pointer" data-row-index="${currentRowIndex}" aria-label="Add new row" style="display: none;">💱</button>
+                        <button type="button" class="delete-row-btn w-[42px] h-[42px] flex items-center justify-center bg-red-200 hover:bg-red-300 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-colors cursor-pointer" data-row-index="${currentRowIndex}" aria-label="Delete row" style="display: none;">🗑️</button>
+                        <div class="relative">
+                            <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 hover:bg-blue-100 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-colors cursor-pointer opacity-50 cursor-not-allowed" data-copytarget="iban-${currentRowIndex}" data-row-index="${currentRowIndex}" disabled>📋</button>
+                            <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 pointer-events-none transition-all duration-300 z-50 mb-1" id="tooltip-iban-${currentRowIndex}">Copied!</div>
+                        </div>
+                    </div>
+                </div>
+            `;
             
-            // Hide the "+" button temporarily when clicked
-            if (fromUserClick && addBtn) {
-                addBtn.style.display = 'none';
-            }
+            container.appendChild(newRow);
             
-            // Create currency field
-            const currencyField = document.createElement('input');
-            currencyField.type = 'text';
-            currencyField.id = `currency-${rowIndex}`;
-            currencyField.name = `currency-${rowIndex}`;
-            currencyField.placeholder = 'EUR';
-            currencyField.className = 'w-20 rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark text-center';
-            currencyField.setAttribute('aria-label', 'Currency');
+            // Update delete button visibility after adding the new row
+            updateDeleteButtonVisibility();
             
-            // Insert currency field before IBAN field
-            inputContainer.insertBefore(currencyField, ibanField);
+            // Add event listeners for the new fields
+            const currencyField = document.getElementById(`currency-${currentRowIndex}`);
+            const ibanField = document.getElementById(`iban-${currentRowIndex}`);
             
-            // Update IBAN field attributes for multi-currency context
-            ibanField.id = `iban-${rowIndex}`;
-            ibanField.name = `iban-${rowIndex}`;
-            
-            // Update copy button data attributes
-            const copyBtn = row.querySelector('.copy-btn');
-            copyBtn.setAttribute('data-copytarget', `iban-${rowIndex}`);
-            copyBtn.setAttribute('data-row-index', rowIndex);
-            
-            // Update tooltip id
-            const tooltip = row.querySelector('.tooltip');
-            tooltip.id = `tooltip-iban-${rowIndex}`;
-            
-            // Add new row
-            addNewIbanRow();
-            
-            // Add event listeners for the new currency field
             currencyField.addEventListener('input', () => {
-                updateMultiCurrencyCopyButtonState(rowIndex);
-                // Update all subsequent row "+" button states when this row changes
-                updateAllAddButtonStates();
+                updateIbanCopyButtonState(currentRowIndex);
+                updateAllButtonStates();
             });
             
-            // Update existing IBAN field event listener
             ibanField.addEventListener('input', () => {
-                updateMultiCurrencyCopyButtonState(rowIndex);
-                // Update all subsequent row "+" button states when this row changes
-                updateAllAddButtonStates();
+                updateIbanCopyButtonState(currentRowIndex);
+                updateAllButtonStates();
             });
         }
 
@@ -605,9 +523,6 @@
             
             const row = document.querySelector(`.iban-row[data-row-index="${rowIndex}"]`);
             if (row) {
-                // Remove from converted rows set
-                convertedRows.delete(rowIndex);
-                
                 // Remove the row from DOM
                 row.remove();
                 
@@ -615,63 +530,19 @@
                 updateDeleteButtonVisibility();
                 
                 // Update all button states
-                updateAllAddButtonStates();
+                updateAllButtonStates();
             }
-        }
-
-        // Function to add a new IBAN row
-        function addNewIbanRow() {
-            const container = document.getElementById('iban-rows-container');
-            const currentRowIndex = nextRowIndex++;
-            
-            const newRow = document.createElement('div');
-            newRow.className = 'iban-row mt-4';
-            newRow.setAttribute('data-row-index', currentRowIndex);
-            
-            newRow.innerHTML = `
-                <div class="flex gap-2">
-                    <input type="text" id="currency-${currentRowIndex}" name="currency-${currentRowIndex}" placeholder="EUR"
-                        class="w-20 rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark text-center" aria-label="Currency" />
-                    <input type="text" id="iban-${currentRowIndex}" name="iban-${currentRowIndex}" value=""
-                        class="w-full rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark" aria-label="IBAN" />
-                    <div class="flex gap-2">
-                        <button type="button" class="add-row-btn w-[42px] h-[42px] flex items-center justify-center bg-green-200 hover:bg-green-300 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-all duration-200 cursor-pointer" data-row-index="${currentRowIndex}" aria-label="Add currency field" style="display: none;">💱</button>
-                        <button type="button" class="delete-row-btn w-[42px] h-[42px] flex items-center justify-center bg-red-200 hover:bg-red-300 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-colors cursor-pointer" data-row-index="${currentRowIndex}" aria-label="Delete row" style="display: none;">🗑️</button>
-                        <div class="relative">
-                            <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 hover:bg-blue-100 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-colors cursor-pointer opacity-50 cursor-not-allowed" data-copytarget="iban-${currentRowIndex}" data-row-index="${currentRowIndex}" disabled>📋</button>
-                            <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 pointer-events-none transition-all duration-300 z-50 mb-1" id="tooltip-iban-${currentRowIndex}">Copied!</div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            container.appendChild(newRow);
-            
-            // Update delete button visibility after adding the new row
-            updateDeleteButtonVisibility();
-            
-            // Add event listeners for the new fields
-            const currencyField = document.getElementById(`currency-${currentRowIndex}`);
-            const ibanField = document.getElementById(`iban-${currentRowIndex}`);
-            
-            currencyField.addEventListener('input', () => {
-                updateMultiCurrencyCopyButtonState(currentRowIndex);
-                // Update all subsequent row "+" button states when this row changes
-                updateAllAddButtonStates();
-            });
-            
-            ibanField.addEventListener('input', () => {
-                updateMultiCurrencyCopyButtonState(currentRowIndex);
-                // Update all subsequent row "+" button states when this row changes
-                updateAllAddButtonStates();
-            });
         }
 
         // Event listener for "+" and delete buttons
         document.addEventListener('click', function(e) {
             if (e.target.classList.contains('add-row-btn')) {
                 const rowIndex = parseInt(e.target.getAttribute('data-row-index'));
-                addCurrencyToRow(rowIndex);
+                addNewIbanRow();
+                // Hide the button after clicking
+                e.target.style.display = 'none';
+                // Update all button states
+                updateAllButtonStates();
             } else if (e.target.classList.contains('delete-row-btn')) {
                 const rowIndex = parseInt(e.target.getAttribute('data-row-index'));
                 deleteRow(rowIndex);
@@ -679,37 +550,36 @@
         });
         function setFieldsFromParams() {
             const params = new URLSearchParams(window.location.search);
-            if (params.has('iban')) document.getElementById('iban').value = params.get('iban') || '';
+            
+            // Handle legacy single IBAN parameter
+            if (params.has('iban') && !params.has('iban-0')) {
+                document.getElementById('iban-0').value = params.get('iban') || '';
+            }
+            
             if (params.has('name')) document.getElementById('name').value = params.get('name') || '';
             if (params.has('details')) document.getElementById('details').value = params.get('details') || '';
             
-            // Handle currency fields and additional IBAN fields
-            let rowIndex = 0;
+            // Handle currency fields and IBAN fields for row 0
+            if (params.has('currency-0')) {
+                document.getElementById('currency-0').value = params.get('currency-0') || '';
+            }
+            if (params.has('iban-0')) {
+                document.getElementById('iban-0').value = params.get('iban-0') || '';
+            }
+            
+            // Handle additional IBAN rows
+            let rowIndex = 1;
             while (params.has(`currency-${rowIndex}`) || params.has(`iban-${rowIndex}`)) {
-                if (rowIndex === 0) {
-                    // First row - add currency to existing IBAN
-                    if (params.has(`currency-${rowIndex}`)) {
-                        addCurrencyToRow(0, false); // false = not from user click
-                        document.getElementById(`currency-0`).value = params.get(`currency-0`) || '';
-                        if (params.has(`iban-${rowIndex}`)) {
-                            document.getElementById(`iban-0`).value = params.get(`iban-0`) || '';
-                        }
-                    }
-                } else {
-                    // Additional rows
-                    if (!document.getElementById(`iban-${rowIndex}`)) {
-                        // Create the row if it doesn't exist
-                        while (nextRowIndex <= rowIndex) {
-                            addNewIbanRow();
-                        }
-                    }
-                    if (params.has(`currency-${rowIndex}`)) {
-                        document.getElementById(`currency-${rowIndex}`).value = params.get(`currency-${rowIndex}`) || '';
-                        // Don't mark this row as converted since it's from permalink loading
-                    }
-                    if (params.has(`iban-${rowIndex}`)) {
-                        document.getElementById(`iban-${rowIndex}`).value = params.get(`iban-${rowIndex}`) || '';
-                    }
+                // Create the row if it doesn't exist
+                if (!document.getElementById(`iban-${rowIndex}`)) {
+                    addNewIbanRow();
+                }
+                
+                if (params.has(`currency-${rowIndex}`)) {
+                    document.getElementById(`currency-${rowIndex}`).value = params.get(`currency-${rowIndex}`) || '';
+                }
+                if (params.has(`iban-${rowIndex}`)) {
+                    document.getElementById(`iban-${rowIndex}`).value = params.get(`iban-${rowIndex}`) || '';
                 }
                 rowIndex++;
             }
@@ -764,16 +634,11 @@
             }
 
             setFieldsFromParams();
-            ['iban', 'name', 'details'].forEach(updateCopyButtonState);
+            ['name', 'details'].forEach(updateCopyButtonState);
             
-            // Update copy and add button states for all existing rows after loading from params
-            updateAllAddButtonStates();
+            // Update all button states after loading from params
+            updateAllButtonStates();
             updateDeleteButtonVisibility();
-            let rowIndex = 0;
-            while (document.getElementById(`iban-${rowIndex}`) || document.getElementById(`currency-${rowIndex}`)) {
-                updateMultiCurrencyCopyButtonState(rowIndex);
-                rowIndex++;
-            }
         })();
 
         // Permalink logic
@@ -781,31 +646,27 @@
             const params = new URLSearchParams();
             const langVal = document.getElementById('lang-select').value;
             
-            // Handle the main IBAN field - check if it still exists or has been converted to iban-0
-            const mainIbanField = document.getElementById('iban');
-            const ibanVal = mainIbanField ? mainIbanField.value : '';
             const nameVal = document.getElementById('name').value;
             const detailsVal = document.getElementById('details').value;
             
             if (langVal) params.set('lang', langVal);
-            if (ibanVal) params.set('iban', ibanVal);
             if (nameVal) params.set('name', nameVal);
             if (detailsVal) params.set('details', detailsVal);
             
-            // Include currency fields and additional IBAN fields
+            // Include currency fields and IBAN fields for all rows
             let rowIndex = 0;
             while (true) {
                 const currencyField = document.getElementById(`currency-${rowIndex}`);
                 const ibanField = document.getElementById(`iban-${rowIndex}`);
                 
-                if (!currencyField && !ibanField) {
+                if (!currencyField || !ibanField) {
                     break;
                 }
                 
-                if (currencyField && currencyField.value.trim()) {
+                if (currencyField.value.trim()) {
                     params.set(`currency-${rowIndex}`, currencyField.value.trim());
                 }
-                if (ibanField && ibanField.value.trim()) {
+                if (ibanField.value.trim()) {
                     params.set(`iban-${rowIndex}`, ibanField.value.trim());
                 }
                 
