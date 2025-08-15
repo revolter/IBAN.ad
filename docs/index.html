@@ -623,11 +623,17 @@
             if (params.has('name')) document.getElementById('name').value = params.get('name') || '';
             if (params.has('details')) document.getElementById('details').value = params.get('details') || '';
             
-            // Handle currency fields and IBAN fields for row 0
-            if (params.has('currency-0')) {
+            // Handle currency and IBAN fields for row 0 (backwards compatibility)
+            // First check parameterless versions (new format), then indexed versions (fallback)
+            if (params.has('currency')) {
+                document.getElementById('currency-0').value = params.get('currency') || '';
+            } else if (params.has('currency-0')) {
                 document.getElementById('currency-0').value = params.get('currency-0') || '';
             }
-            if (params.has('iban-0')) {
+            
+            if (params.has('iban')) {
+                document.getElementById('iban-0').value = params.get('iban') || '';
+            } else if (params.has('iban-0')) {
                 document.getElementById('iban-0').value = params.get('iban-0') || '';
             }
             
@@ -721,7 +727,7 @@
             const allRows = document.querySelectorAll('.iban-row');
             
             allRows.forEach(row => {
-                const rowIndex = row.getAttribute('data-row-index');
+                const rowIndex = parseInt(row.getAttribute('data-row-index'));
                 const currencyField = document.getElementById(`currency-${rowIndex}`);
                 const ibanField = document.getElementById(`iban-${rowIndex}`);
                 
@@ -729,13 +735,22 @@
                     const currencyValue = currencyField.value.trim();
                     const ibanValue = ibanField.value.trim();
                     
-                    // Include currency if present
-                    if (currencyValue) {
-                        params.set(`currency-${rowIndex}`, currencyValue);
-                    }
-                    // Include IBAN if present
-                    if (ibanValue) {
-                        params.set(`iban-${rowIndex}`, ibanValue);
+                    // For first row (index 0), use parameterless names for backwards compatibility
+                    if (rowIndex === 0) {
+                        if (currencyValue) {
+                            params.set('currency', currencyValue);
+                        }
+                        if (ibanValue) {
+                            params.set('iban', ibanValue);
+                        }
+                    } else {
+                        // For subsequent rows, use indexed names
+                        if (currencyValue) {
+                            params.set(`currency-${rowIndex}`, currencyValue);
+                        }
+                        if (ibanValue) {
+                            params.set(`iban-${rowIndex}`, ibanValue);
+                        }
                     }
                 }
             });
