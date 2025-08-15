@@ -332,9 +332,6 @@
 
         // Global variable to track next row index
         let nextRowIndex = 1;
-        
-        // Track which rows have been converted (had their add button clicked)
-        const convertedRows = new Set();
 
         // Disable copy buttons when fields are empty and handle "+" button visibility
         function updateCopyButtonState(fieldId) {
@@ -354,13 +351,17 @@
 
         // Helper function to find the last row index
         function getLastRowIndex() {
-            let lastRowIndex = 0; // Row 0 always exists
-            let rowIndex = 1;
-            while (document.querySelector(`.iban-row[data-row-index="${rowIndex}"]`)) {
-                lastRowIndex = rowIndex;
-                rowIndex++;
-            }
-            return lastRowIndex;
+            const allRows = document.querySelectorAll('.iban-row');
+            let maxRowIndex = 0;
+            
+            allRows.forEach(row => {
+                const rowIndex = parseInt(row.getAttribute('data-row-index'));
+                if (rowIndex > maxRowIndex) {
+                    maxRowIndex = rowIndex;
+                }
+            });
+            
+            return maxRowIndex;
         }
 
         // Update copy button state for IBAN rows (considers both currency and IBAN fields)
@@ -383,7 +384,7 @@
             }
         }
 
-        // Update "+" button visibility (only show on last row when both currency and IBAN fields are filled and row hasn't been converted)
+        // Update "+" button visibility (only show on last row when both currency and IBAN fields are filled)
         function updateAddButtonVisibility(rowIndex) {
             const lastRowIndex = getLastRowIndex();
             const currencyField = document.getElementById(`currency-${rowIndex}`);
@@ -391,8 +392,8 @@
             const addBtn = document.querySelector(`.add-row-btn[data-row-index="${rowIndex}"]`);
             
             if (currencyField && ibanField && addBtn) {
-                // Show only if this is the last row, both currency and IBAN have content, and row hasn't been converted
-                if (rowIndex === lastRowIndex && currencyField.value.trim() && ibanField.value.trim() && !convertedRows.has(rowIndex)) {
+                // Show only if this is the last row and both currency and IBAN have content
+                if (rowIndex === lastRowIndex && currencyField.value.trim() && ibanField.value.trim()) {
                     addBtn.style.display = 'flex';
                 } else {
                     addBtn.style.display = 'none';
@@ -532,10 +533,8 @@
         document.addEventListener('click', function(e) {
             if (e.target.classList.contains('add-row-btn')) {
                 const rowIndex = parseInt(e.target.getAttribute('data-row-index'));
-                // Mark this row as converted
-                convertedRows.add(rowIndex);
                 addNewIbanRow();
-                // Hide the button after clicking (it's now permanently hidden for this row)
+                // Hide the button after clicking (will be updated by updateAllButtonStates)
                 e.target.style.display = 'none';
                 // Update all button states
                 updateAllButtonStates();
