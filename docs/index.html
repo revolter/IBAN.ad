@@ -644,25 +644,38 @@
             if (nameVal) params.set('name', nameVal);
             if (detailsVal) params.set('details', detailsVal);
             
-            // Include currency fields and IBAN fields for all rows
-            let rowIndex = 0;
-            while (true) {
+            // Collect all existing rows data, regardless of index gaps
+            const rowsData = [];
+            const allRows = document.querySelectorAll('.iban-row');
+            
+            allRows.forEach(row => {
+                const rowIndex = row.getAttribute('data-row-index');
                 const currencyField = document.getElementById(`currency-${rowIndex}`);
                 const ibanField = document.getElementById(`iban-${rowIndex}`);
                 
-                if (!currencyField || !ibanField) {
-                    break;
+                if (currencyField && ibanField) {
+                    const currencyValue = currencyField.value.trim();
+                    const ibanValue = ibanField.value.trim();
+                    
+                    // Only include rows with actual data
+                    if (currencyValue || ibanValue) {
+                        rowsData.push({
+                            currency: currencyValue,
+                            iban: ibanValue
+                        });
+                    }
                 }
-                
-                if (currencyField.value.trim()) {
-                    params.set(`currency-${rowIndex}`, currencyField.value.trim());
+            });
+            
+            // Re-index consecutively starting from 0
+            rowsData.forEach((rowData, index) => {
+                if (rowData.currency) {
+                    params.set(`currency-${index}`, rowData.currency);
                 }
-                if (ibanField.value.trim()) {
-                    params.set(`iban-${rowIndex}`, ibanField.value.trim());
+                if (rowData.iban) {
+                    params.set(`iban-${index}`, rowData.iban);
                 }
-                
-                rowIndex++;
-            }
+            });
             
             return params;
         }
