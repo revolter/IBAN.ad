@@ -403,17 +403,13 @@
 
         // Update all button states
         function updateAllButtonStates() {
-            // Update row 0
-            updateIbanCopyButtonState(0);
-            updateAddButtonVisibility(0);
-            
-            // Update all subsequent rows
-            let rowIndex = 1;
-            while (document.getElementById(`iban-${rowIndex}`)) {
+            // Find all existing rows and update their button states
+            const allRows = document.querySelectorAll('.iban-row');
+            allRows.forEach(row => {
+                const rowIndex = parseInt(row.getAttribute('data-row-index'));
                 updateIbanCopyButtonState(rowIndex);
                 updateAddButtonVisibility(rowIndex);
-                rowIndex++;
-            }
+            });
         }
 
         // Add event listeners for the first row fields
