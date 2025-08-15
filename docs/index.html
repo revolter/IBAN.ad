@@ -380,15 +380,16 @@
             }
         }
 
-        // Update "+" button visibility (only show on last row when IBAN field has content)
+        // Update "+" button visibility (only show on last row when both currency and IBAN fields are filled)
         function updateAddButtonVisibility(rowIndex) {
             const lastRowIndex = getLastRowIndex();
+            const currencyField = document.getElementById(`currency-${rowIndex}`);
             const ibanField = document.getElementById(`iban-${rowIndex}`);
             const addBtn = document.querySelector(`.add-row-btn[data-row-index="${rowIndex}"]`);
             
-            if (ibanField && addBtn) {
-                // Show only if this is the last row and has IBAN content
-                if (rowIndex === lastRowIndex && ibanField.value.trim()) {
+            if (currencyField && ibanField && addBtn) {
+                // Show only if this is the last row and both currency and IBAN have content
+                if (rowIndex === lastRowIndex && currencyField.value.trim() && ibanField.value.trim()) {
                     addBtn.style.display = 'flex';
                 } else {
                     addBtn.style.display = 'none';
