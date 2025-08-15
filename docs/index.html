@@ -330,8 +330,10 @@
             }
         });
 
-        // Global variable to track next row index
-        let nextRowIndex = 1;
+        // Function to get the next available row index (always consecutive)
+        function getNextRowIndex() {
+            return document.querySelectorAll('.iban-row').length;
+        }
 
         // Disable copy buttons when fields are empty and handle "+" button visibility
         function updateCopyButtonState(fieldId) {
@@ -349,19 +351,10 @@
             }
         }
 
-        // Helper function to find the last row index
+        // Helper function to find the last row index (now always consecutive)
         function getLastRowIndex() {
             const allRows = document.querySelectorAll('.iban-row');
-            let maxRowIndex = 0;
-            
-            allRows.forEach(row => {
-                const rowIndex = parseInt(row.getAttribute('data-row-index'));
-                if (rowIndex > maxRowIndex) {
-                    maxRowIndex = rowIndex;
-                }
-            });
-            
-            return maxRowIndex;
+            return allRows.length - 1; // Since rows are always consecutive, last index = count - 1
         }
 
         // Update copy button state for IBAN rows (considers both currency and IBAN fields)
@@ -444,7 +437,7 @@
         // Function to add a new IBAN row
         function addNewIbanRow() {
             const container = document.getElementById('iban-rows-container');
-            const currentRowIndex = nextRowIndex++;
+            const currentRowIndex = getNextRowIndex();
             
             const newRow = document.createElement('div');
             newRow.className = 'iban-row mt-4';
@@ -508,6 +501,83 @@
             }
         }
 
+        // Function to renumber all rows to eliminate gaps in indices
+        function renumberAllRows() {
+            const allRows = document.querySelectorAll('.iban-row');
+            
+            allRows.forEach((row, newIndex) => {
+                const oldIndex = parseInt(row.getAttribute('data-row-index'));
+                
+                if (oldIndex !== newIndex) {
+                    // Update row data attribute
+                    row.setAttribute('data-row-index', newIndex);
+                    
+                    // Update currency field
+                    const currencyField = row.querySelector(`#currency-${oldIndex}`);
+                    if (currencyField) {
+                        currencyField.id = `currency-${newIndex}`;
+                        currencyField.name = `currency-${newIndex}`;
+                    }
+                    
+                    // Update IBAN field
+                    const ibanField = row.querySelector(`#iban-${oldIndex}`);
+                    if (ibanField) {
+                        ibanField.id = `iban-${newIndex}`;
+                        ibanField.name = `iban-${newIndex}`;
+                    }
+                    
+                    // Update add button
+                    const addBtn = row.querySelector(`.add-row-btn[data-row-index="${oldIndex}"]`);
+                    if (addBtn) {
+                        addBtn.setAttribute('data-row-index', newIndex);
+                    }
+                    
+                    // Update delete button
+                    const deleteBtn = row.querySelector(`.delete-row-btn[data-row-index="${oldIndex}"]`);
+                    if (deleteBtn) {
+                        deleteBtn.setAttribute('data-row-index', newIndex);
+                    }
+                    
+                    // Update copy button
+                    const copyBtn = row.querySelector(`.copy-btn[data-row-index="${oldIndex}"]`);
+                    if (copyBtn) {
+                        copyBtn.setAttribute('data-row-index', newIndex);
+                        copyBtn.setAttribute('data-copytarget', `iban-${newIndex}`);
+                    }
+                    
+                    // Update tooltip
+                    const tooltip = row.querySelector(`#tooltip-iban-${oldIndex}`);
+                    if (tooltip) {
+                        tooltip.id = `tooltip-iban-${newIndex}`;
+                    }
+                    
+                    // Re-add event listeners for the renumbered fields
+                    if (currencyField) {
+                        // Remove existing listeners by cloning and replacing
+                        const newCurrencyField = currencyField.cloneNode(true);
+                        currencyField.parentNode.replaceChild(newCurrencyField, currencyField);
+                        
+                        newCurrencyField.addEventListener('input', (e) => {
+                            e.target.value = e.target.value.toUpperCase();
+                            updateIbanCopyButtonState(newIndex);
+                            updateAllButtonStates();
+                        });
+                    }
+                    
+                    if (ibanField) {
+                        // Remove existing listeners by cloning and replacing
+                        const newIbanField = ibanField.cloneNode(true);
+                        ibanField.parentNode.replaceChild(newIbanField, ibanField);
+                        
+                        newIbanField.addEventListener('input', () => {
+                            updateIbanCopyButtonState(newIndex);
+                            updateAllButtonStates();
+                        });
+                    }
+                }
+            });
+        }
+
         // Function to delete a row
         function deleteRow(rowIndex) {
             if (rowIndex === 0) return; // Never delete row 0
@@ -516,6 +586,9 @@
             if (row) {
                 // Remove the row from DOM
                 row.remove();
+                
+                // Renumber all remaining rows to eliminate gaps
+                renumberAllRows();
                 
                 // Update delete button visibility
                 updateDeleteButtonVisibility();
@@ -644,8 +717,7 @@
             if (nameVal) params.set('name', nameVal);
             if (detailsVal) params.set('details', detailsVal);
             
-            // Collect all existing rows data, regardless of index gaps
-            const rowsData = [];
+            // Collect all existing rows data - rows are already consecutively indexed
             const allRows = document.querySelectorAll('.iban-row');
             
             allRows.forEach(row => {
@@ -657,23 +729,14 @@
                     const currencyValue = currencyField.value.trim();
                     const ibanValue = ibanField.value.trim();
                     
-                    // Only include rows with actual data
-                    if (currencyValue || ibanValue) {
-                        rowsData.push({
-                            currency: currencyValue,
-                            iban: ibanValue
-                        });
+                    // Include currency if present
+                    if (currencyValue) {
+                        params.set(`currency-${rowIndex}`, currencyValue);
                     }
-                }
-            });
-            
-            // Re-index consecutively starting from 0
-            rowsData.forEach((rowData, index) => {
-                if (rowData.currency) {
-                    params.set(`currency-${index}`, rowData.currency);
-                }
-                if (rowData.iban) {
-                    params.set(`iban-${index}`, rowData.iban);
+                    // Include IBAN if present
+                    if (ibanValue) {
+                        params.set(`iban-${rowIndex}`, ibanValue);
+                    }
                 }
             });
             
