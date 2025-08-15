@@ -430,7 +430,9 @@
         const ibanField0 = document.getElementById('iban-0');
         
         if (currencyField0) {
-            currencyField0.addEventListener('input', () => {
+            currencyField0.addEventListener('input', (e) => {
+                // Convert to uppercase immediately
+                e.target.value = e.target.value.toUpperCase();
                 updateIbanCopyButtonState(0);
                 updateAllButtonStates();
             });
@@ -487,7 +489,9 @@
             const currencyField = document.getElementById(`currency-${currentRowIndex}`);
             const ibanField = document.getElementById(`iban-${currentRowIndex}`);
             
-            currencyField.addEventListener('input', () => {
+            currencyField.addEventListener('input', (e) => {
+                // Convert to uppercase immediately
+                e.target.value = e.target.value.toUpperCase();
                 updateIbanCopyButtonState(currentRowIndex);
                 updateAllButtonStates();
             });
