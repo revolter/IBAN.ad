@@ -284,17 +284,10 @@
                 let value = '';
                 
                 if (rowIndex !== null) {
-                    // IBAN row - combine currency and IBAN if currency has value
-                    const currencyField = document.getElementById(`currency-${rowIndex}`);
+                    // IBAN row - only copy IBAN value
                     const ibanField = document.getElementById(`iban-${rowIndex}`);
-                    if (currencyField && ibanField) {
-                        const currencyValue = currencyField.value.trim();
-                        const ibanValue = ibanField.value.trim();
-                        if (currencyValue && ibanValue) {
-                            value = `${currencyValue} ${ibanValue}`;
-                        } else {
-                            value = ibanValue;
-                        }
+                    if (ibanField) {
+                        value = ibanField.value.trim();
                     }
                 } else {
                     // Regular field
@@ -320,17 +313,10 @@
                 let value = '';
                 
                 if (rowIndex !== null) {
-                    // IBAN row - combine currency and IBAN if currency has value
-                    const currencyField = document.getElementById(`currency-${rowIndex}`);
+                    // IBAN row - only copy IBAN value
                     const ibanField = document.getElementById(`iban-${rowIndex}`);
-                    if (currencyField && ibanField) {
-                        const currencyValue = currencyField.value.trim();
-                        const ibanValue = ibanField.value.trim();
-                        if (currencyValue && ibanValue) {
-                            value = `${currencyValue} ${ibanValue}`;
-                        } else {
-                            value = ibanValue;
-                        }
+                    if (ibanField) {
+                        value = ibanField.value.trim();
                     }
                 } else {
                     // Regular field
