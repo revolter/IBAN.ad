@@ -265,6 +265,9 @@
                 const rowIndex = btn.getAttribute('data-row-index');
                 let tooltipId;
                 
+                // Determine tooltip ID based on button type:
+                // - For IBAN copy buttons (have row-index): use tooltip-iban-{rowIndex}
+                // - For other copy buttons (name, details): use tooltip-{targetId}
                 if (rowIndex !== null) {
                     tooltipId = `tooltip-iban-${rowIndex}`;
                 } else {
@@ -275,27 +278,27 @@
             });
         }
         
+        // Helper function to get copy value from button attributes
+        function getCopyValueFromButton(button) {
+            const targetId = button.getAttribute('data-copytarget');
+            const rowIndex = button.getAttribute('data-row-index');
+            
+            // Check if this is an IBAN row copy button (has data-row-index)
+            if (rowIndex !== null) {
+                const ibanField = document.getElementById(`iban-${rowIndex}`);
+                return ibanField ? ibanField.value.trim() : '';
+            }
+            
+            // This is a regular field copy button (name or details)
+            const targetField = document.getElementById(targetId);
+            return targetField ? targetField.value.trim() : '';
+        }
+        
         document.querySelectorAll('.copy-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 if (btn.disabled) return;
                 
-                const targetId = btn.getAttribute('data-copytarget');
-                const rowIndex = btn.getAttribute('data-row-index');
-                let value = '';
-                
-                if (rowIndex !== null) {
-                    // IBAN row - only copy IBAN value
-                    const ibanField = document.getElementById(`iban-${rowIndex}`);
-                    if (ibanField) {
-                        value = ibanField.value.trim();
-                    }
-                } else {
-                    // Regular field
-                    const el = document.getElementById(targetId);
-                    if (el) {
-                        value = el.value;
-                    }
-                }
+                const value = getCopyValueFromButton(btn);
                 
                 copyWithFeedback(btn, value);
             });
@@ -308,23 +311,7 @@
                 
                 if (e.target.disabled) return;
                 
-                const targetId = e.target.getAttribute('data-copytarget');
-                const rowIndex = e.target.getAttribute('data-row-index');
-                let value = '';
-                
-                if (rowIndex !== null) {
-                    // IBAN row - only copy IBAN value
-                    const ibanField = document.getElementById(`iban-${rowIndex}`);
-                    if (ibanField) {
-                        value = ibanField.value.trim();
-                    }
-                } else {
-                    // Regular field
-                    const el = document.getElementById(targetId);
-                    if (el) {
-                        value = el.value;
-                    }
-                }
+                const value = getCopyValueFromButton(e.target);
                 
                 copyWithFeedback(e.target, value);
             }
