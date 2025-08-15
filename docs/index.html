@@ -332,6 +332,9 @@
 
         // Global variable to track next row index
         let nextRowIndex = 1;
+        
+        // Track which rows have been converted (had their add button clicked)
+        const convertedRows = new Set();
 
         // Disable copy buttons when fields are empty and handle "+" button visibility
         function updateCopyButtonState(fieldId) {
@@ -380,7 +383,7 @@
             }
         }
 
-        // Update "+" button visibility (only show on last row when both currency and IBAN fields are filled)
+        // Update "+" button visibility (only show on last row when both currency and IBAN fields are filled and row hasn't been converted)
         function updateAddButtonVisibility(rowIndex) {
             const lastRowIndex = getLastRowIndex();
             const currencyField = document.getElementById(`currency-${rowIndex}`);
@@ -388,8 +391,8 @@
             const addBtn = document.querySelector(`.add-row-btn[data-row-index="${rowIndex}"]`);
             
             if (currencyField && ibanField && addBtn) {
-                // Show only if this is the last row and both currency and IBAN have content
-                if (rowIndex === lastRowIndex && currencyField.value.trim() && ibanField.value.trim()) {
+                // Show only if this is the last row, both currency and IBAN have content, and row hasn't been converted
+                if (rowIndex === lastRowIndex && currencyField.value.trim() && ibanField.value.trim() && !convertedRows.has(rowIndex)) {
                     addBtn.style.display = 'flex';
                 } else {
                     addBtn.style.display = 'none';
@@ -529,8 +532,10 @@
         document.addEventListener('click', function(e) {
             if (e.target.classList.contains('add-row-btn')) {
                 const rowIndex = parseInt(e.target.getAttribute('data-row-index'));
+                // Mark this row as converted
+                convertedRows.add(rowIndex);
                 addNewIbanRow();
-                // Hide the button after clicking
+                // Hide the button after clicking (it's now permanently hidden for this row)
                 e.target.style.display = 'none';
                 // Update all button states
                 updateAllButtonStates();
