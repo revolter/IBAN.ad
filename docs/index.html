@@ -355,51 +355,45 @@
         }
 
         // Update copy button state for IBAN rows (considers both currency and IBAN fields)
-        function updateIbanCopyButtonState(rowIndex) {
-            const currencyField = document.getElementById(`currency-${rowIndex}`);
-            const ibanField = document.getElementById(`iban-${rowIndex}`);
-            const copyBtn = document.querySelector(`.copy-btn[data-row-index="${rowIndex}"]`);
-            
-            if (currencyField && ibanField && copyBtn) {
-                // Enable copy if IBAN has content (currency is optional)
-                const shouldEnable = ibanField.value.trim();
-                copyBtn.disabled = !shouldEnable;
-                if (copyBtn.disabled) {
-                    copyBtn.classList.add('opacity-50', 'cursor-not-allowed');
-                    copyBtn.classList.remove('hover:bg-blue-100', 'cursor-pointer');
-                } else {
-                    copyBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-                    copyBtn.classList.add('hover:bg-blue-100', 'cursor-pointer');
-                }
-            }
-        }
-
-        // Update "+" button visibility (only show on last row when both currency and IBAN fields are filled)
-        function updateAddButtonVisibility(rowIndex) {
-            const lastRowIndex = getLastRowIndex();
-            const currencyField = document.getElementById(`currency-${rowIndex}`);
-            const ibanField = document.getElementById(`iban-${rowIndex}`);
-            const addBtn = document.querySelector(`.add-row-btn[data-row-index="${rowIndex}"]`);
-            
-            if (currencyField && ibanField && addBtn) {
-                // Show only if this is the last row and both currency and IBAN have content
-                if (rowIndex === lastRowIndex && currencyField.value.trim() && ibanField.value.trim()) {
-                    addBtn.style.display = 'flex';
-                } else {
-                    addBtn.style.display = 'none';
-                }
-            }
-        }
-
-        // Update all button states
+        // Unified button state management for all row buttons
         function updateAllButtonStates() {
-            // Find all existing rows and update their button states
             const allRows = document.querySelectorAll('.iban-row');
+            const lastRowIndex = getLastRowIndex();
+            
             allRows.forEach(row => {
                 const rowIndex = parseInt(row.getAttribute('data-row-index'));
-                updateIbanCopyButtonState(rowIndex);
-                updateAddButtonVisibility(rowIndex);
+                const currencyField = document.getElementById(`currency-${rowIndex}`);
+                const ibanField = document.getElementById(`iban-${rowIndex}`);
+                const addBtn = document.querySelector(`.add-row-btn[data-row-index="${rowIndex}"]`);
+                const copyBtn = document.querySelector(`.copy-btn[data-row-index="${rowIndex}"]`);
+                
+                if (currencyField && ibanField) {
+                    // Update copy button - enable if IBAN has content (currency is optional)
+                    if (copyBtn) {
+                        const shouldEnable = ibanField.value.trim();
+                        copyBtn.disabled = !shouldEnable;
+                        if (copyBtn.disabled) {
+                            copyBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                            copyBtn.classList.remove('hover:bg-blue-100', 'cursor-pointer');
+                        } else {
+                            copyBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                            copyBtn.classList.add('hover:bg-blue-100', 'cursor-pointer');
+                        }
+                    }
+                    
+                    // Update add button - show only on last row when both fields are filled
+                    if (addBtn) {
+                        if (rowIndex === lastRowIndex && currencyField.value.trim() && ibanField.value.trim()) {
+                            addBtn.style.display = 'flex';
+                        } else {
+                            addBtn.style.display = 'none';
+                        }
+                    }
+                }
             });
+            
+            // Update delete button visibility - only show on last row, never on first row
+            updateDeleteButtonVisibility();
         }
 
         // Add event listeners for the first row fields
@@ -410,14 +404,12 @@
             currencyField1.addEventListener('input', (e) => {
                 // Convert to uppercase immediately
                 e.target.value = e.target.value.toUpperCase();
-                updateIbanCopyButtonState(1);
                 updateAllButtonStates();
             });
         }
         
         if (ibanField1) {
             ibanField1.addEventListener('input', () => {
-                updateIbanCopyButtonState(1);
                 updateAllButtonStates();
             });
         }
@@ -459,8 +451,8 @@
             
             container.appendChild(newRow);
             
-            // Update delete button visibility after adding the new row
-            updateDeleteButtonVisibility();
+            // Update all button states after adding the new row
+            updateAllButtonStates();
             
             // Add event listeners for the new fields
             const currencyField = document.getElementById(`currency-${currentRowIndex}`);
@@ -469,12 +461,10 @@
             currencyField.addEventListener('input', (e) => {
                 // Convert to uppercase immediately
                 e.target.value = e.target.value.toUpperCase();
-                updateIbanCopyButtonState(currentRowIndex);
                 updateAllButtonStates();
             });
             
             ibanField.addEventListener('input', () => {
-                updateIbanCopyButtonState(currentRowIndex);
                 updateAllButtonStates();
             });
         }
@@ -507,11 +497,8 @@
                 // Simply remove the row from DOM
                 row.remove();
                 
-                // Update delete button visibility
-                updateDeleteButtonVisibility();
-                
-                // Update all button states
-                updateAllButtonStates();
+            // Update all button states
+            updateAllButtonStates();
             }
         }
 
@@ -520,8 +507,6 @@
             if (e.target.classList.contains('add-row-btn')) {
                 const rowIndex = parseInt(e.target.getAttribute('data-row-index'));
                 addNewIbanRow();
-                // Hide the button after clicking (will be updated by updateAllButtonStates)
-                e.target.style.display = 'none';
                 // Update all button states
                 updateAllButtonStates();
             } else if (e.target.classList.contains('delete-row-btn')) {
@@ -562,8 +547,8 @@
                 rowIndex++;
             }
             
-            // Update delete button visibility after loading from params
-            updateDeleteButtonVisibility();
+            // Update all button states after setting fields
+            updateAllButtonStates();
         }
 
         // Unified redirect function
@@ -616,7 +601,6 @@
             
             // Update all button states after loading from params
             updateAllButtonStates();
-            updateDeleteButtonVisibility();
         })();
 
         // Permalink logic
