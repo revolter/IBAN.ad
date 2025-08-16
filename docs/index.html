@@ -317,7 +317,7 @@
             }
         });
 
-        // Function to get the next available row index (using fixed mapping: 0, 2, 3, 4...)
+        // Function to get the next available row index (stable indexing: 1, 2, 3, ...)
         function getNextRowIndex() {
             const existingRows = document.querySelectorAll('.iban-row');
             return existingRows.length + 1; // 1, 2, 3, ...
