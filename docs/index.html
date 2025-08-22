@@ -752,13 +752,11 @@
             
             // Enable transitions for copy buttons and permalink button to prevent flash during initial render
             const copyButtons = document.querySelectorAll('.copy-btn');
-            copyButtons.forEach(btn => {
-                btn.classList.add('transition-colors');
-            });
+            copyButtons.forEach(enableCopyButtonTransitions);
             
             const permalinkButton = document.getElementById('permalink-btn');
             if (permalinkButton) {
-                permalinkButton.classList.add('transition-colors');
+                enableCopyButtonTransitions(permalinkButton);
             }
         });
     </script>
