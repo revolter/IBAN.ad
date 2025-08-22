@@ -165,6 +165,9 @@
         const QUERY_PARAM_LANG = 'lang';
         const QUERY_PARAM_EDIT = 'edit';
         const QUERY_PARAM_EDIT_VALUE = 'true';
+        
+        // Query parameters that don't represent permalink data
+        const NON_PERMALINK_QUERY_PARAMS = [QUERY_PARAM_LANG, QUERY_PARAM_EDIT];
         const TRANSLATIONS = {
             en: {
                 siteName: 'IBAN.ad',
@@ -260,9 +263,9 @@
         // State management for read-only mode
         function hasPermalinkData() {
             const params = new URLSearchParams(window.location.search);
-            // Check if any form field parameters are present (excluding lang and edit)
+            // Check if any form field parameters are present (excluding non-permalink params)
             for (const [key] of params) {
-                if (key !== QUERY_PARAM_LANG && key !== QUERY_PARAM_EDIT) {
+                if (!NON_PERMALINK_QUERY_PARAMS.includes(key)) {
                     return true;
                 }
             }
