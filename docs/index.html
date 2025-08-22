@@ -452,7 +452,7 @@
             // Enable tooltip transitions for the newly created tooltip
             const newTooltip = document.getElementById(`tooltip-iban-${currentRowIndex}`);
             if (newTooltip) {
-                newTooltip.classList.add('transition-all', 'duration-300');
+                enableTooltipTransitions(newTooltip);
             }
             
             // Update all button states after adding the new row
@@ -724,12 +724,15 @@
             }
         }
 
+        // Utility function to enable tooltip transitions
+        function enableTooltipTransitions(tooltip) {
+            tooltip.classList.add('transition-all', 'duration-300');
+        }
+
         // Enable tooltip transitions after page load to prevent flash during initial render
         window.addEventListener('load', function() {
             const tooltips = document.querySelectorAll('.tooltip');
-            tooltips.forEach(tooltip => {
-                tooltip.classList.add('transition-all', 'duration-300');
-            });
+            tooltips.forEach(enableTooltipTransitions);
         });
     </script>
 </body>
