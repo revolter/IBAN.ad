@@ -313,10 +313,16 @@
         function setButtonsVisibility() {
             const readOnly = isReadOnlyMode();
             const editBtn = document.getElementById('edit-btn');
+            const permalinkBtn = document.getElementById('permalink-btn');
             
             // Show edit button in read-only mode, hide in edit mode
             if (editBtn) {
                 editBtn.style.display = readOnly ? 'flex' : 'none';
+            }
+            
+            // Show permalink button in edit mode, hide in read-only mode
+            if (permalinkBtn) {
+                permalinkBtn.style.display = readOnly ? 'none' : 'flex';
             }
             
             // Hide add/delete buttons in read-only mode
