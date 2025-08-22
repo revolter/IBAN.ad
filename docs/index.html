@@ -83,14 +83,21 @@
                 <h1 id="iban-info-title" class="text-2xl font-bold text-primary mb-4">IBAN Information</h1>
                 <form class="space-y-6" aria-describedby="iban-info-desc" autocomplete="off">
                     <p id="iban-info-desc" class="sr-only">Readonly form displaying IBAN and related transaction details.</p>
-                    <div>
-                        <label for="iban" class="block text-sm font-medium text-gray-700 mb-1">IBAN</label>
-                        <div class="flex gap-2">
-                            <input type="text" id="iban" name="iban" value=""
-                                class="w-full rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark" aria-label="IBAN" />
-                            <div class="relative">
-                                <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 hover:bg-blue-100 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-colors cursor-pointer" data-copytarget="iban">📋</button>
-                                <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 pointer-events-none transition-all duration-300 z-50 mb-1" id="tooltip-iban">Copied!</div>
+                    <div id="iban-rows-container">
+                        <div class="iban-row" data-row-index="1">
+                            <label for="currency-1" class="block text-sm font-medium text-gray-700 mb-1">Currency & IBAN</label>
+                            <div class="flex gap-2">
+                                <input type="text" id="currency-1" name="currency-1"
+                                    class="w-20 rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark text-center" aria-label="Currency (optional)" />
+                                <input type="text" id="iban-1" name="iban-1" value=""
+                                    class="w-full rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark" aria-label="IBAN" />
+                                <div class="flex gap-2">
+                                    <button type="button" class="add-row-btn w-[42px] h-[42px] flex items-center justify-center bg-green-200 hover:bg-green-300 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-all duration-200 cursor-pointer" data-row-index="1" aria-label="Add new row" style="display: none;">💱</button>
+                                    <div class="relative">
+                                        <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 hover:bg-blue-100 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-colors cursor-pointer opacity-50 cursor-not-allowed" data-copytarget="iban-1" data-row-index="1" disabled>📋</button>
+                                        <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 pointer-events-none transition-all duration-300 z-50 mb-1" id="tooltip-iban-1">Copied!</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -154,7 +161,7 @@
                 tagline: 'Advertise your IBAN with IBAN.ad – the easiest way for NGOs, freelancers, and clubs to share their bank details for donations, payments, or memberships.',
                 title: 'IBAN Information',
                 ibanInfo: 'IBAN Information',
-                ibanLabel: 'IBAN',
+                ibanLabel: 'Currency & IBAN',
                 nameLabel: 'Account Holder Name',
                 detailsLabel: 'Transaction Details',
                 formDesc: 'Readonly form displaying IBAN and related transaction details.',
@@ -175,7 +182,7 @@
                 tagline: 'Promovează-ți IBAN-ul cu IBAN.ad – cea mai simplă modalitate pentru ONG-uri, freelanceri și cluburi de a-și partaja contul bancar pentru donații, plăți sau cotizații.',
                 title: 'Informații IBAN',
                 ibanInfo: 'Informații IBAN',
-                ibanLabel: 'IBAN',
+                ibanLabel: 'Monedă și IBAN',
                 nameLabel: 'Nume titular cont',
                 detailsLabel: 'Detalii tranzacție',
                 formDesc: 'Formular doar pentru citire care afișează IBAN-ul și detaliile tranzacției.',
@@ -203,14 +210,14 @@
             document.getElementById('clear-form-btn').textContent = t.siteName;
             document.getElementById('site-tagline').textContent = t.tagline;
             // Localize aria-labels for copy buttons
-            document.querySelector('.copy-btn[data-copytarget="iban"]').setAttribute('aria-label', t.copyIBAN);
+            document.querySelector('.copy-btn[data-row-index="1"]').setAttribute('aria-label', t.copyIBAN);
             document.querySelector('.copy-btn[data-copytarget="name"]').setAttribute('aria-label', t.copyName);
             document.querySelector('.copy-btn[data-copytarget="details"]').setAttribute('aria-label', t.copyDetails);
             // Localize permalink button label and aria-label
             document.getElementById('permalink-btn-label').textContent = t.permalink;
             document.getElementById('permalink-btn').setAttribute('aria-label', t.permalink);
             // Localize tooltip text
-            document.getElementById('tooltip-iban').textContent = t.copied;
+            document.getElementById('tooltip-iban-1').textContent = t.copied;
             document.getElementById('tooltip-name').textContent = t.copied;
             document.getElementById('tooltip-details').textContent = t.copied;
             document.getElementById('tooltip-permalink').textContent = t.copied;
@@ -221,7 +228,7 @@
             // Announce language change for screen readers
             announceA11y(t.langChanged);
             document.getElementById('iban-info-title').textContent = t.ibanInfo;
-            document.querySelector('label[for="iban"]').textContent = t.ibanLabel;
+            document.querySelector('label[for="currency-1"]').textContent = t.ibanLabel;
             document.querySelector('label[for="name"]').textContent = t.nameLabel;
             document.querySelector('label[for="details"]').textContent = t.detailsLabel;
             document.getElementById('iban-info-desc').textContent = t.formDesc;
@@ -253,25 +260,70 @@
         // Copy to clipboard logic for all fields
         function copyWithFeedback(btn, value) {
             navigator.clipboard.writeText(value).then(() => {
-                // Get the tooltip ID based on the button's data-copytarget
+                // Get the tooltip ID based on the button's data-copytarget and row index
                 const targetId = btn.getAttribute('data-copytarget');
-                const tooltipId = `tooltip-${targetId}`;
+                const rowIndex = btn.getAttribute('data-row-index');
+                let tooltipId;
+                
+                // Determine tooltip ID based on button type:
+                // - For IBAN copy buttons (have row-index): use tooltip-iban-{rowIndex}
+                // - For other copy buttons (name, details): use tooltip-{targetId}
+                if (rowIndex !== null) {
+                    tooltipId = `tooltip-iban-${rowIndex}`;
+                } else {
+                    tooltipId = `tooltip-${targetId}`;
+                }
+                
                 showTooltip(tooltipId);
             });
         }
+        
+        // Helper function to get copy value from button attributes
+        function getCopyValueFromButton(button) {
+            const targetId = button.getAttribute('data-copytarget');
+            const rowIndex = button.getAttribute('data-row-index');
+            
+            // Check if this is an IBAN row copy button (has data-row-index)
+            if (rowIndex !== null) {
+                const ibanField = document.getElementById(`iban-${rowIndex}`);
+                return ibanField ? ibanField.value.trim() : '';
+            }
+            
+            // This is a regular field copy button (name or details)
+            const targetField = document.getElementById(targetId);
+            return targetField ? targetField.value.trim() : '';
+        }
+        
         document.querySelectorAll('.copy-btn').forEach(btn => {
             btn.addEventListener('click', function() {
-                const targetId = btn.getAttribute('data-copytarget');
-                const el = document.getElementById(targetId);
-                let value = '';
-                if (el) {
-                    value = el.value;
-                }
+                if (btn.disabled) return;
+                
+                const value = getCopyValueFromButton(btn);
+                
                 copyWithFeedback(btn, value);
             });
         });
+        
+        // Handle dynamically added copy buttons
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('copy-btn') && !e.target.hasAttribute('data-listener-added')) {
+                e.target.setAttribute('data-listener-added', 'true');
+                
+                if (e.target.disabled) return;
+                
+                const value = getCopyValueFromButton(e.target);
+                
+                copyWithFeedback(e.target, value);
+            }
+        });
 
-        // Disable copy buttons when fields are empty
+        // Function to get the next available row index (stable indexing: 1, 2, 3, ...)
+        function getNextRowIndex() {
+            const existingRows = document.querySelectorAll('.iban-row');
+            return existingRows.length + 1; // 1, 2, 3, ...
+        }
+
+        // Disable copy buttons when fields are empty and handle "+" button visibility
         function updateCopyButtonState(fieldId) {
             const field = document.getElementById(fieldId);
             const btn = document.querySelector(`.copy-btn[data-copytarget="${fieldId}"]`);
@@ -286,19 +338,217 @@
                 }
             }
         }
-        ['iban', 'name', 'details'].forEach(fieldId => {
+
+        // Helper function to find the last row index (using fixed indices)
+        function getLastRowIndex() {
+            const allRows = document.querySelectorAll('.iban-row');
+            if (allRows.length === 0) return -1;
+            
+            let maxIndex = -1;
+            allRows.forEach(row => {
+                const index = parseInt(row.getAttribute('data-row-index'));
+                if (index > maxIndex) {
+                    maxIndex = index;
+                }
+            });
+            return maxIndex;
+        }
+
+        // Update copy button state for IBAN rows (considers both currency and IBAN fields)
+        // Unified button state management for all row buttons
+        function updateAllButtonStates() {
+            const allRows = document.querySelectorAll('.iban-row');
+            const lastRowIndex = getLastRowIndex();
+            
+            allRows.forEach(row => {
+                const rowIndex = parseInt(row.getAttribute('data-row-index'));
+                const currencyField = document.getElementById(`currency-${rowIndex}`);
+                const ibanField = document.getElementById(`iban-${rowIndex}`);
+                const addBtn = document.querySelector(`.add-row-btn[data-row-index="${rowIndex}"]`);
+                const copyBtn = document.querySelector(`.copy-btn[data-row-index="${rowIndex}"]`);
+                
+                if (currencyField && ibanField) {
+                    // Update copy button - enable if IBAN has content (currency is optional)
+                    if (copyBtn) {
+                        const shouldEnable = ibanField.value.trim();
+                        copyBtn.disabled = !shouldEnable;
+                        if (copyBtn.disabled) {
+                            copyBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                            copyBtn.classList.remove('hover:bg-blue-100', 'cursor-pointer');
+                        } else {
+                            copyBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                            copyBtn.classList.add('hover:bg-blue-100', 'cursor-pointer');
+                        }
+                    }
+                    
+                    // Update add button - show only on last row when both fields are filled
+                    if (addBtn) {
+                        if (rowIndex === lastRowIndex && currencyField.value.trim() && ibanField.value.trim()) {
+                            addBtn.style.display = 'flex';
+                        } else {
+                            addBtn.style.display = 'none';
+                        }
+                    }
+                }
+            });
+            
+            // Update delete button visibility - only show on last row, never on first row
+            updateDeleteButtonVisibility();
+        }
+
+        // Add event listeners for the first row fields
+        const currencyField1 = document.getElementById('currency-1');
+        const ibanField1 = document.getElementById('iban-1');
+        
+        if (currencyField1) {
+            currencyField1.addEventListener('input', (e) => {
+                // Convert to uppercase immediately
+                e.target.value = e.target.value.toUpperCase();
+                updateAllButtonStates();
+            });
+        }
+        
+        if (ibanField1) {
+            ibanField1.addEventListener('input', () => {
+                updateAllButtonStates();
+            });
+        }
+
+        ['name', 'details'].forEach(fieldId => {
             const field = document.getElementById(fieldId);
             if (field) {
-                field.addEventListener('input', () => updateCopyButtonState(fieldId));
+                field.addEventListener('input', () => {
+                    updateCopyButtonState(fieldId);
+                });
             }
         });
 
-        // Populate fields from query params
+        // Function to add a new IBAN row
+        function addNewIbanRow() {
+            const container = document.getElementById('iban-rows-container');
+            const currentRowIndex = getNextRowIndex();
+            
+            const newRow = document.createElement('div');
+            newRow.className = 'iban-row mt-4';
+            newRow.setAttribute('data-row-index', currentRowIndex);
+            
+            newRow.innerHTML = `
+                <div class="flex gap-2">
+                    <input type="text" id="currency-${currentRowIndex}" name="currency-${currentRowIndex}"
+                        class="w-20 rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark text-center" aria-label="Currency (optional)" />
+                    <input type="text" id="iban-${currentRowIndex}" name="iban-${currentRowIndex}" value=""
+                        class="w-full rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark" aria-label="IBAN" />
+                    <div class="flex gap-2">
+                        <button type="button" class="add-row-btn w-[42px] h-[42px] flex items-center justify-center bg-green-200 hover:bg-green-300 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-all duration-200 cursor-pointer" data-row-index="${currentRowIndex}" aria-label="Add new row" style="display: none;">💱</button>
+                        <button type="button" class="delete-row-btn w-[42px] h-[42px] flex items-center justify-center bg-red-200 hover:bg-red-300 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-colors cursor-pointer" data-row-index="${currentRowIndex}" aria-label="Delete row" style="display: none;">🗑️</button>
+                        <div class="relative">
+                            <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 hover:bg-blue-100 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-colors cursor-pointer opacity-50 cursor-not-allowed" data-copytarget="iban-${currentRowIndex}" data-row-index="${currentRowIndex}" disabled>📋</button>
+                            <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 pointer-events-none transition-all duration-300 z-50 mb-1" id="tooltip-iban-${currentRowIndex}">Copied!</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            container.appendChild(newRow);
+            
+            // Update all button states after adding the new row
+            updateAllButtonStates();
+            
+            // Add event listeners for the new fields
+            const currencyField = document.getElementById(`currency-${currentRowIndex}`);
+            const ibanField = document.getElementById(`iban-${currentRowIndex}`);
+            
+            currencyField.addEventListener('input', (e) => {
+                // Convert to uppercase immediately
+                e.target.value = e.target.value.toUpperCase();
+                updateAllButtonStates();
+            });
+            
+            ibanField.addEventListener('input', () => {
+                updateAllButtonStates();
+            });
+        }
+
+        // Function to update delete button visibility (only show on last row, never on row 0)
+        function updateDeleteButtonVisibility() {
+            // Hide all delete buttons first
+            document.querySelectorAll('.delete-row-btn').forEach(btn => {
+                btn.style.display = 'none';
+            });
+            
+            // Find the last row using the helper function
+            const lastRowIndex = getLastRowIndex();
+            
+            // Show delete button only on the last row (if it exists and is not row 0)
+            if (lastRowIndex > 0) {
+                const deleteBtn = document.querySelector(`.delete-row-btn[data-row-index="${lastRowIndex}"]`);
+                if (deleteBtn) {
+                    deleteBtn.style.display = 'flex';
+                }
+            }
+        }
+
+        // Function to delete a row
+        function deleteRow(rowIndex) {
+            if (rowIndex === 1) return; // Never delete the first row
+            
+            const row = document.querySelector(`.iban-row[data-row-index="${rowIndex}"]`);
+            if (row) {
+                // Simply remove the row from DOM
+                row.remove();
+                
+            // Update all button states
+            updateAllButtonStates();
+            }
+        }
+
+        // Event listener for "+" and delete buttons
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('add-row-btn')) {
+                const rowIndex = parseInt(e.target.getAttribute('data-row-index'));
+                addNewIbanRow();
+                // Update all button states
+                updateAllButtonStates();
+            } else if (e.target.classList.contains('delete-row-btn')) {
+                const rowIndex = parseInt(e.target.getAttribute('data-row-index'));
+                deleteRow(rowIndex);
+            }
+        });
         function setFieldsFromParams() {
             const params = new URLSearchParams(window.location.search);
-            if (params.has('iban')) document.getElementById('iban').value = params.get('iban') || '';
+            
+            // Handle legacy single IBAN parameter
+            if (params.has('iban')) {
+                document.getElementById('iban-1').value = params.get('iban') || '';
+            }
+            
             if (params.has('name')) document.getElementById('name').value = params.get('name') || '';
             if (params.has('details')) document.getElementById('details').value = params.get('details') || '';
+            
+            // Handle currency field for row 1 (first row) - backwards compatibility with parameterless
+            if (params.has('currency')) {
+                document.getElementById('currency-1').value = params.get('currency') || '';
+            }
+            
+            // Handle additional IBAN rows (starting from index 2)
+            let rowIndex = 2;
+            while (params.has(`currency-${rowIndex}`) || params.has(`iban-${rowIndex}`)) {
+                // Create the row if it doesn't exist
+                if (!document.getElementById(`iban-${rowIndex}`)) {
+                    addNewIbanRow();
+                }
+                
+                if (params.has(`currency-${rowIndex}`)) {
+                    document.getElementById(`currency-${rowIndex}`).value = params.get(`currency-${rowIndex}`) || '';
+                }
+                if (params.has(`iban-${rowIndex}`)) {
+                    document.getElementById(`iban-${rowIndex}`).value = params.get(`iban-${rowIndex}`) || '';
+                }
+                rowIndex++;
+            }
+            
+            // Update all button states after setting fields
+            updateAllButtonStates();
         }
 
         // Unified redirect function
@@ -347,20 +597,56 @@
             }
 
             setFieldsFromParams();
-            ['iban', 'name', 'details'].forEach(updateCopyButtonState);
+            ['name', 'details'].forEach(updateCopyButtonState);
+            
+            // Update all button states after loading from params
+            updateAllButtonStates();
         })();
 
         // Permalink logic
         function generatePermalinkParams() {
             const params = new URLSearchParams();
             const langVal = document.getElementById('lang-select').value;
-            const ibanVal = document.getElementById('iban').value;
+            
             const nameVal = document.getElementById('name').value;
             const detailsVal = document.getElementById('details').value;
+            
             if (langVal) params.set('lang', langVal);
-            if (ibanVal) params.set('iban', ibanVal);
             if (nameVal) params.set('name', nameVal);
             if (detailsVal) params.set('details', detailsVal);
+            
+            // Collect all existing rows data using their actual indices
+            const allRows = document.querySelectorAll('.iban-row');
+            
+            allRows.forEach(row => {
+                const rowIndex = parseInt(row.getAttribute('data-row-index'));
+                const currencyField = document.getElementById(`currency-${rowIndex}`);
+                const ibanField = document.getElementById(`iban-${rowIndex}`);
+                
+                if (currencyField && ibanField) {
+                    const currencyValue = currencyField.value.trim();
+                    const ibanValue = ibanField.value.trim();
+                    
+                    // For first row (index 1), use parameterless names for backwards compatibility
+                    if (rowIndex === 1) {
+                        if (currencyValue) {
+                            params.set('currency', currencyValue);
+                        }
+                        if (ibanValue) {
+                            params.set('iban', ibanValue);
+                        }
+                    } else {
+                        // For subsequent rows, use their actual index (2, 3, 4, ...)
+                        if (currencyValue) {
+                            params.set(`currency-${rowIndex}`, currencyValue);
+                        }
+                        if (ibanValue) {
+                            params.set(`iban-${rowIndex}`, ibanValue);
+                        }
+                    }
+                }
+            });
+            
             return params;
         }
 
