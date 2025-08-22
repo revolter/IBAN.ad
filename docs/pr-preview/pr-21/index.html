@@ -95,7 +95,7 @@
                                     <button type="button" class="add-row-btn w-[42px] h-[42px] flex items-center justify-center bg-green-200 hover:bg-green-300 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-all duration-200 cursor-pointer" data-row-index="1" aria-label="Add new row" style="display: none;">💱</button>
                                     <div class="relative">
                                         <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 hover:bg-blue-100 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-colors cursor-pointer opacity-50 cursor-not-allowed" data-copytarget="iban-1" data-row-index="1" disabled>📋</button>
-                                        <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 pointer-events-none transition-all duration-300 z-50 mb-1" id="tooltip-iban-1">Copied!</div>
+                                        <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 pointer-events-none z-50 mb-1" id="tooltip-iban-1">Copied!</div>
                                     </div>
                                 </div>
                             </div>
@@ -108,7 +108,7 @@
                                 class="w-full rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark" aria-label="Account Holder Name" />
                             <div class="relative">
                                 <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 hover:bg-blue-100 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-colors cursor-pointer" data-copytarget="name">📋</button>
-                                <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 pointer-events-none transition-all duration-300 z-50 mb-1" id="tooltip-name">Copied!</div>
+                                <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 pointer-events-none z-50 mb-1" id="tooltip-name">Copied!</div>
                             </div>
                         </div>
                         <p id="name-suggestion" class="text-xs text-gray-500 mt-1">Tip: Avoid special characters (ă, ș, ț, etc.) for maximum compatibility with all banks.</p>
@@ -120,7 +120,7 @@
                                 class="w-full rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark" aria-label="Transaction Details" />
                             <div class="relative">
                                 <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 hover:bg-blue-100 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-colors cursor-pointer" data-copytarget="details">📋</button>
-                                <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 pointer-events-none transition-all duration-300 z-50 mb-1" id="tooltip-details">Copied!</div>
+                                <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 pointer-events-none z-50 mb-1" id="tooltip-details">Copied!</div>
                             </div>
                         </div>
                         <p id="details-suggestion" class="text-xs text-gray-500 mt-1">Tip: Avoid special characters (ă, ș, ț, etc.) for maximum compatibility with all banks.</p>
@@ -130,7 +130,7 @@
                             <button type="button" id="permalink-btn" class="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-primary-dark transition-colors font-semibold text-sm cursor-pointer">
                                 <span aria-hidden="true">🔗</span> <span id="permalink-btn-label">Create Permalink</span>
                             </button>
-                            <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 pointer-events-none transition-all duration-300 z-50 mb-1" id="tooltip-permalink">Copied!</div>
+                            <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 pointer-events-none z-50 mb-1" id="tooltip-permalink">Copied!</div>
                         </div>
                     </div>
                 </form>
@@ -214,18 +214,11 @@
             // Localize permalink button label and aria-label
             document.getElementById('permalink-btn-label').textContent = t.permalink;
             document.getElementById('permalink-btn').setAttribute('aria-label', t.permalink);
-            // Ensure tooltips are hidden before updating their content
-            const tooltips = ['tooltip-iban-1', 'tooltip-name', 'tooltip-details', 'tooltip-permalink'];
-            tooltips.forEach(tooltipId => {
-                const tooltip = document.getElementById(tooltipId);
-                if (tooltip) {
-                    tooltip.classList.remove('opacity-100', 'pointer-events-auto');
-                    tooltip.classList.add('opacity-0', 'pointer-events-none');
-                    tooltip.style.opacity = '0';
-                    tooltip.style.pointerEvents = 'none';
-                    tooltip.textContent = t.copied;
-                }
-            });
+            // Localize tooltip text
+            document.getElementById('tooltip-iban-1').textContent = t.copied;
+            document.getElementById('tooltip-name').textContent = t.copied;
+            document.getElementById('tooltip-details').textContent = t.copied;
+            document.getElementById('tooltip-permalink').textContent = t.copied;
             // Update <html lang=...>
             document.documentElement.setAttribute('lang', lang);
             // Localize skip to main content link
@@ -255,13 +248,9 @@
             if (tooltip) {
                 tooltip.classList.remove('opacity-0', 'pointer-events-none');
                 tooltip.classList.add('opacity-100', 'pointer-events-auto');
-                tooltip.style.opacity = '1';
-                tooltip.style.pointerEvents = 'auto';
                 setTimeout(() => {
                     tooltip.classList.remove('opacity-100', 'pointer-events-auto');
                     tooltip.classList.add('opacity-0', 'pointer-events-none');
-                    tooltip.style.opacity = '0';
-                    tooltip.style.pointerEvents = 'none';
                 }, 2000);
             }
         }
@@ -452,13 +441,19 @@
                         <button type="button" class="delete-row-btn w-[42px] h-[42px] flex items-center justify-center bg-red-200 hover:bg-red-300 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-colors cursor-pointer" data-row-index="${currentRowIndex}" aria-label="Delete row" style="display: none;">🗑️</button>
                         <div class="relative">
                             <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 hover:bg-blue-100 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-colors cursor-pointer opacity-50 cursor-not-allowed" data-copytarget="iban-${currentRowIndex}" data-row-index="${currentRowIndex}" disabled>📋</button>
-                            <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 pointer-events-none transition-all duration-300 z-50 mb-1" id="tooltip-iban-${currentRowIndex}">Copied!</div>
+                            <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 pointer-events-none z-50 mb-1" id="tooltip-iban-${currentRowIndex}">Copied!</div>
                         </div>
                     </div>
                 </div>
             `;
             
             container.appendChild(newRow);
+            
+            // Enable tooltip transitions for the newly created tooltip
+            const newTooltip = document.getElementById(`tooltip-iban-${currentRowIndex}`);
+            if (newTooltip) {
+                newTooltip.classList.add('transition-all', 'duration-300');
+            }
             
             // Update all button states after adding the new row
             updateAllButtonStates();
@@ -728,6 +723,14 @@
                 setTimeout(() => { announcer.textContent = message; }, 50);
             }
         }
+
+        // Enable tooltip transitions after page load to prevent flash during initial render
+        window.addEventListener('load', function() {
+            const tooltips = document.querySelectorAll('.tooltip');
+            tooltips.forEach(tooltip => {
+                tooltip.classList.add('transition-all', 'duration-300');
+            });
+        });
     </script>
 </body>
 </html>
