@@ -125,7 +125,12 @@
                         </div>
                         <p id="details-suggestion" class="text-xs text-gray-500 mt-1">Tip: Avoid special characters (ă, ș, ț, etc.) for maximum compatibility with all banks.</p>
                     </div>
-                    <div class="flex justify-end mt-8">
+                    <div class="flex justify-end mt-8 gap-2">
+                        <div class="relative">
+                            <button type="button" id="edit-btn" class="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-primary-dark font-semibold text-sm cursor-pointer" style="display: none;">
+                                <span aria-hidden="true">✏️</span> <span id="edit-btn-label">Edit</span>
+                            </button>
+                        </div>
                         <div class="relative">
                             <button type="button" id="permalink-btn" class="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-primary-dark font-semibold text-sm cursor-pointer">
                                 <span aria-hidden="true">🔗</span> <span id="permalink-btn-label">Create Permalink</span>
@@ -168,6 +173,7 @@
                 copyName: 'Copy Account Holder Name',
                 copyDetails: 'Copy Transaction Details',
                 permalink: 'Create Permalink',
+                edit: 'Edit',
                 permalinkCopied: 'Copied!',
                 copied: 'Copied!',
                 skipToMain: 'Skip to main content',
@@ -188,6 +194,7 @@
                 copyName: 'Copiază numele titularului',
                 copyDetails: 'Copiază detaliile tranzacției',
                 permalink: 'Creează link permanent',
+                edit: 'Modifică',
                 permalinkCopied: 'Copiat!',
                 copied: 'Copiat!',
                 skipToMain: 'Sari la conținutul principal',
@@ -214,6 +221,9 @@
             // Localize permalink button label and aria-label
             document.getElementById('permalink-btn-label').textContent = t.permalink;
             document.getElementById('permalink-btn').setAttribute('aria-label', t.permalink);
+            // Localize edit button label and aria-label
+            document.getElementById('edit-btn-label').textContent = t.edit;
+            document.getElementById('edit-btn').setAttribute('aria-label', t.edit);
             // Localize tooltip text
             document.getElementById('tooltip-iban-1').textContent = t.copied;
             document.getElementById('tooltip-name').textContent = t.copied;
@@ -241,6 +251,76 @@
 
         // Set default language
         setLanguage(document.getElementById('lang-select').value);
+
+        // State management for read-only mode
+        function hasPermalinkData() {
+            const params = new URLSearchParams(window.location.search);
+            // Check if any form field parameters are present (excluding lang and edit)
+            for (const [key] of params) {
+                if (key !== 'lang' && key !== 'edit') {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function isEditMode() {
+            const params = new URLSearchParams(window.location.search);
+            return params.has('edit') && params.get('edit') === 'true';
+        }
+
+        function isReadOnlyMode() {
+            return hasPermalinkData() && !isEditMode();
+        }
+
+        function setFieldsReadOnly(readOnly) {
+            // Set readonly state for all input fields
+            document.getElementById('name').readOnly = readOnly;
+            document.getElementById('details').readOnly = readOnly;
+            
+            // Set readonly state for all IBAN rows
+            document.querySelectorAll('.iban-row').forEach(row => {
+                const rowIndex = parseInt(row.getAttribute('data-row-index'));
+                const currencyField = document.getElementById(`currency-${rowIndex}`);
+                const ibanField = document.getElementById(`iban-${rowIndex}`);
+                if (currencyField) currencyField.readOnly = readOnly;
+                if (ibanField) ibanField.readOnly = readOnly;
+            });
+            
+            // Update visual styling for readonly fields
+            const allFields = document.querySelectorAll('input[type="text"]');
+            allFields.forEach(field => {
+                if (readOnly) {
+                    field.classList.remove('bg-gray-100');
+                    field.classList.add('bg-gray-50', 'cursor-default');
+                    field.setAttribute('tabindex', '-1');
+                } else {
+                    field.classList.remove('bg-gray-50', 'cursor-default');
+                    field.classList.add('bg-gray-100');
+                    field.removeAttribute('tabindex');
+                }
+            });
+        }
+
+        function setButtonsVisibility() {
+            const readOnly = isReadOnlyMode();
+            const editBtn = document.getElementById('edit-btn');
+            
+            // Show edit button in read-only mode, hide in edit mode
+            if (editBtn) {
+                editBtn.style.display = readOnly ? 'flex' : 'none';
+            }
+            
+            // Hide add/delete buttons in read-only mode
+            document.querySelectorAll('.add-row-btn, .delete-row-btn').forEach(btn => {
+                if (readOnly) {
+                    btn.style.display = 'none';
+                } else {
+                    // Restore normal visibility logic for add/delete buttons
+                    // This will be handled by updateAllButtonStates()
+                }
+            });
+        }
 
         // Unified tooltip notification function
         function showTooltip(tooltipId) {
@@ -357,6 +437,7 @@
         function updateAllButtonStates() {
             const allRows = document.querySelectorAll('.iban-row');
             const lastRowIndex = getLastRowIndex();
+            const readOnly = isReadOnlyMode();
             
             allRows.forEach(row => {
                 const rowIndex = parseInt(row.getAttribute('data-row-index'));
@@ -379,9 +460,9 @@
                         }
                     }
                     
-                    // Update add button - show only on last row when both fields are filled
+                    // Update add button - show only on last row when both fields are filled (and not in read-only mode)
                     if (addBtn) {
-                        if (rowIndex === lastRowIndex && currencyField.value.trim() && ibanField.value.trim()) {
+                        if (!readOnly && rowIndex === lastRowIndex && currencyField.value.trim() && ibanField.value.trim()) {
                             addBtn.style.display = 'flex';
                         } else {
                             addBtn.style.display = 'none';
@@ -390,8 +471,11 @@
                 }
             });
             
-            // Update delete button visibility - only show on last row, never on first row
+            // Update delete button visibility - only show on last row, never on first row (and not in read-only mode)
             updateDeleteButtonVisibility();
+            
+            // Update edit button visibility
+            setButtonsVisibility();
         }
 
         // Add event listeners for the first row fields
@@ -479,18 +563,23 @@
             });
         }
 
-        // Function to update delete button visibility (only show on last row, never on row 0)
+        // Function to update delete button visibility (only show on last row, never on row 0, and not in read-only mode)
         function updateDeleteButtonVisibility() {
             // Hide all delete buttons first
             document.querySelectorAll('.delete-row-btn').forEach(btn => {
                 btn.style.display = 'none';
             });
             
+            // Don't show delete buttons in read-only mode
+            if (isReadOnlyMode()) {
+                return;
+            }
+            
             // Find the last row using the helper function
             const lastRowIndex = getLastRowIndex();
             
-            // Show delete button only on the last row (if it exists and is not row 0)
-            if (lastRowIndex > 0) {
+            // Show delete button only on the last row (if it exists and is not row 1)
+            if (lastRowIndex > 1) {
                 const deleteBtn = document.querySelector(`.delete-row-btn[data-row-index="${lastRowIndex}"]`);
                 if (deleteBtn) {
                     deleteBtn.style.display = 'flex';
@@ -609,6 +698,9 @@
             setFieldsFromParams();
             ['name', 'details'].forEach(updateCopyButtonState);
             
+            // Apply read-only state if needed
+            setFieldsReadOnly(isReadOnlyMode());
+            
             // Update all button states after loading from params
             updateAllButtonStates();
         })();
@@ -688,6 +780,13 @@
             });
         }
         document.getElementById('permalink-btn').addEventListener('click', redirectToPermalink);
+        
+        // Edit button functionality
+        document.getElementById('edit-btn').addEventListener('click', function() {
+            const params = new URLSearchParams(window.location.search);
+            params.set('edit', 'true');
+            redirectToUrl(params);
+        });
         document.getElementById('lang-select').addEventListener('change', function() {
             const params = new URLSearchParams(window.location.search);
             const newLang = document.getElementById('lang-select').value;
