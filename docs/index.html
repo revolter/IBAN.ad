@@ -160,6 +160,11 @@
     <script>
         // Localization strings
         const DEFAULT_LANGUAGE = 'en';
+        
+        // Query parameter constants
+        const QUERY_PARAM_LANG = 'lang';
+        const QUERY_PARAM_EDIT = 'edit';
+        const QUERY_PARAM_EDIT_VALUE = 'true';
         const TRANSLATIONS = {
             en: {
                 siteName: 'IBAN.ad',
@@ -257,7 +262,7 @@
             const params = new URLSearchParams(window.location.search);
             // Check if any form field parameters are present (excluding lang and edit)
             for (const [key] of params) {
-                if (key !== 'lang' && key !== 'edit') {
+                if (key !== QUERY_PARAM_LANG && key !== QUERY_PARAM_EDIT) {
                     return true;
                 }
             }
@@ -266,7 +271,7 @@
 
         function isEditMode() {
             const params = new URLSearchParams(window.location.search);
-            return params.has('edit') && params.get('edit') === 'true';
+            return params.has(QUERY_PARAM_EDIT) && params.get(QUERY_PARAM_EDIT) === QUERY_PARAM_EDIT_VALUE;
         }
 
         function isReadOnlyMode() {
@@ -713,7 +718,7 @@
             const nameVal = document.getElementById('name').value;
             const detailsVal = document.getElementById('details').value;
             
-            if (langVal) params.set('lang', langVal);
+            if (langVal) params.set(QUERY_PARAM_LANG, langVal);
             if (nameVal) params.set('name', nameVal);
             if (detailsVal) params.set('details', detailsVal);
             
@@ -784,13 +789,13 @@
         // Edit button functionality
         document.getElementById('edit-btn').addEventListener('click', function() {
             const params = new URLSearchParams(window.location.search);
-            params.set('edit', 'true');
+            params.set(QUERY_PARAM_EDIT, QUERY_PARAM_EDIT_VALUE);
             redirectToUrl(params);
         });
         document.getElementById('lang-select').addEventListener('change', function() {
             const params = new URLSearchParams(window.location.search);
             const newLang = document.getElementById('lang-select').value;
-            if (params.get('lang') !== newLang) {
+            if (params.get(QUERY_PARAM_LANG) !== newLang) {
                 redirectToPermalink();
             }
         });
@@ -798,8 +803,8 @@
         // On page load, set language from query param if present
         (function() {
             const params = new URLSearchParams(window.location.search);
-            if (params.has('lang')) {
-                const lang = params.get('lang');
+            if (params.has(QUERY_PARAM_LANG)) {
+                const lang = params.get(QUERY_PARAM_LANG);
                 const langSelect = document.getElementById('lang-select');
                 if (langSelect && langSelect.value !== lang) {
                     // Use the requested language if supported, otherwise default to the default language
@@ -815,7 +820,7 @@
             const langVal = document.getElementById('lang-select').value;
             const t = getTranslations(langVal);
             const params = new URLSearchParams();
-            if (langVal) params.set('lang', langVal);
+            if (langVal) params.set(QUERY_PARAM_LANG, langVal);
             announceA11y(t.formReset);
             redirectToUrl(params);
         });
