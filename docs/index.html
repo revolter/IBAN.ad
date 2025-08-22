@@ -214,11 +214,18 @@
             // Localize permalink button label and aria-label
             document.getElementById('permalink-btn-label').textContent = t.permalink;
             document.getElementById('permalink-btn').setAttribute('aria-label', t.permalink);
-            // Localize tooltip text
-            document.getElementById('tooltip-iban-1').textContent = t.copied;
-            document.getElementById('tooltip-name').textContent = t.copied;
-            document.getElementById('tooltip-details').textContent = t.copied;
-            document.getElementById('tooltip-permalink').textContent = t.copied;
+            // Ensure tooltips are hidden before updating their content
+            const tooltips = ['tooltip-iban-1', 'tooltip-name', 'tooltip-details', 'tooltip-permalink'];
+            tooltips.forEach(tooltipId => {
+                const tooltip = document.getElementById(tooltipId);
+                if (tooltip) {
+                    tooltip.classList.remove('opacity-100', 'pointer-events-auto');
+                    tooltip.classList.add('opacity-0', 'pointer-events-none');
+                    tooltip.style.opacity = '0';
+                    tooltip.style.pointerEvents = 'none';
+                    tooltip.textContent = t.copied;
+                }
+            });
             // Update <html lang=...>
             document.documentElement.setAttribute('lang', lang);
             // Localize skip to main content link
@@ -248,9 +255,13 @@
             if (tooltip) {
                 tooltip.classList.remove('opacity-0', 'pointer-events-none');
                 tooltip.classList.add('opacity-100', 'pointer-events-auto');
+                tooltip.style.opacity = '1';
+                tooltip.style.pointerEvents = 'auto';
                 setTimeout(() => {
                     tooltip.classList.remove('opacity-100', 'pointer-events-auto');
                     tooltip.classList.add('opacity-0', 'pointer-events-none');
+                    tooltip.style.opacity = '0';
+                    tooltip.style.pointerEvents = 'none';
                 }, 2000);
             }
         }
