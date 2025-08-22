@@ -160,7 +160,6 @@
                 siteName: 'IBAN.ad',
                 tagline: 'The easiest way for NGOs, freelancers, and clubs to share their bank details for donations, payments, or memberships.',
                 title: 'IBAN Advertiser',
-                ibanInfo: 'IBAN Advertiser',
                 ibanLabel: 'Currency & IBAN',
                 nameLabel: 'Account Holder Name',
                 detailsLabel: 'Transaction Details',
@@ -181,7 +180,6 @@
                 siteName: 'IBAN.ad',
                 tagline: 'Cea mai simplă modalitate pentru ONG-uri, freelanceri și cluburi de a-și partaja contul bancar pentru donații, plăți sau cotizații.',
                 title: 'Anunțător IBAN',
-                ibanInfo: 'Anunțător IBAN',
                 ibanLabel: 'Monedă și IBAN',
                 nameLabel: 'Nume titular cont',
                 detailsLabel: 'Detalii tranzacție',
@@ -227,7 +225,7 @@
             document.getElementById('skip-link').textContent = t.skipToMain;
             // Announce language change for screen readers
             announceA11y(t.langChanged);
-            document.getElementById('iban-info-title').textContent = t.ibanInfo;
+            document.getElementById('iban-info-title').textContent = t.title;
             document.querySelector('label[for="currency-1"]').textContent = t.ibanLabel;
             document.querySelector('label[for="name"]').textContent = t.nameLabel;
             document.querySelector('label[for="details"]').textContent = t.detailsLabel;
