@@ -36,6 +36,15 @@
             background-repeat: no-repeat;
         }
         
+        /* Custom utility classes for element visibility */
+        .hide-element {
+            display: none !important;
+        }
+        
+        .show-flex {
+            display: flex !important;
+        }
+        
         /* Tooltip arrow - requires custom CSS as Tailwind doesn't have built-in arrow utilities */
         .tooltip::after {
             content: '';
@@ -92,7 +101,7 @@
                                 <input type="text" id="iban-1" name="iban-1" value=""
                                     class="w-full rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark" aria-label="IBAN" />
                                 <div class="flex gap-2">
-                                    <button type="button" class="add-row-btn w-[42px] h-[42px] flex items-center justify-center bg-green-200 hover:bg-green-300 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-all duration-200 cursor-pointer" data-row-index="1" aria-label="Add new row" style="display: none;">💱</button>
+                                    <button type="button" class="add-row-btn w-[42px] h-[42px] hide-element items-center justify-center bg-green-200 hover:bg-green-300 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-all duration-200 cursor-pointer" data-row-index="1" aria-label="Add new row">💱</button>
                                     <div class="relative">
                                         <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 hover:bg-blue-100 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg cursor-pointer opacity-50 cursor-not-allowed" data-copytarget="iban-1" data-row-index="1" disabled>📋</button>
                                         <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 pointer-events-none z-50 mb-1" id="tooltip-iban-1">Copied!</div>
@@ -127,7 +136,7 @@
                     </div>
                     <div class="flex justify-end mt-8">
                         <div class="relative">
-                            <button type="button" id="edit-btn" class="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-primary-dark font-semibold text-sm cursor-pointer" style="display: none;">
+                            <button type="button" id="edit-btn" class="hide-element items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-primary-dark font-semibold text-sm cursor-pointer">
                                 <span aria-hidden="true">✏️</span> <span id="edit-btn-label">Edit</span>
                             </button>
                         </div>
@@ -308,18 +317,31 @@
             
             // Show edit button in read-only mode, hide in edit mode
             if (editBtn) {
-                editBtn.style.display = readOnly ? 'flex' : 'none';
+                if (readOnly) {
+                    editBtn.classList.remove('hide-element');
+                    editBtn.classList.add('show-flex');
+                } else {
+                    editBtn.classList.remove('show-flex');
+                    editBtn.classList.add('hide-element');
+                }
             }
             
             // Show permalink button in edit mode, hide in read-only mode
             if (permalinkBtn) {
-                permalinkBtn.style.display = readOnly ? 'none' : 'flex';
+                if (readOnly) {
+                    permalinkBtn.classList.remove('show-flex');
+                    permalinkBtn.classList.add('hide-element');
+                } else {
+                    permalinkBtn.classList.remove('hide-element');
+                    permalinkBtn.classList.add('show-flex');
+                }
             }
             
             // Hide add/delete buttons in read-only mode
             document.querySelectorAll('.add-row-btn, .delete-row-btn').forEach(btn => {
                 if (readOnly) {
-                    btn.style.display = 'none';
+                    btn.classList.remove('show-flex');
+                    btn.classList.add('hide-element');
                 } else {
                     // Restore normal visibility logic for add/delete buttons
                     // This will be handled by updateAllButtonStates()
@@ -468,9 +490,11 @@
                     // Update add button - show only on last row when both fields are filled (and not in read-only mode)
                     if (addBtn) {
                         if (!readOnly && rowIndex === lastRowIndex && currencyField.value.trim() && ibanField.value.trim()) {
-                            addBtn.style.display = 'flex';
+                            addBtn.classList.remove('hide-element');
+                            addBtn.classList.add('show-flex');
                         } else {
-                            addBtn.style.display = 'none';
+                            addBtn.classList.remove('show-flex');
+                            addBtn.classList.add('hide-element');
                         }
                     }
                 }
@@ -526,8 +550,8 @@
                     <input type="text" id="iban-${currentRowIndex}" name="iban-${currentRowIndex}" value=""
                         class="w-full rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark" aria-label="IBAN" />
                     <div class="flex gap-2">
-                        <button type="button" class="add-row-btn w-[42px] h-[42px] flex items-center justify-center bg-green-200 hover:bg-green-300 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-all duration-200 cursor-pointer" data-row-index="${currentRowIndex}" aria-label="Add new row" style="display: none;">💱</button>
-                        <button type="button" class="delete-row-btn w-[42px] h-[42px] flex items-center justify-center bg-red-200 hover:bg-red-300 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-colors cursor-pointer" data-row-index="${currentRowIndex}" aria-label="Delete row" style="display: none;">🗑️</button>
+                        <button type="button" class="add-row-btn w-[42px] h-[42px] hide-element items-center justify-center bg-green-200 hover:bg-green-300 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-all duration-200 cursor-pointer" data-row-index="${currentRowIndex}" aria-label="Add new row">💱</button>
+                        <button type="button" class="delete-row-btn w-[42px] h-[42px] hide-element items-center justify-center bg-red-200 hover:bg-red-300 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-colors cursor-pointer" data-row-index="${currentRowIndex}" aria-label="Delete row">🗑️</button>
                         <div class="relative">
                             <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 hover:bg-blue-100 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg cursor-pointer opacity-50 cursor-not-allowed" data-copytarget="iban-${currentRowIndex}" data-row-index="${currentRowIndex}" disabled>📋</button>
                             <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 pointer-events-none z-50 mb-1" id="tooltip-iban-${currentRowIndex}">Copied!</div>
@@ -572,7 +596,8 @@
         function updateDeleteButtonVisibility() {
             // Hide all delete buttons first
             document.querySelectorAll('.delete-row-btn').forEach(btn => {
-                btn.style.display = 'none';
+                btn.classList.remove('show-flex');
+                btn.classList.add('hide-element');
             });
             
             // Don't show delete buttons in read-only mode
@@ -587,7 +612,8 @@
             if (lastRowIndex > 1) {
                 const deleteBtn = document.querySelector(`.delete-row-btn[data-row-index="${lastRowIndex}"]`);
                 if (deleteBtn) {
-                    deleteBtn.style.display = 'flex';
+                    deleteBtn.classList.remove('hide-element');
+                    deleteBtn.classList.add('show-flex');
                 }
             }
         }
