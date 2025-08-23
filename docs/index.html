@@ -744,6 +744,37 @@
             return false; // No redirect needed
         }
 
+        // Redirect if empty second row parameters are present
+        function redirectFromEmptySecondRows() {
+            const params = new URLSearchParams(window.location.search);
+            let needsRedirect = false;
+            const newParams = new URLSearchParams();
+
+            // Copy all existing parameters, excluding empty second row parameters
+            for (const [key, value] of params.entries()) {
+                // Check if this is a second row parameter (currency-N or iban-N where N >= 2)
+                const match = key.match(/^(currency|iban)-(\d+)$/);
+                if (match && parseInt(match[2]) >= 2) {
+                    // This is a second+ row parameter, only keep it if it has a non-empty value
+                    if (value.trim()) {
+                        newParams.set(key, value);
+                    } else {
+                        needsRedirect = true; // Found an empty second+ row parameter
+                    }
+                } else {
+                    // Keep all other parameters as-is
+                    newParams.set(key, value);
+                }
+            }
+
+            if (needsRedirect) {
+                // Redirect to the new URL without empty second row parameters
+                redirectToUrl(newParams, true);
+                return true; // Indicate that a redirect happened
+            }
+            return false; // No redirect needed
+        }
+
         // Initialize the page
         (function() {
             // Check for redirects first
@@ -754,6 +785,12 @@
             }
 
             if (redirectFromLowercaseCurrency()) {
+                // If redirect happened, don't continue with field population
+                // The page will reload with the new URL
+                return;
+            }
+
+            if (redirectFromEmptySecondRows()) {
                 // If redirect happened, don't continue with field population
                 // The page will reload with the new URL
                 return;
