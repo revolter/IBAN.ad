@@ -717,10 +717,43 @@
             return false; // No redirect needed
         }
 
+        // Redirect if currency parameters contain lowercase letters
+        function redirectFromLowercaseCurrency() {
+            const params = new URLSearchParams(window.location.search);
+            let needsRedirect = false;
+            const newParams = new URLSearchParams();
+
+            // Copy all existing parameters, uppercasing currency values
+            for (const [key, value] of params.entries()) {
+                if (key === 'currency' || key.startsWith('currency-')) {
+                    const uppercaseValue = value.toUpperCase();
+                    if (value !== uppercaseValue) {
+                        needsRedirect = true;
+                    }
+                    newParams.set(key, uppercaseValue);
+                } else {
+                    newParams.set(key, value);
+                }
+            }
+
+            if (needsRedirect) {
+                // Redirect to the new URL with uppercased currency values
+                redirectToUrl(newParams, true);
+                return true; // Indicate that a redirect happened
+            }
+            return false; // No redirect needed
+        }
+
         // Initialize the page
         (function() {
-            // Check for redirect first
+            // Check for redirects first
             if (redirectFromOldParam()) {
+                // If redirect happened, don't continue with field population
+                // The page will reload with the new URL
+                return;
+            }
+
+            if (redirectFromLowercaseCurrency()) {
                 // If redirect happened, don't continue with field population
                 // The page will reload with the new URL
                 return;
