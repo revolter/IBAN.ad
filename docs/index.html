@@ -36,6 +36,8 @@
             background-repeat: no-repeat;
         }
         
+
+        
         /* Tooltip arrow - requires custom CSS as Tailwind doesn't have built-in arrow utilities */
         .tooltip::after {
             content: '';
@@ -92,7 +94,7 @@
                                 <input type="text" id="iban-1" name="iban-1" value=""
                                     class="w-full rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark" aria-label="IBAN" />
                                 <div class="flex gap-2">
-                                    <button type="button" class="add-row-btn w-[42px] h-[42px] flex items-center justify-center bg-green-200 hover:bg-green-300 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-all duration-200 cursor-pointer" data-row-index="1" aria-label="Add new row" style="display: none;">💱</button>
+                                    <button type="button" class="add-row-btn w-[42px] h-[42px] hidden items-center justify-center bg-green-200 hover:bg-green-300 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-all duration-200 cursor-pointer" data-row-index="1" aria-label="Add new row">💱</button>
                                     <div class="relative">
                                         <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 hover:bg-blue-100 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg cursor-pointer opacity-50 cursor-not-allowed" data-copytarget="iban-1" data-row-index="1" disabled>📋</button>
                                         <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 pointer-events-none z-50 mb-1" id="tooltip-iban-1">Copied!</div>
@@ -127,6 +129,11 @@
                     </div>
                     <div class="flex justify-end mt-8">
                         <div class="relative">
+                            <button type="button" id="edit-btn" class="hidden items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-primary-dark font-semibold text-sm cursor-pointer">
+                                <span aria-hidden="true">✏️</span> <span id="edit-btn-label">Edit</span>
+                            </button>
+                        </div>
+                        <div class="relative">
                             <button type="button" id="permalink-btn" class="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-primary-dark font-semibold text-sm cursor-pointer">
                                 <span aria-hidden="true">🔗</span> <span id="permalink-btn-label">Create Permalink</span>
                             </button>
@@ -155,6 +162,14 @@
     <script>
         // Localization strings
         const DEFAULT_LANGUAGE = 'en';
+        
+        // Query parameter constants
+        const QUERY_PARAM_LANG = 'lang';
+        const QUERY_PARAM_EDIT = 'edit';
+        const QUERY_PARAM_EDIT_VALUE = 'true';
+        
+        // Query parameters that don't represent permalink data
+        const NON_PERMALINK_QUERY_PARAMS = [QUERY_PARAM_LANG, QUERY_PARAM_EDIT];
         const TRANSLATIONS = {
             en: {
                 siteName: 'IBAN.ad',
@@ -168,6 +183,7 @@
                 copyName: 'Copy Account Holder Name',
                 copyDetails: 'Copy Transaction Details',
                 permalink: 'Create Permalink',
+                edit: 'Edit',
                 permalinkCopied: 'Copied!',
                 copied: 'Copied!',
                 skipToMain: 'Skip to main content',
@@ -188,6 +204,7 @@
                 copyName: 'Copiază numele titularului',
                 copyDetails: 'Copiază detaliile tranzacției',
                 permalink: 'Creează link permanent',
+                edit: 'Modifică',
                 permalinkCopied: 'Copiat!',
                 copied: 'Copiat!',
                 skipToMain: 'Sari la conținutul principal',
@@ -214,6 +231,9 @@
             // Localize permalink button label and aria-label
             document.getElementById('permalink-btn-label').textContent = t.permalink;
             document.getElementById('permalink-btn').setAttribute('aria-label', t.permalink);
+            // Localize edit button label and aria-label
+            document.getElementById('edit-btn-label').textContent = t.edit;
+            document.getElementById('edit-btn').setAttribute('aria-label', t.edit);
             // Localize tooltip text
             document.getElementById('tooltip-iban-1').textContent = t.copied;
             document.getElementById('tooltip-name').textContent = t.copied;
@@ -241,6 +261,49 @@
 
         // Set default language
         setLanguage(document.getElementById('lang-select').value);
+
+        // State management for read-only mode
+        function hasPermalinkData() {
+            const params = new URLSearchParams(window.location.search);
+            // Check if any form field parameters are present (excluding non-permalink params)
+            for (const [key] of params) {
+                if (!NON_PERMALINK_QUERY_PARAMS.includes(key)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function isEditMode() {
+            const params = new URLSearchParams(window.location.search);
+            return params.has(QUERY_PARAM_EDIT) && params.get(QUERY_PARAM_EDIT) === QUERY_PARAM_EDIT_VALUE;
+        }
+
+        function isReadOnlyMode() {
+            return hasPermalinkData() && !isEditMode();
+        }
+
+        function setFieldsReadOnly(readOnly) {
+            // Set readonly state and styling for all input fields
+            const allFields = document.querySelectorAll('input[type="text"]');
+            allFields.forEach(field => {
+                // Set readonly property
+                field.readOnly = readOnly;
+                
+                // Update visual styling
+                if (readOnly) {
+                    field.classList.remove('bg-gray-100', 'text-gray-900', 'focus:ring-2', 'focus:ring-primary-dark');
+                    field.classList.add('bg-gray-50', 'text-gray-500', 'cursor-default', 'focus:ring-0');
+                    field.setAttribute('tabindex', '-1');
+                } else {
+                    field.classList.remove('bg-gray-50', 'text-gray-500', 'cursor-default', 'focus:ring-0');
+                    field.classList.add('bg-gray-100', 'text-gray-900', 'focus:ring-2', 'focus:ring-primary-dark');
+                    field.removeAttribute('tabindex');
+                }
+            });
+        }
+
+
 
         // Unified tooltip notification function
         function showTooltip(tooltipId) {
@@ -321,21 +384,7 @@
             return existingRows.length + 1; // 1, 2, 3, ...
         }
 
-        // Disable copy buttons when fields are empty and handle "+" button visibility
-        function updateCopyButtonState(fieldId) {
-            const field = document.getElementById(fieldId);
-            const btn = document.querySelector(`.copy-btn[data-copytarget="${fieldId}"]`);
-            if (btn) {
-                btn.disabled = !field.value.trim();
-                if (btn.disabled) {
-                    btn.classList.add('opacity-50', 'cursor-not-allowed');
-                    btn.classList.remove('hover:bg-blue-100', 'cursor-pointer');
-                } else {
-                    btn.classList.remove('opacity-50', 'cursor-not-allowed');
-                    btn.classList.add('hover:bg-blue-100', 'cursor-pointer');
-                }
-            }
-        }
+
 
         // Helper function to find the last row index (using fixed indices)
         function getLastRowIndex() {
@@ -352,18 +401,20 @@
             return maxIndex;
         }
 
-        // Update copy button state for IBAN rows (considers both currency and IBAN fields)
-        // Unified button state management for all row buttons
-        function updateAllButtonStates() {
+        // Unified button state management for all buttons
+        function setAllButtonStates() {
             const allRows = document.querySelectorAll('.iban-row');
             const lastRowIndex = getLastRowIndex();
+            const readOnly = isReadOnlyMode();
             
+            // Update IBAN row buttons (copy, add, delete)
             allRows.forEach(row => {
                 const rowIndex = parseInt(row.getAttribute('data-row-index'));
                 const currencyField = document.getElementById(`currency-${rowIndex}`);
                 const ibanField = document.getElementById(`iban-${rowIndex}`);
                 const addBtn = document.querySelector(`.add-row-btn[data-row-index="${rowIndex}"]`);
                 const copyBtn = document.querySelector(`.copy-btn[data-row-index="${rowIndex}"]`);
+                const deleteBtn = document.querySelector(`.delete-row-btn[data-row-index="${rowIndex}"]`);
                 
                 if (currencyField && ibanField) {
                     // Update copy button - enable if IBAN has content (currency is optional)
@@ -379,19 +430,71 @@
                         }
                     }
                     
-                    // Update add button - show only on last row when both fields are filled
+                    // Update add button - show only on last row when both fields are filled (and not in read-only mode)
                     if (addBtn) {
-                        if (rowIndex === lastRowIndex && currencyField.value.trim() && ibanField.value.trim()) {
-                            addBtn.style.display = 'flex';
+                        if (!readOnly && rowIndex === lastRowIndex && currencyField.value.trim() && ibanField.value.trim()) {
+                            addBtn.classList.remove('hidden');
+                            addBtn.classList.add('flex');
                         } else {
-                            addBtn.style.display = 'none';
+                            addBtn.classList.remove('flex');
+                            addBtn.classList.add('hidden');
+                        }
+                    }
+                    
+                    // Update delete button - show only on last row, never on first row (and not in read-only mode)
+                    if (deleteBtn) {
+                        if (!readOnly && rowIndex === lastRowIndex && rowIndex > 1) {
+                            deleteBtn.classList.remove('hidden');
+                            deleteBtn.classList.add('flex');
+                        } else {
+                            deleteBtn.classList.remove('flex');
+                            deleteBtn.classList.add('hidden');
                         }
                     }
                 }
             });
             
-            // Update delete button visibility - only show on last row, never on first row
-            updateDeleteButtonVisibility();
+            // Update name and details copy buttons
+            ['name', 'details'].forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                const btn = document.querySelector(`.copy-btn[data-copytarget="${fieldId}"]`);
+                if (btn && field) {
+                    btn.disabled = !field.value.trim();
+                    if (btn.disabled) {
+                        btn.classList.add('opacity-50', 'cursor-not-allowed');
+                        btn.classList.remove('hover:bg-blue-100', 'cursor-pointer');
+                    } else {
+                        btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                        btn.classList.add('hover:bg-blue-100', 'cursor-pointer');
+                    }
+                }
+            });
+            
+            // Update footer buttons (edit/permalink) - mutually exclusive
+            const editBtn = document.getElementById('edit-btn');
+            const permalinkBtn = document.getElementById('permalink-btn');
+            
+            if (readOnly) {
+                // Read-only mode: show edit button, hide permalink button
+                if (editBtn) {
+                    editBtn.classList.remove('hidden');
+                    editBtn.classList.add('flex');
+                }
+                if (permalinkBtn) {
+                    permalinkBtn.classList.remove('flex');
+                    permalinkBtn.classList.add('hidden');
+                }
+            } else {
+                // Edit mode: show permalink button, hide edit button
+                if (editBtn) {
+                    editBtn.classList.remove('flex');
+                    editBtn.classList.add('hidden');
+                }
+                if (permalinkBtn) {
+                    permalinkBtn.classList.remove('hidden');
+                    permalinkBtn.classList.add('flex');
+                }
+            }
         }
 
         // Add event listeners for the first row fields
@@ -402,13 +505,13 @@
             currencyField1.addEventListener('input', (e) => {
                 // Convert to uppercase immediately
                 e.target.value = e.target.value.toUpperCase();
-                updateAllButtonStates();
+                setAllButtonStates();
             });
         }
         
         if (ibanField1) {
             ibanField1.addEventListener('input', () => {
-                updateAllButtonStates();
+                setAllButtonStates();
             });
         }
 
@@ -416,7 +519,7 @@
             const field = document.getElementById(fieldId);
             if (field) {
                 field.addEventListener('input', () => {
-                    updateCopyButtonState(fieldId);
+                    setAllButtonStates();
                 });
             }
         });
@@ -437,8 +540,8 @@
                     <input type="text" id="iban-${currentRowIndex}" name="iban-${currentRowIndex}" value=""
                         class="w-full rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark" aria-label="IBAN" />
                     <div class="flex gap-2">
-                        <button type="button" class="add-row-btn w-[42px] h-[42px] flex items-center justify-center bg-green-200 hover:bg-green-300 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-all duration-200 cursor-pointer" data-row-index="${currentRowIndex}" aria-label="Add new row" style="display: none;">💱</button>
-                        <button type="button" class="delete-row-btn w-[42px] h-[42px] flex items-center justify-center bg-red-200 hover:bg-red-300 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-colors cursor-pointer" data-row-index="${currentRowIndex}" aria-label="Delete row" style="display: none;">🗑️</button>
+                        <button type="button" class="add-row-btn w-[42px] h-[42px] hidden items-center justify-center bg-green-200 hover:bg-green-300 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-all duration-200 cursor-pointer" data-row-index="${currentRowIndex}" aria-label="Add new row">💱</button>
+                        <button type="button" class="delete-row-btn w-[42px] h-[42px] hidden items-center justify-center bg-red-200 hover:bg-red-300 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-colors cursor-pointer" data-row-index="${currentRowIndex}" aria-label="Delete row">🗑️</button>
                         <div class="relative">
                             <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 hover:bg-blue-100 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg cursor-pointer opacity-50 cursor-not-allowed" data-copytarget="iban-${currentRowIndex}" data-row-index="${currentRowIndex}" disabled>📋</button>
                             <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 pointer-events-none z-50 mb-1" id="tooltip-iban-${currentRowIndex}">Copied!</div>
@@ -462,7 +565,7 @@
             }
             
             // Update all button states after adding the new row
-            updateAllButtonStates();
+            setAllButtonStates();
             
             // Add event listeners for the new fields
             const currencyField = document.getElementById(`currency-${currentRowIndex}`);
@@ -471,32 +574,15 @@
             currencyField.addEventListener('input', (e) => {
                 // Convert to uppercase immediately
                 e.target.value = e.target.value.toUpperCase();
-                updateAllButtonStates();
+                setAllButtonStates();
             });
             
             ibanField.addEventListener('input', () => {
-                updateAllButtonStates();
+                setAllButtonStates();
             });
         }
 
-        // Function to update delete button visibility (only show on last row, never on row 0)
-        function updateDeleteButtonVisibility() {
-            // Hide all delete buttons first
-            document.querySelectorAll('.delete-row-btn').forEach(btn => {
-                btn.style.display = 'none';
-            });
-            
-            // Find the last row using the helper function
-            const lastRowIndex = getLastRowIndex();
-            
-            // Show delete button only on the last row (if it exists and is not row 0)
-            if (lastRowIndex > 0) {
-                const deleteBtn = document.querySelector(`.delete-row-btn[data-row-index="${lastRowIndex}"]`);
-                if (deleteBtn) {
-                    deleteBtn.style.display = 'flex';
-                }
-            }
-        }
+
 
         // Function to delete a row
         function deleteRow(rowIndex) {
@@ -508,7 +594,7 @@
                 row.remove();
                 
             // Update all button states
-            updateAllButtonStates();
+            setAllButtonStates();
             }
         }
 
@@ -518,7 +604,7 @@
                 const rowIndex = parseInt(e.target.getAttribute('data-row-index'));
                 addNewIbanRow();
                 // Update all button states
-                updateAllButtonStates();
+                setAllButtonStates();
             } else if (e.target.classList.contains('delete-row-btn')) {
                 const rowIndex = parseInt(e.target.getAttribute('data-row-index'));
                 deleteRow(rowIndex);
@@ -558,7 +644,7 @@
             }
             
             // Update all button states after setting fields
-            updateAllButtonStates();
+            setAllButtonStates();
         }
 
         // Unified redirect function
@@ -607,10 +693,12 @@
             }
 
             setFieldsFromParams();
-            ['name', 'details'].forEach(updateCopyButtonState);
+            
+            // Apply read-only state if needed
+            setFieldsReadOnly(isReadOnlyMode());
             
             // Update all button states after loading from params
-            updateAllButtonStates();
+            setAllButtonStates();
         })();
 
         // Permalink logic
@@ -621,7 +709,7 @@
             const nameVal = document.getElementById('name').value;
             const detailsVal = document.getElementById('details').value;
             
-            if (langVal) params.set('lang', langVal);
+            if (langVal) params.set(QUERY_PARAM_LANG, langVal);
             if (nameVal) params.set('name', nameVal);
             if (detailsVal) params.set('details', detailsVal);
             
@@ -688,19 +776,36 @@
             });
         }
         document.getElementById('permalink-btn').addEventListener('click', redirectToPermalink);
-        document.getElementById('lang-select').addEventListener('change', function() {
+        
+        // Edit button functionality
+        document.getElementById('edit-btn').addEventListener('click', function() {
             const params = new URLSearchParams(window.location.search);
+            params.set(QUERY_PARAM_EDIT, QUERY_PARAM_EDIT_VALUE);
+            redirectToUrl(params);
+        });
+        document.getElementById('lang-select').addEventListener('change', function() {
+            const currentParams = new URLSearchParams(window.location.search);
             const newLang = document.getElementById('lang-select').value;
-            if (params.get('lang') !== newLang) {
-                redirectToPermalink();
+            if (currentParams.get(QUERY_PARAM_LANG) !== newLang) {
+                // Capture all current form field values to preserve user input
+                const params = generatePermalinkParams();
+                
+                // Preserve edit state from URL if present
+                if (currentParams.has(QUERY_PARAM_EDIT)) {
+                    params.set(QUERY_PARAM_EDIT, currentParams.get(QUERY_PARAM_EDIT));
+                }
+                
+                // Update language parameter (generatePermalinkParams already includes current language, but we need to override it)
+                params.set(QUERY_PARAM_LANG, newLang);
+                redirectToUrl(params);
             }
         });
 
         // On page load, set language from query param if present
         (function() {
             const params = new URLSearchParams(window.location.search);
-            if (params.has('lang')) {
-                const lang = params.get('lang');
+            if (params.has(QUERY_PARAM_LANG)) {
+                const lang = params.get(QUERY_PARAM_LANG);
                 const langSelect = document.getElementById('lang-select');
                 if (langSelect && langSelect.value !== lang) {
                     // Use the requested language if supported, otherwise default to the default language
@@ -716,7 +821,7 @@
             const langVal = document.getElementById('lang-select').value;
             const t = getTranslations(langVal);
             const params = new URLSearchParams();
-            if (langVal) params.set('lang', langVal);
+            if (langVal) params.set(QUERY_PARAM_LANG, langVal);
             announceA11y(t.formReset);
             redirectToUrl(params);
         });
