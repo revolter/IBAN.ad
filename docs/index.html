@@ -531,14 +531,81 @@
             }
         }
 
+        // Currency validation functions
+        function isCurrencySymbol(char) {
+            // Use Unicode property classes to match currency symbols
+            const currencySymbolRegex = /^[\p{Sc}]$/u;
+            return currencySymbolRegex.test(char);
+        }
+        
+        function isLetter(char) {
+            const letterRegex = /^[A-Za-z]$/;
+            return letterRegex.test(char);
+        }
+        
+        function validateAndFormatCurrency(value) {
+            if (!value) return '';
+            
+            // Remove all whitespace
+            value = value.replace(/\s/g, '');
+            
+            // Separate letters and symbols
+            const letters = value.match(/[A-Za-z]/g) || [];
+            const symbols = [];
+            
+            // Extract currency symbols using Unicode property
+            for (const char of value) {
+                if (isCurrencySymbol(char)) {
+                    symbols.push(char);
+                }
+            }
+            
+            // Apply validation rules based on what comes first in the input
+            let firstSymbolIndex = -1;
+            let firstLetterIndex = -1;
+            
+            for (let i = 0; i < value.length; i++) {
+                const char = value[i];
+                if (isCurrencySymbol(char) && firstSymbolIndex === -1) {
+                    firstSymbolIndex = i;
+                }
+                if (isLetter(char) && firstLetterIndex === -1) {
+                    firstLetterIndex = i;
+                }
+                if (firstSymbolIndex !== -1 && firstLetterIndex !== -1) {
+                    break;
+                }
+            }
+            
+            if (letters.length > 0 && symbols.length > 0) {
+                // Mixed content - prefer the type that appears first
+                if (firstSymbolIndex !== -1 && (firstLetterIndex === -1 || firstSymbolIndex < firstLetterIndex)) {
+                    // Symbol appears first, return first symbol
+                    return symbols[0];
+                } else {
+                    // Letter appears first, return first 3 letters
+                    return letters.slice(0, 3).join('').toUpperCase();
+                }
+            } else if (letters.length > 0) {
+                // Only letters - take first 3, uppercase
+                return letters.slice(0, 3).join('').toUpperCase();
+            } else if (symbols.length > 0) {
+                // Only symbols - take first 1
+                return symbols[0];
+            }
+            
+            return '';
+        }
+
         // Add event listeners for the first row fields
         const currencyField1 = document.getElementById('currency-1');
         const ibanField1 = document.getElementById('iban-1');
         
         if (currencyField1) {
             currencyField1.addEventListener('input', (e) => {
-                // Convert to uppercase immediately
-                e.target.value = e.target.value.toUpperCase();
+                // Apply currency validation and formatting
+                const formatted = validateAndFormatCurrency(e.target.value);
+                e.target.value = formatted;
                 setAllButtonStates();
             });
         }
@@ -606,8 +673,9 @@
             const ibanField = document.getElementById(`iban-${currentRowIndex}`);
             
             currencyField.addEventListener('input', (e) => {
-                // Convert to uppercase immediately
-                e.target.value = e.target.value.toUpperCase();
+                // Apply currency validation and formatting
+                const formatted = validateAndFormatCurrency(e.target.value);
+                e.target.value = formatted;
                 setAllButtonStates();
             });
             
@@ -717,27 +785,30 @@
             return false; // No redirect needed
         }
 
-        // Redirect if currency parameters contain lowercase letters
-        function redirectFromLowercaseCurrency() {
+        // Redirect if currency parameters need validation/formatting
+        function redirectFromInvalidCurrency() {
             const params = new URLSearchParams(window.location.search);
             let needsRedirect = false;
             const newParams = new URLSearchParams();
 
-            // Copy all existing parameters, uppercasing currency values
+            // Copy all existing parameters, validating and formatting currency values
             for (const [key, value] of params.entries()) {
                 if (key === 'currency' || key.startsWith('currency-')) {
-                    const uppercaseValue = value.toUpperCase();
-                    if (value !== uppercaseValue) {
+                    const formattedValue = validateAndFormatCurrency(value);
+                    if (value !== formattedValue) {
                         needsRedirect = true;
                     }
-                    newParams.set(key, uppercaseValue);
+                    if (formattedValue) {
+                        newParams.set(key, formattedValue);
+                    }
+                    // If formattedValue is empty, we don't add the parameter (effectively removing invalid ones)
                 } else {
                     newParams.set(key, value);
                 }
             }
 
             if (needsRedirect) {
-                // Redirect to the new URL with uppercased currency values
+                // Redirect to the new URL with validated currency values
                 redirectToUrl(newParams, true);
                 return true; // Indicate that a redirect happened
             }
@@ -784,7 +855,7 @@
                 return;
             }
 
-            if (redirectFromLowercaseCurrency()) {
+            if (redirectFromInvalidCurrency()) {
                 // If redirect happened, don't continue with field population
                 // The page will reload with the new URL
                 return;
