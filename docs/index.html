@@ -283,6 +283,35 @@
             return hasPermalinkData() && !isEditMode();
         }
 
+        function hasDataToShare() {
+            // Check if there's meaningful data in the current form that can be shared
+            const nameVal = document.getElementById('name').value.trim();
+            const detailsVal = document.getElementById('details').value.trim();
+            
+            if (nameVal || detailsVal) {
+                return true;
+            }
+            
+            // Check all IBAN rows for meaningful data
+            const allRows = document.querySelectorAll('.iban-row');
+            for (const row of allRows) {
+                const rowIndex = parseInt(row.getAttribute('data-row-index'));
+                const currencyField = document.getElementById(`currency-${rowIndex}`);
+                const ibanField = document.getElementById(`iban-${rowIndex}`);
+                
+                if (currencyField && ibanField) {
+                    const currencyValue = currencyField.value.trim();
+                    const ibanValue = ibanField.value.trim();
+                    
+                    if (currencyValue || ibanValue) {
+                        return true;
+                    }
+                }
+            }
+            
+            return false;
+        }
+
         function setFieldsReadOnly(readOnly) {
             // Set readonly state and styling for all input fields
             const allFields = document.querySelectorAll('input[type="text"]');
@@ -401,6 +430,20 @@
             return maxIndex;
         }
 
+        // Helper function to set button state (enabled/disabled) with consistent styling
+        function setButtonState(button, enabled, hoverClass = 'hover:bg-blue-100') {
+            if (!button) return;
+            
+            button.disabled = !enabled;
+            if (!enabled) {
+                button.classList.add('opacity-50', 'cursor-not-allowed');
+                button.classList.remove(hoverClass, 'cursor-pointer');
+            } else {
+                button.classList.remove('opacity-50', 'cursor-not-allowed');
+                button.classList.add(hoverClass, 'cursor-pointer');
+            }
+        }
+
         // Unified button state management for all buttons
         function setAllButtonStates() {
             const allRows = document.querySelectorAll('.iban-row');
@@ -420,14 +463,7 @@
                     // Update copy button - enable if IBAN has content (currency is optional)
                     if (copyBtn) {
                         const shouldEnable = ibanField.value.trim();
-                        copyBtn.disabled = !shouldEnable;
-                        if (copyBtn.disabled) {
-                            copyBtn.classList.add('opacity-50', 'cursor-not-allowed');
-                            copyBtn.classList.remove('hover:bg-blue-100', 'cursor-pointer');
-                        } else {
-                            copyBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-                            copyBtn.classList.add('hover:bg-blue-100', 'cursor-pointer');
-                        }
+                        setButtonState(copyBtn, shouldEnable);
                     }
                     
                     // Update add button - show only on last row when both fields are filled (and not in read-only mode)
@@ -459,14 +495,8 @@
                 const field = document.getElementById(fieldId);
                 const btn = document.querySelector(`.copy-btn[data-copytarget="${fieldId}"]`);
                 if (btn && field) {
-                    btn.disabled = !field.value.trim();
-                    if (btn.disabled) {
-                        btn.classList.add('opacity-50', 'cursor-not-allowed');
-                        btn.classList.remove('hover:bg-blue-100', 'cursor-pointer');
-                    } else {
-                        btn.classList.remove('opacity-50', 'cursor-not-allowed');
-                        btn.classList.add('hover:bg-blue-100', 'cursor-pointer');
-                    }
+                    const hasValue = field.value.trim();
+                    setButtonState(btn, hasValue);
                 }
             });
             
@@ -493,6 +523,10 @@
                 if (permalinkBtn) {
                     permalinkBtn.classList.remove('hidden');
                     permalinkBtn.classList.add('flex');
+                    
+                    // Disable permalink button if there's no meaningful data to share
+                    const hasData = hasDataToShare();
+                    setButtonState(permalinkBtn, hasData, 'hover:bg-blue-600');
                 }
             }
         }
