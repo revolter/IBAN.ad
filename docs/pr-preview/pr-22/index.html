@@ -787,7 +787,9 @@
             const params = new URLSearchParams(window.location.search);
             const newLang = document.getElementById('lang-select').value;
             if (params.get(QUERY_PARAM_LANG) !== newLang) {
-                redirectToPermalink();
+                // Update language parameter while preserving all other current parameters (including edit state)
+                params.set(QUERY_PARAM_LANG, newLang);
+                redirectToUrl(params);
             }
         });
 
