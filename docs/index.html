@@ -283,6 +283,35 @@
             return hasPermalinkData() && !isEditMode();
         }
 
+        function hasDataToShare() {
+            // Check if there's meaningful data in the current form that can be shared
+            const nameVal = document.getElementById('name').value.trim();
+            const detailsVal = document.getElementById('details').value.trim();
+            
+            if (nameVal || detailsVal) {
+                return true;
+            }
+            
+            // Check all IBAN rows for meaningful data
+            const allRows = document.querySelectorAll('.iban-row');
+            for (const row of allRows) {
+                const rowIndex = parseInt(row.getAttribute('data-row-index'));
+                const currencyField = document.getElementById(`currency-${rowIndex}`);
+                const ibanField = document.getElementById(`iban-${rowIndex}`);
+                
+                if (currencyField && ibanField) {
+                    const currencyValue = currencyField.value.trim();
+                    const ibanValue = ibanField.value.trim();
+                    
+                    if (currencyValue || ibanValue) {
+                        return true;
+                    }
+                }
+            }
+            
+            return false;
+        }
+
         function setFieldsReadOnly(readOnly) {
             // Set readonly state and styling for all input fields
             const allFields = document.querySelectorAll('input[type="text"]');
@@ -493,6 +522,17 @@
                 if (permalinkBtn) {
                     permalinkBtn.classList.remove('hidden');
                     permalinkBtn.classList.add('flex');
+                    
+                    // Disable permalink button if there's no meaningful data to share
+                    const hasData = hasDataToShare();
+                    permalinkBtn.disabled = !hasData;
+                    if (permalinkBtn.disabled) {
+                        permalinkBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                        permalinkBtn.classList.remove('hover:bg-blue-600', 'cursor-pointer');
+                    } else {
+                        permalinkBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                        permalinkBtn.classList.add('hover:bg-blue-600', 'cursor-pointer');
+                    }
                 }
             }
         }
