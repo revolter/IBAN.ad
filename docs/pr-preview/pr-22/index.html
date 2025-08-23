@@ -784,10 +784,18 @@
             redirectToUrl(params);
         });
         document.getElementById('lang-select').addEventListener('change', function() {
-            const params = new URLSearchParams(window.location.search);
+            const currentParams = new URLSearchParams(window.location.search);
             const newLang = document.getElementById('lang-select').value;
-            if (params.get(QUERY_PARAM_LANG) !== newLang) {
-                // Update language parameter while preserving all other current parameters (including edit state)
+            if (currentParams.get(QUERY_PARAM_LANG) !== newLang) {
+                // Capture all current form field values to preserve user input
+                const params = generatePermalinkParams();
+                
+                // Preserve edit state from URL if present
+                if (currentParams.has(QUERY_PARAM_EDIT)) {
+                    params.set(QUERY_PARAM_EDIT, currentParams.get(QUERY_PARAM_EDIT));
+                }
+                
+                // Update language parameter (generatePermalinkParams already includes current language, but we need to override it)
                 params.set(QUERY_PARAM_LANG, newLang);
                 redirectToUrl(params);
             }
