@@ -335,12 +335,12 @@
 
         function hasDataToShare() {
             // Check if there's meaningful data in the current form that can be shared
+            const swiftVal = document.getElementById('swift').value.trim();
             const nameVal = document.getElementById('name').value.trim();
             const addressVal = document.getElementById('address').value.trim();
             const detailsVal = document.getElementById('details').value.trim();
-            const swiftVal = document.getElementById('swift').value.trim();
             
-            if (nameVal || addressVal || detailsVal || swiftVal) {
+            if (swiftVal || nameVal || addressVal || detailsVal) {
                 return true;
             }
             
@@ -543,7 +543,7 @@
             });
             
             // Update copy buttons for other fields
-            ['name', 'address', 'details', 'swift'].forEach(fieldId => {
+            ['swift', 'name', 'address', 'details'].forEach(fieldId => {
                 const field = document.getElementById(fieldId);
                 const btn = document.querySelector(`.copy-btn[data-copytarget="${fieldId}"]`);
                 if (btn && field) {
@@ -703,7 +703,7 @@
             });
         }
 
-        ['name', 'address', 'details', 'swift'].forEach(fieldId => {
+        ['swift', 'name', 'address', 'details'].forEach(fieldId => {
             const field = document.getElementById(fieldId);
             if (field) {
                 field.addEventListener('input', () => {
