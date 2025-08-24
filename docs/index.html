@@ -207,6 +207,7 @@
                 tagline: 'The easiest way for NGOs, freelancers, and clubs to share their bank details for donations, payments, or memberships.',
                 title: 'IBAN Advertiser',
                 ibanLabel: 'Currency & IBAN',
+                bankingInformationSection: 'Banking Information',
                 accountHolderSection: 'Account Holder',
                 nameLabel: 'Name',
                 addressLabel: 'Address',
@@ -233,6 +234,7 @@
                 tagline: 'Cea mai simplă modalitate pentru ONG-uri, freelanceri și cluburi de a-și partaja contul bancar pentru donații, plăți sau cotizații.',
                 title: 'Promotor IBAN',
                 ibanLabel: 'Monedă și IBAN',
+                bankingInformationSection: 'Informații bancare',
                 accountHolderSection: 'Titular cont',
                 nameLabel: 'Nume',
                 addressLabel: 'Adresă',
@@ -292,6 +294,7 @@
             announceA11y(t.langChanged);
             document.getElementById('iban-info-title').textContent = t.title;
             document.querySelector('label[for="currency-1"]').textContent = t.ibanLabel;
+            document.getElementById('banking-info-section').textContent = t.bankingInformationSection;
             document.getElementById('account-holder-section').textContent = t.accountHolderSection;
             document.querySelector('label[for="name"]').textContent = t.nameLabel;
             document.querySelector('label[for="address"]').textContent = t.addressLabel;
