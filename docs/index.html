@@ -843,9 +843,7 @@
                 const addressField = document.getElementById('address');
                 addressField.value = params.get('address') || '';
                 // Auto-resize textarea if it has content
-                if (addressField.tagName.toLowerCase() === 'textarea') {
-                    autoResizeTextarea(addressField);
-                }
+                autoResizeTextarea(addressField);
             }
             if (params.has('details')) document.getElementById('details').value = params.get('details') || '';
             
