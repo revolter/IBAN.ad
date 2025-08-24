@@ -810,10 +810,10 @@
                 document.getElementById('iban-1').value = params.get('iban') || '';
             }
             
+            if (params.has('swift')) document.getElementById('swift').value = params.get('swift') || '';
             if (params.has('name')) document.getElementById('name').value = params.get('name') || '';
             if (params.has('address')) document.getElementById('address').value = params.get('address') || '';
             if (params.has('details')) document.getElementById('details').value = params.get('details') || '';
-            if (params.has('swift')) document.getElementById('swift').value = params.get('swift') || '';
             
             // Handle currency field for row 1 (first row) - backwards compatibility with parameterless
             if (params.has('currency')) {
