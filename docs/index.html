@@ -85,25 +85,39 @@
                 <h1 id="iban-info-title" class="text-2xl font-bold text-primary mb-4">IBAN Advertiser</h1>
                 <form class="space-y-6" aria-describedby="iban-info-desc" autocomplete="off">
                     <p id="iban-info-desc" class="sr-only">Readonly form displaying IBAN and related transaction details.</p>
-                    <div id="iban-rows-container">
-                        <div class="iban-row" data-row-index="1">
-                            <label for="currency-1" class="block text-sm font-medium text-gray-700 mb-1">Currency & IBAN</label>
-                            <div class="flex gap-2">
-                                <input type="text" id="currency-1" name="currency-1"
-                                    class="w-16 rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark text-center" aria-label="Currency (optional)" />
-                                <input type="text" id="iban-1" name="iban-1" value=""
-                                    class="w-full rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark" aria-label="IBAN" />
+                    <fieldset class="border border-gray-300 rounded-lg p-4 md:p-6 bg-white" aria-labelledby="banking-info-section">
+                        <legend id="banking-info-section" class="text-lg font-bold text-gray-800 px-2 bg-white rounded">Banking Information</legend>
+                        <div id="iban-rows-container">
+                            <div class="iban-row" data-row-index="1">
+                                <label for="currency-1" class="block text-sm font-medium text-gray-700 mb-1">Currency & IBAN</label>
                                 <div class="flex gap-2">
-                                    <button type="button" class="add-row-btn w-[42px] h-[42px] hidden items-center justify-center bg-green-200 hover:bg-green-300 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-all duration-200 cursor-pointer" data-row-index="1" aria-label="Add new row">💱</button>
-                                    <div class="relative">
-                                        <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 hover:bg-blue-100 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg cursor-pointer opacity-50 cursor-not-allowed" data-copytarget="iban-1" data-row-index="1" disabled>📋</button>
-                                        <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 pointer-events-none z-50 mb-1" id="tooltip-iban-1">Copied!</div>
+                                    <input type="text" id="currency-1" name="currency-1"
+                                        class="w-16 rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark text-center" aria-label="Currency (optional)" />
+                                    <input type="text" id="iban-1" name="iban-1" value=""
+                                        class="w-full rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark" aria-label="IBAN" />
+                                    <div class="flex gap-2">
+                                        <button type="button" class="add-row-btn w-[42px] h-[42px] hidden items-center justify-center bg-green-200 hover:bg-green-300 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-all duration-200 cursor-pointer" data-row-index="1" aria-label="Add new row">💱</button>
+                                        <div class="relative">
+                                            <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 hover:bg-blue-100 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg cursor-pointer opacity-50 cursor-not-allowed" data-copytarget="iban-1" data-row-index="1" disabled>📋</button>
+                                            <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 pointer-events-none z-50 mb-1" id="tooltip-iban-1">Copied!</div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <fieldset class="border border-gray-300 rounded-lg p-6 bg-white" aria-labelledby="account-holder-section">
+                        <div class="mt-6">
+                            <label for="swift" class="block text-sm font-medium text-gray-700 mb-1">SWIFT/BIC</label>
+                            <div class="flex gap-2">
+                                <input type="text" id="swift" name="swift" value=""
+                                    class="w-full rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark" aria-label="SWIFT/BIC (optional)" />
+                                <div class="relative">
+                                    <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 hover:bg-blue-100 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg cursor-pointer opacity-50 cursor-not-allowed" data-copytarget="swift" disabled>📋</button>
+                                    <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 pointer-events-none z-50 mb-1" id="tooltip-swift">Copied!</div>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset class="border border-gray-300 rounded-lg p-4 md:p-6 bg-white" aria-labelledby="account-holder-section">
                         <legend id="account-holder-section" class="text-lg font-bold text-gray-800 px-2 bg-white rounded">Account Holder</legend>
                         <div class="space-y-6">
                             <div>
@@ -112,7 +126,7 @@
                                     <input type="text" id="name" name="name" value=""
                                         class="w-full rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark" aria-label="Name" />
                                     <div class="relative">
-                                        <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 hover:bg-blue-100 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg cursor-pointer" data-copytarget="name">📋</button>
+                                        <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 hover:bg-blue-100 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg cursor-pointer opacity-50 cursor-not-allowed" data-copytarget="name" disabled>📋</button>
                                         <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 pointer-events-none z-50 mb-1" id="tooltip-name">Copied!</div>
                                     </div>
                                 </div>
@@ -124,7 +138,7 @@
                                     <input type="text" id="address" name="address" value=""
                                         class="w-full rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark" aria-label="Address" />
                                     <div class="relative">
-                                        <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 hover:bg-blue-100 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg cursor-pointer" data-copytarget="address">📋</button>
+                                        <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 hover:bg-blue-100 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg cursor-pointer opacity-50 cursor-not-allowed" data-copytarget="address" disabled>📋</button>
                                         <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 pointer-events-none z-50 mb-1" id="tooltip-address">Copied!</div>
                                     </div>
                                 </div>
@@ -138,7 +152,7 @@
                             <input type="text" id="details" name="details" value=""
                                 class="w-full rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark" aria-label="Transaction Details" />
                             <div class="relative">
-                                <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 hover:bg-blue-100 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg cursor-pointer" data-copytarget="details">📋</button>
+                                <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 hover:bg-blue-100 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg cursor-pointer opacity-50 cursor-not-allowed" data-copytarget="details" disabled>📋</button>
                                 <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 pointer-events-none z-50 mb-1" id="tooltip-details">Copied!</div>
                             </div>
                         </div>
@@ -192,49 +206,53 @@
                 siteName: 'IBAN.ad',
                 tagline: 'The easiest way for NGOs, freelancers, and clubs to share their bank details for donations, payments, or memberships.',
                 title: 'IBAN Advertiser',
+                formDesc: 'Readonly form displaying IBAN and related transaction details.',
+                bankingInformationSection: 'Banking Information',
                 ibanLabel: 'Currency & IBAN',
+                copyIBAN: 'Copy IBAN',
+                swiftLabel: 'SWIFT/BIC',
+                copySWIFT: 'Copy SWIFT/BIC',
                 accountHolderSection: 'Account Holder',
                 nameLabel: 'Name',
-                addressLabel: 'Address',
-                detailsLabel: 'Transaction Details',
-                formDesc: 'Readonly form displaying IBAN and related transaction details.',
-                copyIBAN: 'Copy IBAN',
                 copyName: 'Copy Name',
+                addressLabel: 'Address',
                 copyAddress: 'Copy Address',
+                detailsLabel: 'Transaction Details',
                 copyDetails: 'Copy Transaction Details',
-                permalink: 'Share',
                 edit: 'Edit',
-                permalinkCopied: 'Copied!',
+                permalink: 'Share',
                 copied: 'Copied!',
+                specialCharactersSuggestion: 'Tip: Avoid special characters (á, é, ñ, ü, ç, etc.) for maximum compatibility with all banks.',
                 skipToMain: 'Skip to main content',
                 langChanged: 'Language changed to English.',
                 formReset: 'Form has been reset.',
-                disclaimer: 'Disclaimer: This website does not process payments or donations. It only helps you copy IBAN information to use in your banking app or other payment methods for actual transfers.',
-                specialCharactersSuggestion: 'Tip: Avoid special characters (á, é, ñ, ü, ç, etc.) for maximum compatibility with all banks.'
+                disclaimer: 'Disclaimer: This website does not process payments or donations. It only helps you copy IBAN information to use in your banking app or other payment methods for actual transfers.'
             },
             ro: {
                 siteName: 'IBAN.ad',
                 tagline: 'Cea mai simplă modalitate pentru ONG-uri, freelanceri și cluburi de a-și partaja contul bancar pentru donații, plăți sau cotizații.',
                 title: 'Promotor IBAN',
+                formDesc: 'Formular doar pentru citire care afișează IBAN-ul și detaliile tranzacției.',
+                bankingInformationSection: 'Informații bancare',
                 ibanLabel: 'Monedă și IBAN',
+                copyIBAN: 'Copiază IBAN',
+                swiftLabel: 'SWIFT/BIC',
+                copySWIFT: 'Copiază SWIFT/BIC',
                 accountHolderSection: 'Titular cont',
                 nameLabel: 'Nume',
-                addressLabel: 'Adresă',
-                detailsLabel: 'Detalii tranzacție',
-                formDesc: 'Formular doar pentru citire care afișează IBAN-ul și detaliile tranzacției.',
-                copyIBAN: 'Copiază IBAN',
                 copyName: 'Copiază nume',
+                addressLabel: 'Adresă',
                 copyAddress: 'Copiază adresă',
+                detailsLabel: 'Detalii tranzacție',
                 copyDetails: 'Copiază detalii tranzacție',
-                permalink: 'Partajează',
                 edit: 'Modifică',
-                permalinkCopied: 'Copiat!',
+                permalink: 'Partajează',
                 copied: 'Copiat!',
+                specialCharactersSuggestion: 'Sfat: Evită caracterele speciale (ă, ș, ț, etc.) pentru compatibilitate maximă cu toate băncile.',
                 skipToMain: 'Sari la conținutul principal',
                 langChanged: 'Limba a fost schimbată în română.',
                 formReset: 'Formularul a fost resetat.',
-                disclaimer: 'Precizare: Acest site nu procesează plăți sau donații. Te ajută doar să copiezi informațiile IBAN pentru a le folosi în aplicația ta bancară sau alte metode de plată pentru transferuri reale.',
-                specialCharactersSuggestion: 'Sfat: Evită caracterele speciale (ă, ș, ț, etc.) pentru compatibilitate maximă cu toate băncile.'
+                disclaimer: 'Precizare: Acest site nu procesează plăți sau donații. Te ajută doar să copiezi informațiile IBAN pentru a le folosi în aplicația ta bancară sau alte metode de plată pentru transferuri reale.'
             }
         };
 
@@ -252,6 +270,7 @@
             document.querySelector('.copy-btn[data-copytarget="name"]').setAttribute('aria-label', t.copyName);
             document.querySelector('.copy-btn[data-copytarget="address"]').setAttribute('aria-label', t.copyAddress);
             document.querySelector('.copy-btn[data-copytarget="details"]').setAttribute('aria-label', t.copyDetails);
+            document.querySelector('.copy-btn[data-copytarget="swift"]').setAttribute('aria-label', t.copySWIFT);
             // Localize permalink button label and aria-label
             document.getElementById('permalink-btn-label').textContent = t.permalink;
             document.getElementById('permalink-btn').setAttribute('aria-label', t.permalink);
@@ -263,6 +282,7 @@
             document.getElementById('tooltip-name').textContent = t.copied;
             document.getElementById('tooltip-address').textContent = t.copied;
             document.getElementById('tooltip-details').textContent = t.copied;
+            document.getElementById('tooltip-swift').textContent = t.copied;
             document.getElementById('tooltip-permalink').textContent = t.copied;
             // Update <html lang=...>
             document.documentElement.setAttribute('lang', lang);
@@ -272,10 +292,12 @@
             announceA11y(t.langChanged);
             document.getElementById('iban-info-title').textContent = t.title;
             document.querySelector('label[for="currency-1"]').textContent = t.ibanLabel;
+            document.getElementById('banking-info-section').textContent = t.bankingInformationSection;
             document.getElementById('account-holder-section').textContent = t.accountHolderSection;
             document.querySelector('label[for="name"]').textContent = t.nameLabel;
             document.querySelector('label[for="address"]').textContent = t.addressLabel;
             document.querySelector('label[for="details"]').textContent = t.detailsLabel;
+            document.querySelector('label[for="swift"]').textContent = t.swiftLabel;
             document.getElementById('iban-info-desc').textContent = t.formDesc;
             document.getElementById('disclaimer-text').textContent = t.disclaimer;
             document.getElementById('name-suggestion').textContent = t.specialCharactersSuggestion;
@@ -313,11 +335,12 @@
 
         function hasDataToShare() {
             // Check if there's meaningful data in the current form that can be shared
+            const swiftVal = document.getElementById('swift').value.trim();
             const nameVal = document.getElementById('name').value.trim();
             const addressVal = document.getElementById('address').value.trim();
             const detailsVal = document.getElementById('details').value.trim();
             
-            if (nameVal || addressVal || detailsVal) {
+            if (swiftVal || nameVal || addressVal || detailsVal) {
                 return true;
             }
             
@@ -520,7 +543,7 @@
             });
             
             // Update copy buttons for other fields
-            ['name', 'address', 'details'].forEach(fieldId => {
+            ['swift', 'name', 'address', 'details'].forEach(fieldId => {
                 const field = document.getElementById(fieldId);
                 const btn = document.querySelector(`.copy-btn[data-copytarget="${fieldId}"]`);
                 if (btn && field) {
@@ -637,9 +660,21 @@
             return value.slice(0, 34).toUpperCase();
         }
 
+        // SWIFT validation function
+        function validateAndFormatSWIFT(value) {
+            if (!value) return '';
+            
+            // Remove all whitespace and non-alphanumeric characters
+            value = value.replace(/[^A-Za-z0-9]/g, '');
+            
+            // Limit to 11 characters and convert to uppercase
+            return value.slice(0, 11).toUpperCase();
+        }
+
         // Add event listeners for the first row fields
         const currencyField1 = document.getElementById('currency-1');
         const ibanField1 = document.getElementById('iban-1');
+        const swiftField = document.getElementById('swift');
         
         if (currencyField1) {
             currencyField1.addEventListener('input', (e) => {
@@ -659,7 +694,16 @@
             });
         }
 
-        ['name', 'address', 'details'].forEach(fieldId => {
+        if (swiftField) {
+            swiftField.addEventListener('input', (e) => {
+                // Apply SWIFT validation and formatting
+                const formatted = validateAndFormatSWIFT(e.target.value);
+                e.target.value = formatted;
+                setAllButtonStates();
+            });
+        }
+
+        ['swift', 'name', 'address', 'details'].forEach(fieldId => {
             const field = document.getElementById(fieldId);
             if (field) {
                 field.addEventListener('input', () => {
@@ -766,6 +810,7 @@
                 document.getElementById('iban-1').value = params.get('iban') || '';
             }
             
+            if (params.has('swift')) document.getElementById('swift').value = params.get('swift') || '';
             if (params.has('name')) document.getElementById('name').value = params.get('name') || '';
             if (params.has('address')) document.getElementById('address').value = params.get('address') || '';
             if (params.has('details')) document.getElementById('details').value = params.get('details') || '';
@@ -892,6 +937,36 @@
             return false; // No redirect needed
         }
 
+        // Redirect if SWIFT parameters need validation/formatting
+        function redirectFromInvalidSWIFT() {
+            const params = new URLSearchParams(window.location.search);
+            let needsRedirect = false;
+            const newParams = new URLSearchParams();
+
+            // Copy all existing parameters, validating and formatting SWIFT values
+            for (const [key, value] of params.entries()) {
+                if (key === 'swift') {
+                    const formattedValue = validateAndFormatSWIFT(value);
+                    if (value !== formattedValue) {
+                        needsRedirect = true;
+                    }
+                    if (formattedValue) {
+                        newParams.set(key, formattedValue);
+                    }
+                    // If formattedValue is empty, we don't add the parameter (effectively removing invalid ones)
+                } else {
+                    newParams.set(key, value);
+                }
+            }
+
+            if (needsRedirect) {
+                // Redirect to the new URL with validated SWIFT values
+                redirectToUrl(newParams, true);
+                return true; // Indicate that a redirect happened
+            }
+            return false; // No redirect needed
+        }
+
         // Redirect if empty second row parameters are present
         function redirectFromEmptySecondRows() {
             const params = new URLSearchParams(window.location.search);
@@ -900,7 +975,7 @@
 
             // Copy all existing parameters, excluding empty second row parameters
             for (const [key, value] of params.entries()) {
-                // Check if this is a second row parameter (currency-N or iban-N where N >= 2)
+                // Check if this is a second row parameter (currency-N, iban-N where N >= 2)
                 const match = key.match(/^(currency|iban)-(\d+)$/);
                 if (match && parseInt(match[2]) >= 2) {
                     // This is a second+ row parameter, only keep it if it has a non-empty value
@@ -944,6 +1019,12 @@
                 return;
             }
 
+            if (redirectFromInvalidSWIFT()) {
+                // If redirect happened, don't continue with field population
+                // The page will reload with the new URL
+                return;
+            }
+
             if (redirectFromEmptySecondRows()) {
                 // If redirect happened, don't continue with field population
                 // The page will reload with the new URL
@@ -964,11 +1045,13 @@
             const params = new URLSearchParams();
             const langVal = document.getElementById('lang-select').value;
             
+            const swiftVal = document.getElementById('swift').value;
             const nameVal = document.getElementById('name').value;
             const addressVal = document.getElementById('address').value;
             const detailsVal = document.getElementById('details').value;
             
             if (langVal) params.set(QUERY_PARAM_LANG, langVal);
+            if (swiftVal) params.set('swift', swiftVal);
             if (nameVal) params.set('name', nameVal);
             if (addressVal) params.set('address', addressVal);
             if (detailsVal) params.set('details', detailsVal);
@@ -1050,9 +1133,12 @@
                 // Capture all current form field values to preserve user input
                 const params = generatePermalinkParams();
                 
-                // Preserve edit state from URL if present
+                // Preserve edit state from URL if present, or add it if user has entered data
                 if (currentParams.has(QUERY_PARAM_EDIT)) {
                     params.set(QUERY_PARAM_EDIT, currentParams.get(QUERY_PARAM_EDIT));
+                } else if (hasDataToShare()) {
+                    // If user has entered data but not explicitly in edit mode, preserve edit mode
+                    params.set(QUERY_PARAM_EDIT, QUERY_PARAM_EDIT_VALUE);
                 }
                 
                 // Update language parameter (generatePermalinkParams already includes current language, but we need to override it)
