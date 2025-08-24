@@ -1045,16 +1045,16 @@
             const params = new URLSearchParams();
             const langVal = document.getElementById('lang-select').value;
             
+            const swiftVal = document.getElementById('swift').value;
             const nameVal = document.getElementById('name').value;
             const addressVal = document.getElementById('address').value;
             const detailsVal = document.getElementById('details').value;
-            const swiftVal = document.getElementById('swift').value;
             
             if (langVal) params.set(QUERY_PARAM_LANG, langVal);
+            if (swiftVal) params.set('swift', swiftVal);
             if (nameVal) params.set('name', nameVal);
             if (addressVal) params.set('address', addressVal);
             if (detailsVal) params.set('details', detailsVal);
-            if (swiftVal) params.set('swift', swiftVal);
             
             // Collect all existing rows data using their actual indices
             const allRows = document.querySelectorAll('.iban-row');
