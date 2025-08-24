@@ -136,7 +136,7 @@
                                 <label for="address" class="block text-sm font-medium text-gray-700 mb-1">Address</label>
                                 <div class="flex gap-2">
                                     <textarea id="address" name="address" rows="1"
-                                        class="w-full rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark resize-none overflow-hidden min-h-[42px] max-h-[84px]" 
+                                        class="w-full rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark resize-none overflow-hidden" 
                                         aria-label="Address"></textarea>
                                     <div class="relative">
                                         <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 hover:bg-blue-100 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg cursor-pointer opacity-50 cursor-not-allowed" data-copytarget="address" disabled>📋</button>
@@ -704,36 +704,21 @@
             });
         }
 
-        // Function to auto-resize textarea based on content
-        function autoResizeTextarea(textarea) {
-            // Reset height to get the correct scrollHeight
-            textarea.style.height = 'auto';
-            
-            // Calculate the appropriate height (minimum 42px, maximum 84px for 2 lines)
-            const minHeight = 42; // Height for 1 line
-            const maxHeight = 84; // Height for 2 lines  
-            const scrollHeight = textarea.scrollHeight;
-            
-            // Set height between min and max
-            const newHeight = Math.min(Math.max(scrollHeight, minHeight), maxHeight);
-            textarea.style.height = newHeight + 'px';
-            
-            // Show overflow if content exceeds 2 lines
-            if (scrollHeight > maxHeight) {
-                textarea.style.overflowY = 'auto';
-            } else {
-                textarea.style.overflowY = 'hidden';
-            }
-        }
+        // Auto-resize all textareas based on content
+        document.querySelectorAll("textarea").forEach(function(textarea) {
+            textarea.style.height = textarea.scrollHeight + "px";
+            textarea.style.overflowY = "hidden";
+
+            textarea.addEventListener("input", function() {
+                this.style.height = "auto";
+                this.style.height = this.scrollHeight + "px";
+            });
+        });
 
         ['swift', 'name', 'address', 'details'].forEach(fieldId => {
             const field = document.getElementById(fieldId);
             if (field) {
                 field.addEventListener('input', () => {
-                    // Auto-resize if it's a textarea
-                    if (field.tagName.toLowerCase() === 'textarea') {
-                        autoResizeTextarea(field);
-                    }
                     setAllButtonStates();
                 });
             }
@@ -843,9 +828,8 @@
                 const addressField = document.getElementById('address');
                 addressField.value = params.get('address') || '';
                 // Auto-resize textarea if it has content
-                if (addressField.tagName.toLowerCase() === 'textarea') {
-                    autoResizeTextarea(addressField);
-                }
+                addressField.style.height = "auto";
+                addressField.style.height = addressField.scrollHeight + "px";
             }
             if (params.has('details')) document.getElementById('details').value = params.get('details') || '';
             
