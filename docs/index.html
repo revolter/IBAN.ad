@@ -704,14 +704,19 @@
             });
         }
 
+        // Function to auto-resize a textarea based on its content
+        function autoResizeTextarea(textarea) {
+            textarea.style.height = "auto";
+            textarea.style.height = textarea.scrollHeight + "px";
+        }
+
         // Auto-resize all textareas based on content
         document.querySelectorAll("textarea").forEach(function(textarea) {
-            textarea.style.height = textarea.scrollHeight + "px";
+            autoResizeTextarea(textarea);
             textarea.style.overflowY = "hidden";
 
             textarea.addEventListener("input", function() {
-                this.style.height = "auto";
-                this.style.height = this.scrollHeight + "px";
+                autoResizeTextarea(this);
             });
         });
 
@@ -857,8 +862,7 @@
             // Auto-resize any textareas that have content from URL parameters
             document.querySelectorAll("textarea").forEach(function(textarea) {
                 if (textarea.value) {
-                    textarea.style.height = "auto";
-                    textarea.style.height = textarea.scrollHeight + "px";
+                    autoResizeTextarea(textarea);
                 }
             });
         }
