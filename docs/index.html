@@ -104,28 +104,33 @@
                         </div>
                     </div>
                     <div>
-                        <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Account Holder Name</label>
-                        <div class="flex gap-2">
-                            <input type="text" id="name" name="name" value=""
-                                class="w-full rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark" aria-label="Account Holder Name" />
-                            <div class="relative">
-                                <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 hover:bg-blue-100 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg cursor-pointer" data-copytarget="name">📋</button>
-                                <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 pointer-events-none z-50 mb-1" id="tooltip-name">Copied!</div>
+                        <h2 id="account-holder-section" class="text-lg font-semibold text-gray-800 mb-4 mt-2">Account Holder</h2>
+                        <div class="space-y-6">
+                            <div>
+                                <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                                <div class="flex gap-2">
+                                    <input type="text" id="name" name="name" value=""
+                                        class="w-full rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark" aria-label="Name" />
+                                    <div class="relative">
+                                        <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 hover:bg-blue-100 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg cursor-pointer" data-copytarget="name">📋</button>
+                                        <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 pointer-events-none z-50 mb-1" id="tooltip-name">Copied!</div>
+                                    </div>
+                                </div>
+                                <p id="name-suggestion" class="text-xs text-gray-500 mt-1">Tip: Avoid special characters (ă, ș, ț, etc.) for maximum compatibility with all banks.</p>
+                            </div>
+                            <div>
+                                <label for="address" class="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                                <div class="flex gap-2">
+                                    <input type="text" id="address" name="address" value=""
+                                        class="w-full rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark" aria-label="Address" />
+                                    <div class="relative">
+                                        <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 hover:bg-blue-100 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg cursor-pointer" data-copytarget="address">📋</button>
+                                        <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 pointer-events-none z-50 mb-1" id="tooltip-address">Copied!</div>
+                                    </div>
+                                </div>
+                                <p id="address-suggestion" class="text-xs text-gray-500 mt-1">Tip: Avoid special characters (ă, ș, ț, etc.) for maximum compatibility with all banks.</p>
                             </div>
                         </div>
-                        <p id="name-suggestion" class="text-xs text-gray-500 mt-1">Tip: Avoid special characters (ă, ș, ț, etc.) for maximum compatibility with all banks.</p>
-                    </div>
-                    <div>
-                        <label for="address" class="block text-sm font-medium text-gray-700 mb-1">Account Holder Address</label>
-                        <div class="flex gap-2">
-                            <input type="text" id="address" name="address" value=""
-                                class="w-full rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark" aria-label="Account Holder Address" />
-                            <div class="relative">
-                                <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 hover:bg-blue-100 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg cursor-pointer" data-copytarget="address">📋</button>
-                                <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 pointer-events-none z-50 mb-1" id="tooltip-address">Copied!</div>
-                            </div>
-                        </div>
-                        <p id="address-suggestion" class="text-xs text-gray-500 mt-1">Tip: Avoid special characters (ă, ș, ț, etc.) for maximum compatibility with all banks.</p>
                     </div>
                     <div>
                         <label for="details" class="block text-sm font-medium text-gray-700 mb-1">Transaction Details</label>
@@ -188,13 +193,14 @@
                 tagline: 'The easiest way for NGOs, freelancers, and clubs to share their bank details for donations, payments, or memberships.',
                 title: 'IBAN Advertiser',
                 ibanLabel: 'Currency & IBAN',
-                nameLabel: 'Account Holder Name',
-                addressLabel: 'Account Holder Address',
+                accountHolderSection: 'Account Holder',
+                nameLabel: 'Name',
+                addressLabel: 'Address',
                 detailsLabel: 'Transaction Details',
                 formDesc: 'Readonly form displaying IBAN and related transaction details.',
                 copyIBAN: 'Copy IBAN',
-                copyName: 'Copy Account Holder Name',
-                copyAddress: 'Copy Account Holder Address',
+                copyName: 'Copy Name',
+                copyAddress: 'Copy Address',
                 copyDetails: 'Copy Transaction Details',
                 permalink: 'Share',
                 edit: 'Edit',
@@ -211,13 +217,14 @@
                 tagline: 'Cea mai simplă modalitate pentru ONG-uri, freelanceri și cluburi de a-și partaja contul bancar pentru donații, plăți sau cotizații.',
                 title: 'Promotor IBAN',
                 ibanLabel: 'Monedă și IBAN',
-                nameLabel: 'Nume titular cont',
-                addressLabel: 'Adresă titular cont',
+                accountHolderSection: 'Titular cont',
+                nameLabel: 'Nume',
+                addressLabel: 'Adresă',
                 detailsLabel: 'Detalii tranzacție',
                 formDesc: 'Formular doar pentru citire care afișează IBAN-ul și detaliile tranzacției.',
                 copyIBAN: 'Copiază IBAN',
-                copyName: 'Copiază numele titularului',
-                copyAddress: 'Copiază adresa titularului',
+                copyName: 'Copiază nume',
+                copyAddress: 'Copiază adresă',
                 copyDetails: 'Copiază detaliile tranzacției',
                 permalink: 'Partajează',
                 edit: 'Modifică',
@@ -265,6 +272,7 @@
             announceA11y(t.langChanged);
             document.getElementById('iban-info-title').textContent = t.title;
             document.querySelector('label[for="currency-1"]').textContent = t.ibanLabel;
+            document.getElementById('account-holder-section').textContent = t.accountHolderSection;
             document.querySelector('label[for="name"]').textContent = t.nameLabel;
             document.querySelector('label[for="address"]').textContent = t.addressLabel;
             document.querySelector('label[for="details"]').textContent = t.detailsLabel;
@@ -650,7 +658,7 @@
             });
         }
 
-        ['name', 'details'].forEach(fieldId => {
+        ['name', 'address', 'details'].forEach(fieldId => {
             const field = document.getElementById(fieldId);
             if (field) {
                 field.addEventListener('input', () => {
