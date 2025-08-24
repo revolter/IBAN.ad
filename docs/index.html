@@ -825,11 +825,7 @@
             if (params.has('swift')) document.getElementById('swift').value = params.get('swift') || '';
             if (params.has('name')) document.getElementById('name').value = params.get('name') || '';
             if (params.has('address')) {
-                const addressField = document.getElementById('address');
-                addressField.value = params.get('address') || '';
-                // Auto-resize textarea if it has content
-                addressField.style.height = "auto";
-                addressField.style.height = addressField.scrollHeight + "px";
+                document.getElementById('address').value = params.get('address') || '';
             }
             if (params.has('details')) document.getElementById('details').value = params.get('details') || '';
             
@@ -857,6 +853,14 @@
             
             // Update all button states after setting fields
             setAllButtonStates();
+            
+            // Auto-resize any textareas that have content from URL parameters
+            document.querySelectorAll("textarea").forEach(function(textarea) {
+                if (textarea.value) {
+                    textarea.style.height = "auto";
+                    textarea.style.height = textarea.scrollHeight + "px";
+                }
+            });
         }
 
         // Unified redirect function
