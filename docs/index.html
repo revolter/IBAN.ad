@@ -597,6 +597,17 @@
             return '';
         }
 
+        // IBAN validation function
+        function validateAndFormatIBAN(value) {
+            if (!value) return '';
+            
+            // Remove all whitespace and non-alphanumeric characters
+            value = value.replace(/[^A-Za-z0-9]/g, '');
+            
+            // Limit to 34 characters and convert to uppercase
+            return value.slice(0, 34).toUpperCase();
+        }
+
         // Add event listeners for the first row fields
         const currencyField1 = document.getElementById('currency-1');
         const ibanField1 = document.getElementById('iban-1');
@@ -611,7 +622,10 @@
         }
         
         if (ibanField1) {
-            ibanField1.addEventListener('input', () => {
+            ibanField1.addEventListener('input', (e) => {
+                // Apply IBAN validation and formatting
+                const formatted = validateAndFormatIBAN(e.target.value);
+                e.target.value = formatted;
                 setAllButtonStates();
             });
         }
@@ -626,7 +640,7 @@
         });
 
         // Function to add a new IBAN row
-        function addNewIbanRow() {
+        function addNewIBANRow() {
             const container = document.getElementById('iban-rows-container');
             const currentRowIndex = getNextRowIndex();
             
@@ -679,7 +693,10 @@
                 setAllButtonStates();
             });
             
-            ibanField.addEventListener('input', () => {
+            ibanField.addEventListener('input', (e) => {
+                // Apply IBAN validation and formatting
+                const formatted = validateAndFormatIBAN(e.target.value);
+                e.target.value = formatted;
                 setAllButtonStates();
             });
         }
@@ -704,7 +721,7 @@
         document.addEventListener('click', function(e) {
             if (e.target.classList.contains('add-row-btn')) {
                 const rowIndex = parseInt(e.target.getAttribute('data-row-index'));
-                addNewIbanRow();
+                addNewIBANRow();
                 // Update all button states
                 setAllButtonStates();
             } else if (e.target.classList.contains('delete-row-btn')) {
@@ -733,7 +750,7 @@
             while (params.has(`currency-${rowIndex}`) || params.has(`iban-${rowIndex}`)) {
                 // Create the row if it doesn't exist
                 if (!document.getElementById(`iban-${rowIndex}`)) {
-                    addNewIbanRow();
+                    addNewIBANRow();
                 }
                 
                 if (params.has(`currency-${rowIndex}`)) {
@@ -815,6 +832,36 @@
             return false; // No redirect needed
         }
 
+        // Redirect if IBAN parameters need validation/formatting
+        function redirectFromInvalidIBAN() {
+            const params = new URLSearchParams(window.location.search);
+            let needsRedirect = false;
+            const newParams = new URLSearchParams();
+
+            // Copy all existing parameters, validating and formatting IBAN values
+            for (const [key, value] of params.entries()) {
+                if (key === 'iban' || key.startsWith('iban-')) {
+                    const formattedValue = validateAndFormatIBAN(value);
+                    if (value !== formattedValue) {
+                        needsRedirect = true;
+                    }
+                    if (formattedValue) {
+                        newParams.set(key, formattedValue);
+                    }
+                    // If formattedValue is empty, we don't add the parameter (effectively removing invalid ones)
+                } else {
+                    newParams.set(key, value);
+                }
+            }
+
+            if (needsRedirect) {
+                // Redirect to the new URL with validated IBAN values
+                redirectToUrl(newParams, true);
+                return true; // Indicate that a redirect happened
+            }
+            return false; // No redirect needed
+        }
+
         // Redirect if empty second row parameters are present
         function redirectFromEmptySecondRows() {
             const params = new URLSearchParams(window.location.search);
@@ -856,6 +903,12 @@
             }
 
             if (redirectFromInvalidCurrency()) {
+                // If redirect happened, don't continue with field population
+                // The page will reload with the new URL
+                return;
+            }
+
+            if (redirectFromInvalidIBAN()) {
                 // If redirect happened, don't continue with field population
                 // The page will reload with the new URL
                 return;
