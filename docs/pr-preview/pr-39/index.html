@@ -314,9 +314,10 @@
         function hasDataToShare() {
             // Check if there's meaningful data in the current form that can be shared
             const nameVal = document.getElementById('name').value.trim();
+            const addressVal = document.getElementById('address').value.trim();
             const detailsVal = document.getElementById('details').value.trim();
             
-            if (nameVal || detailsVal) {
+            if (nameVal || addressVal || detailsVal) {
                 return true;
             }
             
