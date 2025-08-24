@@ -386,7 +386,7 @@
                 
                 // Determine tooltip ID based on button type:
                 // - For IBAN copy buttons (have row-index): use tooltip-iban-{rowIndex}
-                // - For other copy buttons (name, details): use tooltip-{targetId}
+                // - For other copy buttons (non-IBAN fields): use tooltip-{targetId}
                 if (rowIndex !== null) {
                     tooltipId = `tooltip-iban-${rowIndex}`;
                 } else {
@@ -408,7 +408,7 @@
                 return ibanField ? ibanField.value.trim() : '';
             }
             
-            // This is a regular field copy button (name or details)
+            // This is a regular field copy button (non-IBAN field)
             const targetField = document.getElementById(targetId);
             return targetField ? targetField.value.trim() : '';
         }
@@ -519,7 +519,7 @@
                 }
             });
             
-            // Update name and details copy buttons
+            // Update copy buttons for other fields
             ['name', 'address', 'details'].forEach(fieldId => {
                 const field = document.getElementById(fieldId);
                 const btn = document.querySelector(`.copy-btn[data-copytarget="${fieldId}"]`);
