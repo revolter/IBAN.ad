@@ -89,14 +89,12 @@
                         <legend id="banking-info-section" class="text-lg font-bold text-gray-800 px-2 bg-white rounded">Banking Information</legend>
                         <div id="iban-rows-container">
                             <div class="iban-row" data-row-index="1">
-                                <label for="currency-1" class="block text-sm font-medium text-gray-700 mb-1">Currency, IBAN & SWIFT</label>
+                                <label for="currency-1" class="block text-sm font-medium text-gray-700 mb-1">Currency & IBAN</label>
                                 <div class="flex gap-2">
                                     <input type="text" id="currency-1" name="currency-1"
                                         class="w-16 rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark text-center" aria-label="Currency (optional)" />
                                     <input type="text" id="iban-1" name="iban-1" value=""
                                         class="flex-1 rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark" aria-label="IBAN" />
-                                    <input type="text" id="swift-1" name="swift-1" value=""
-                                        class="w-28 rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark text-center" aria-label="SWIFT/BIC (optional)" />
                                     <div class="flex gap-2">
                                         <button type="button" class="add-row-btn w-[42px] h-[42px] hidden items-center justify-center bg-green-200 hover:bg-green-300 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-all duration-200 cursor-pointer" data-row-index="1" aria-label="Add new row">💱</button>
                                         <div class="relative">
@@ -104,6 +102,17 @@
                                             <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 pointer-events-none z-50 mb-1" id="tooltip-iban-1">Copied!</div>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-6">
+                            <label for="swift" class="block text-sm font-medium text-gray-700 mb-1">SWIFT/BIC</label>
+                            <div class="flex gap-2">
+                                <input type="text" id="swift" name="swift" value=""
+                                    class="w-full rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark" aria-label="SWIFT/BIC (optional)" />
+                                <div class="relative">
+                                    <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 hover:bg-blue-100 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg cursor-pointer" data-copytarget="swift">📋</button>
+                                    <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 pointer-events-none z-50 mb-1" id="tooltip-swift">Copied!</div>
                                 </div>
                             </div>
                         </div>
@@ -202,11 +211,13 @@
                 nameLabel: 'Name',
                 addressLabel: 'Address',
                 detailsLabel: 'Transaction Details',
+                swiftLabel: 'SWIFT/BIC',
                 formDesc: 'Readonly form displaying IBAN and related transaction details.',
                 copyIBAN: 'Copy IBAN',
                 copyName: 'Copy Name',
                 copyAddress: 'Copy Address',
                 copyDetails: 'Copy Transaction Details',
+                copySWIFT: 'Copy SWIFT/BIC',
                 permalink: 'Share',
                 edit: 'Edit',
                 permalinkCopied: 'Copied!',
@@ -226,11 +237,13 @@
                 nameLabel: 'Nume',
                 addressLabel: 'Adresă',
                 detailsLabel: 'Detalii tranzacție',
+                swiftLabel: 'SWIFT/BIC',
                 formDesc: 'Formular doar pentru citire care afișează IBAN-ul și detaliile tranzacției.',
                 copyIBAN: 'Copiază IBAN',
                 copyName: 'Copiază nume',
                 copyAddress: 'Copiază adresă',
                 copyDetails: 'Copiază detalii tranzacție',
+                copySWIFT: 'Copiază SWIFT/BIC',
                 permalink: 'Partajează',
                 edit: 'Modifică',
                 permalinkCopied: 'Copiat!',
@@ -257,6 +270,7 @@
             document.querySelector('.copy-btn[data-copytarget="name"]').setAttribute('aria-label', t.copyName);
             document.querySelector('.copy-btn[data-copytarget="address"]').setAttribute('aria-label', t.copyAddress);
             document.querySelector('.copy-btn[data-copytarget="details"]').setAttribute('aria-label', t.copyDetails);
+            document.querySelector('.copy-btn[data-copytarget="swift"]').setAttribute('aria-label', t.copySWIFT);
             // Localize permalink button label and aria-label
             document.getElementById('permalink-btn-label').textContent = t.permalink;
             document.getElementById('permalink-btn').setAttribute('aria-label', t.permalink);
@@ -268,6 +282,7 @@
             document.getElementById('tooltip-name').textContent = t.copied;
             document.getElementById('tooltip-address').textContent = t.copied;
             document.getElementById('tooltip-details').textContent = t.copied;
+            document.getElementById('tooltip-swift').textContent = t.copied;
             document.getElementById('tooltip-permalink').textContent = t.copied;
             // Update <html lang=...>
             document.documentElement.setAttribute('lang', lang);
@@ -281,6 +296,7 @@
             document.querySelector('label[for="name"]').textContent = t.nameLabel;
             document.querySelector('label[for="address"]').textContent = t.addressLabel;
             document.querySelector('label[for="details"]').textContent = t.detailsLabel;
+            document.querySelector('label[for="swift"]').textContent = t.swiftLabel;
             document.getElementById('iban-info-desc').textContent = t.formDesc;
             document.getElementById('disclaimer-text').textContent = t.disclaimer;
             document.getElementById('name-suggestion').textContent = t.specialCharactersSuggestion;
@@ -321,8 +337,9 @@
             const nameVal = document.getElementById('name').value.trim();
             const addressVal = document.getElementById('address').value.trim();
             const detailsVal = document.getElementById('details').value.trim();
+            const swiftVal = document.getElementById('swift').value.trim();
             
-            if (nameVal || addressVal || detailsVal) {
+            if (nameVal || addressVal || detailsVal || swiftVal) {
                 return true;
             }
             
@@ -489,13 +506,12 @@
                 const rowIndex = parseInt(row.getAttribute('data-row-index'));
                 const currencyField = document.getElementById(`currency-${rowIndex}`);
                 const ibanField = document.getElementById(`iban-${rowIndex}`);
-                const swiftField = document.getElementById(`swift-${rowIndex}`);
                 const addBtn = document.querySelector(`.add-row-btn[data-row-index="${rowIndex}"]`);
                 const copyBtn = document.querySelector(`.copy-btn[data-row-index="${rowIndex}"]`);
                 const deleteBtn = document.querySelector(`.delete-row-btn[data-row-index="${rowIndex}"]`);
                 
-                if (currencyField && ibanField && swiftField) {
-                    // Update copy button - enable if IBAN has content (currency and swift are optional)
+                if (currencyField && ibanField) {
+                    // Update copy button - enable if IBAN has content (currency is optional)
                     if (copyBtn) {
                         const shouldEnable = ibanField.value.trim();
                         setButtonState(copyBtn, shouldEnable);
@@ -526,7 +542,7 @@
             });
             
             // Update copy buttons for other fields
-            ['name', 'address', 'details'].forEach(fieldId => {
+            ['name', 'address', 'details', 'swift'].forEach(fieldId => {
                 const field = document.getElementById(fieldId);
                 const btn = document.querySelector(`.copy-btn[data-copytarget="${fieldId}"]`);
                 if (btn && field) {
@@ -657,7 +673,7 @@
         // Add event listeners for the first row fields
         const currencyField1 = document.getElementById('currency-1');
         const ibanField1 = document.getElementById('iban-1');
-        const swiftField1 = document.getElementById('swift-1');
+        const swiftField = document.getElementById('swift');
         
         if (currencyField1) {
             currencyField1.addEventListener('input', (e) => {
@@ -677,8 +693,8 @@
             });
         }
 
-        if (swiftField1) {
-            swiftField1.addEventListener('input', (e) => {
+        if (swiftField) {
+            swiftField.addEventListener('input', (e) => {
                 // Apply SWIFT validation and formatting
                 const formatted = validateAndFormatSWIFT(e.target.value);
                 e.target.value = formatted;
@@ -686,7 +702,7 @@
             });
         }
 
-        ['name', 'address', 'details'].forEach(fieldId => {
+        ['name', 'address', 'details', 'swift'].forEach(fieldId => {
             const field = document.getElementById(fieldId);
             if (field) {
                 field.addEventListener('input', () => {
@@ -710,8 +726,6 @@
                         class="w-16 rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark text-center" aria-label="Currency (optional)" />
                     <input type="text" id="iban-${currentRowIndex}" name="iban-${currentRowIndex}" value=""
                         class="flex-1 rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark" aria-label="IBAN" />
-                    <input type="text" id="swift-${currentRowIndex}" name="swift-${currentRowIndex}" value=""
-                        class="w-28 rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark text-center" aria-label="SWIFT/BIC (optional)" />
                     <div class="flex gap-2">
                         <button type="button" class="add-row-btn w-[42px] h-[42px] hidden items-center justify-center bg-green-200 hover:bg-green-300 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-all duration-200 cursor-pointer" data-row-index="${currentRowIndex}" aria-label="Add new row">💱</button>
                         <button type="button" class="delete-row-btn w-[42px] h-[42px] hidden items-center justify-center bg-red-200 hover:bg-red-300 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-colors cursor-pointer" data-row-index="${currentRowIndex}" aria-label="Delete row">🗑️</button>
@@ -743,7 +757,6 @@
             // Add event listeners for the new fields
             const currencyField = document.getElementById(`currency-${currentRowIndex}`);
             const ibanField = document.getElementById(`iban-${currentRowIndex}`);
-            const swiftField = document.getElementById(`swift-${currentRowIndex}`);
             
             currencyField.addEventListener('input', (e) => {
                 // Apply currency validation and formatting
@@ -755,13 +768,6 @@
             ibanField.addEventListener('input', (e) => {
                 // Apply IBAN validation and formatting
                 const formatted = validateAndFormatIBAN(e.target.value);
-                e.target.value = formatted;
-                setAllButtonStates();
-            });
-
-            swiftField.addEventListener('input', (e) => {
-                // Apply SWIFT validation and formatting
-                const formatted = validateAndFormatSWIFT(e.target.value);
                 e.target.value = formatted;
                 setAllButtonStates();
             });
@@ -806,6 +812,7 @@
             if (params.has('name')) document.getElementById('name').value = params.get('name') || '';
             if (params.has('address')) document.getElementById('address').value = params.get('address') || '';
             if (params.has('details')) document.getElementById('details').value = params.get('details') || '';
+            if (params.has('swift')) document.getElementById('swift').value = params.get('swift') || '';
             
             // Handle currency field for row 1 (first row) - backwards compatibility with parameterless
             if (params.has('currency')) {
@@ -814,7 +821,7 @@
             
             // Handle additional IBAN rows (starting from index 2)
             let rowIndex = 2;
-            while (params.has(`currency-${rowIndex}`) || params.has(`iban-${rowIndex}`) || params.has(`swift-${rowIndex}`)) {
+            while (params.has(`currency-${rowIndex}`) || params.has(`iban-${rowIndex}`)) {
                 // Create the row if it doesn't exist
                 if (!document.getElementById(`iban-${rowIndex}`)) {
                     addNewIBANRow();
@@ -826,15 +833,7 @@
                 if (params.has(`iban-${rowIndex}`)) {
                     document.getElementById(`iban-${rowIndex}`).value = params.get(`iban-${rowIndex}`) || '';
                 }
-                if (params.has(`swift-${rowIndex}`)) {
-                    document.getElementById(`swift-${rowIndex}`).value = params.get(`swift-${rowIndex}`) || '';
-                }
                 rowIndex++;
-            }
-
-            // Handle SWIFT field for row 1 (first row)
-            if (params.has('swift')) {
-                document.getElementById('swift-1').value = params.get('swift') || '';
             }
             
             // Update all button states after setting fields
@@ -945,7 +944,7 @@
 
             // Copy all existing parameters, validating and formatting SWIFT values
             for (const [key, value] of params.entries()) {
-                if (key === 'swift' || key.startsWith('swift-')) {
+                if (key === 'swift') {
                     const formattedValue = validateAndFormatSWIFT(value);
                     if (value !== formattedValue) {
                         needsRedirect = true;
@@ -975,8 +974,8 @@
 
             // Copy all existing parameters, excluding empty second row parameters
             for (const [key, value] of params.entries()) {
-                // Check if this is a second row parameter (currency-N, iban-N, or swift-N where N >= 2)
-                const match = key.match(/^(currency|iban|swift)-(\d+)$/);
+                // Check if this is a second row parameter (currency-N, iban-N where N >= 2)
+                const match = key.match(/^(currency|iban)-(\d+)$/);
                 if (match && parseInt(match[2]) >= 2) {
                     // This is a second+ row parameter, only keep it if it has a non-empty value
                     if (value.trim()) {
@@ -1048,11 +1047,13 @@
             const nameVal = document.getElementById('name').value;
             const addressVal = document.getElementById('address').value;
             const detailsVal = document.getElementById('details').value;
+            const swiftVal = document.getElementById('swift').value;
             
             if (langVal) params.set(QUERY_PARAM_LANG, langVal);
             if (nameVal) params.set('name', nameVal);
             if (addressVal) params.set('address', addressVal);
             if (detailsVal) params.set('details', detailsVal);
+            if (swiftVal) params.set('swift', swiftVal);
             
             // Collect all existing rows data using their actual indices
             const allRows = document.querySelectorAll('.iban-row');
@@ -1061,12 +1062,10 @@
                 const rowIndex = parseInt(row.getAttribute('data-row-index'));
                 const currencyField = document.getElementById(`currency-${rowIndex}`);
                 const ibanField = document.getElementById(`iban-${rowIndex}`);
-                const swiftField = document.getElementById(`swift-${rowIndex}`);
                 
-                if (currencyField && ibanField && swiftField) {
+                if (currencyField && ibanField) {
                     const currencyValue = currencyField.value.trim();
                     const ibanValue = ibanField.value.trim();
-                    const swiftValue = swiftField.value.trim();
                     
                     // For first row (index 1), use parameterless names for backwards compatibility
                     if (rowIndex === 1) {
@@ -1076,9 +1075,6 @@
                         if (ibanValue) {
                             params.set('iban', ibanValue);
                         }
-                        if (swiftValue) {
-                            params.set('swift', swiftValue);
-                        }
                     } else {
                         // For subsequent rows, use their actual index (2, 3, 4, ...)
                         if (currencyValue) {
@@ -1086,9 +1082,6 @@
                         }
                         if (ibanValue) {
                             params.set(`iban-${rowIndex}`, ibanValue);
-                        }
-                        if (swiftValue) {
-                            params.set(`swift-${rowIndex}`, swiftValue);
                         }
                     }
                 }
