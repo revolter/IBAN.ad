@@ -518,9 +518,9 @@
                         setButtonState(copyBtn, shouldEnable);
                     }
                     
-                    // Update add button - show only on last row when IBAN field is filled (and not in read-only mode)
+                    // Update add button - show only on last row when both fields are filled (and not in read-only mode)
                     if (addBtn) {
-                        if (!readOnly && rowIndex === lastRowIndex && ibanField.value.trim()) {
+                        if (!readOnly && rowIndex === lastRowIndex && currencyField.value.trim() && ibanField.value.trim()) {
                             addBtn.classList.remove('hidden');
                             addBtn.classList.add('flex');
                         } else {
