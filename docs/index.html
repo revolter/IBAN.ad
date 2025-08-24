@@ -720,6 +720,13 @@
             });
         });
 
+        // Auto-resize all textareas when window is resized
+        window.addEventListener("resize", function() {
+            document.querySelectorAll("textarea").forEach(function(textarea) {
+                autoResizeTextarea(textarea);
+            });
+        });
+
         ['swift', 'name', 'address', 'details'].forEach(fieldId => {
             const field = document.getElementById(fieldId);
             if (field) {
