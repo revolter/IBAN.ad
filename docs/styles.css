@@ -1,4 +1,4 @@
-@import "https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4/index.css";
+@import "https://cdn.jsdelivr.net/npm/tailwindcss@4/index.min.css";
 
 @variant dark (&:is(.dark, .dark *));
 
