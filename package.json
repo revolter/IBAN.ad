@@ -1,0 +1,12 @@
+{
+  "name": "iban-ad",
+  "version": "1.0.0",
+  "description": "The easiest way for NGOs, freelancers, and clubs to share their bank details for donations, payments, or memberships.",
+  "scripts": {
+    "build-css": "tailwindcss -i ./src/styles.css -o ./docs/styles.css --watch",
+    "build-css:prod": "tailwindcss -i ./src/styles.css -o ./docs/styles.css --minify"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.16"
+  }
+}
