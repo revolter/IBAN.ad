@@ -5,7 +5,6 @@
     "build-css": "npx @tailwindcss/cli -i ./src/input.css -o ./docs/styles.css --watch",
     "build-css-prod": "npx @tailwindcss/cli -i ./src/input.css -o ./docs/styles.css --minify"
   },
-  "license": "ISC",
   "devDependencies": {
     "@tailwindcss/cli": "^4.1.12",
     "tailwindcss": "^4.1.12"
