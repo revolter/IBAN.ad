@@ -1,9 +1,6 @@
 {
   "name": "IBAN.ad",
   "version": "1.0.0",
-  "directories": {
-    "doc": "docs"
-  },
   "scripts": {
     "build-css": "npx tailwindcss -i ./src/input.css -o ./docs/styles.css --watch",
     "build-css-prod": "npx tailwindcss -i ./src/input.css -o ./docs/styles.css --minify",
