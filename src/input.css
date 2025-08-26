@@ -1,6 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
 @theme {
   --color-primary: #007bff;
@@ -10,6 +8,6 @@
   --color-danger: #dc3545;
   --color-warning: #ffc107;
   --color-info: #17a2b8;
-  
+
   --max-width-form: 800px;
 }
