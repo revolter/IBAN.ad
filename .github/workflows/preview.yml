@@ -29,6 +29,11 @@ jobs:
       - name: Build CSS
         run: npm run build-css:prod
 
+      - name: Inject cache busting SHA
+        run: |
+          find docs -type f -name '*.html' -print0 \
+            | xargs -0 sed -i "s/__SHA__/${GITHUB_SHA::8}/g"
+
       - name: Deploy preview
         uses: rossjrw/pr-preview-action@v1
         with:
