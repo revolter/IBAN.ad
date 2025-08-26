@@ -6,29 +6,6 @@
     <title>IBAN Advertiser</title>
     <meta name="description" content="The easiest way for NGOs, freelancers, and clubs to share their bank details for donations, payments, or memberships.">
     <link rel="stylesheet" href="styles.css">
-    <style>
-        /* Remove Safari default arrow */
-        select#lang-select {
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-            background-position: right 0.75rem center;
-            background-repeat: no-repeat;
-        }
-
-
-
-        /* Tooltip arrow - requires custom CSS as Tailwind doesn't have built-in arrow utilities */
-        .tooltip::after {
-            content: '';
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            border: 5px solid transparent;
-            border-top-color: #374151;
-        }
-    </style>
 </head>
 <body class="bg-gray-50 text-gray-900 font-sans">
     <a id="skip-link" href="#iban-info-title" class="sr-only focus:not-sr-only absolute top-2 left-2 bg-blue-500 text-white px-3 py-1 rounded z-50">Skip to main content</a>
