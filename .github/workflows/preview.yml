@@ -17,6 +17,23 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.node-version'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build CSS
+        run: npm run build-css:prod
+
+      - name: Inject cache busting SHA
+        run: |
+          find docs -type f -name '*.html' -print0 \
+            | xargs -0 sed -i "s/__SHA__/${GITHUB_SHA::8}/g"
+
       - name: Deploy preview
         uses: rossjrw/pr-preview-action@v1
         with:

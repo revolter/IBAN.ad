@@ -5,50 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IBAN Advertiser</title>
     <meta name="description" content="The easiest way for NGOs, freelancers, and clubs to share their bank details for donations, payments, or memberships.">
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <script type="text/tailwindjs">
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#007bff',
-                        'primary-dark': '#0056b3',
-                        secondary: '#6c757d',
-                        success: '#28a745',
-                        danger: '#dc3545',
-                        warning: '#ffc107',
-                        info: '#17a2b8'
-                    },
-                    maxWidth: {
-                        'form': '800px'
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        /* Remove Safari default arrow */
-        select#lang-select {
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-            background-position: right 0.75rem center;
-            background-repeat: no-repeat;
-        }
-        
-
-        
-        /* Tooltip arrow - requires custom CSS as Tailwind doesn't have built-in arrow utilities */
-        .tooltip::after {
-            content: '';
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            border: 5px solid transparent;
-            border-top-color: #374151;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css?v=__SHA__">
 </head>
 <body class="bg-gray-50 text-gray-900 font-sans">
     <a id="skip-link" href="#iban-info-title" class="sr-only focus:not-sr-only absolute top-2 left-2 bg-blue-500 text-white px-3 py-1 rounded z-50">Skip to main content</a>
@@ -82,7 +39,7 @@
         </header>
         <main class="flex-1 flex flex-col justify-center">
             <div class="w-full max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-4 md:p-6 flex flex-col justify-center" aria-labelledby="iban-info-title">
-                <h1 id="iban-info-title" class="text-2xl font-bold text-primary mb-4">IBAN Advertiser</h1>
+                <h1 id="iban-info-title" class="text-2xl font-bold mb-4">IBAN Advertiser</h1>
                 <form class="space-y-6" aria-describedby="iban-info-desc" autocomplete="off">
                     <p id="iban-info-desc" class="sr-only">Readonly form displaying IBAN and related transaction details.</p>
                     <fieldset class="border border-gray-300 rounded-lg p-4 md:p-6 bg-white" aria-labelledby="banking-info-section">
@@ -136,7 +93,7 @@
                                 <label for="address" class="block text-sm font-medium text-gray-700 mb-1">Address</label>
                                 <div class="flex gap-2">
                                     <textarea id="address" name="address" rows="1"
-                                        class="w-full rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark resize-none overflow-hidden" 
+                                        class="w-full rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark resize-none overflow-hidden"
                                         aria-label="Address"></textarea>
                                     <div class="relative">
                                         <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 hover:bg-blue-100 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg cursor-pointer opacity-50 cursor-not-allowed" data-copytarget="address" disabled>📋</button>
@@ -194,12 +151,12 @@
     <script>
         // Localization strings
         const DEFAULT_LANGUAGE = 'en';
-        
+
         // Query parameter constants
         const QUERY_PARAM_LANG = 'lang';
         const QUERY_PARAM_EDIT = 'edit';
         const QUERY_PARAM_EDIT_VALUE = 'true';
-        
+
         // Query parameters that don't represent permalink data
         const NON_PERMALINK_QUERY_PARAMS = [QUERY_PARAM_LANG, QUERY_PARAM_EDIT];
         const TRANSLATIONS = {
@@ -340,28 +297,28 @@
             const nameVal = document.getElementById('name').value.trim();
             const addressVal = document.getElementById('address').value.trim();
             const detailsVal = document.getElementById('details').value.trim();
-            
+
             if (swiftVal || nameVal || addressVal || detailsVal) {
                 return true;
             }
-            
+
             // Check all IBAN rows for meaningful data
             const allRows = document.querySelectorAll('.iban-row');
             for (const row of allRows) {
                 const rowIndex = parseInt(row.getAttribute('data-row-index'));
                 const currencyField = document.getElementById(`currency-${rowIndex}`);
                 const ibanField = document.getElementById(`iban-${rowIndex}`);
-                
+
                 if (currencyField && ibanField) {
                     const currencyValue = currencyField.value.trim();
                     const ibanValue = ibanField.value.trim();
-                    
+
                     if (currencyValue || ibanValue) {
                         return true;
                     }
                 }
             }
-            
+
             return false;
         }
 
@@ -371,7 +328,7 @@
             allFields.forEach(field => {
                 // Set readonly property
                 field.readOnly = readOnly;
-                
+
                 // Update visual styling
                 if (readOnly) {
                     field.classList.remove('bg-gray-100', 'text-gray-900', 'focus:ring-2', 'focus:ring-primary-dark');
@@ -407,7 +364,7 @@
                 const targetId = btn.getAttribute('data-copytarget');
                 const rowIndex = btn.getAttribute('data-row-index');
                 let tooltipId;
-                
+
                 // Determine tooltip ID based on button type:
                 // - For IBAN copy buttons (have row-index): use tooltip-iban-{rowIndex}
                 // - For other copy buttons (non-IBAN fields): use tooltip-{targetId}
@@ -416,46 +373,46 @@
                 } else {
                     tooltipId = `tooltip-${targetId}`;
                 }
-                
+
                 showTooltip(tooltipId);
             });
         }
-        
+
         // Helper function to get copy value from button attributes
         function getCopyValueFromButton(button) {
             const targetId = button.getAttribute('data-copytarget');
             const rowIndex = button.getAttribute('data-row-index');
-            
+
             // Check if this is an IBAN row copy button (has data-row-index)
             if (rowIndex !== null) {
                 const ibanField = document.getElementById(`iban-${rowIndex}`);
                 return ibanField ? ibanField.value.trim() : '';
             }
-            
+
             // This is a regular field copy button (non-IBAN field)
             const targetField = document.getElementById(targetId);
             return targetField ? targetField.value.trim() : '';
         }
-        
+
         document.querySelectorAll('.copy-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 if (btn.disabled) return;
-                
+
                 const value = getCopyValueFromButton(btn);
-                
+
                 copyWithFeedback(btn, value);
             });
         });
-        
+
         // Handle dynamically added copy buttons
         document.addEventListener('click', function(e) {
             if (e.target.classList.contains('copy-btn') && !e.target.hasAttribute('data-listener-added')) {
                 e.target.setAttribute('data-listener-added', 'true');
-                
+
                 if (e.target.disabled) return;
-                
+
                 const value = getCopyValueFromButton(e.target);
-                
+
                 copyWithFeedback(e.target, value);
             }
         });
@@ -472,7 +429,7 @@
         function getLastRowIndex() {
             const allRows = document.querySelectorAll('.iban-row');
             if (allRows.length === 0) return -1;
-            
+
             let maxIndex = -1;
             allRows.forEach(row => {
                 const index = parseInt(row.getAttribute('data-row-index'));
@@ -486,7 +443,7 @@
         // Helper function to set button state (enabled/disabled) with consistent styling
         function setButtonState(button, enabled, hoverClass = 'hover:bg-blue-100') {
             if (!button) return;
-            
+
             button.disabled = !enabled;
             if (!enabled) {
                 button.classList.add('opacity-50', 'cursor-not-allowed');
@@ -502,7 +459,7 @@
             const allRows = document.querySelectorAll('.iban-row');
             const lastRowIndex = getLastRowIndex();
             const readOnly = isReadOnlyMode();
-            
+
             // Update IBAN row buttons (copy, add, delete)
             allRows.forEach(row => {
                 const rowIndex = parseInt(row.getAttribute('data-row-index'));
@@ -511,14 +468,14 @@
                 const addBtn = document.querySelector(`.add-row-btn[data-row-index="${rowIndex}"]`);
                 const copyBtn = document.querySelector(`.copy-btn[data-row-index="${rowIndex}"]`);
                 const deleteBtn = document.querySelector(`.delete-row-btn[data-row-index="${rowIndex}"]`);
-                
+
                 if (currencyField && ibanField) {
                     // Update copy button - enable if IBAN has content (currency is optional)
                     if (copyBtn) {
                         const shouldEnable = ibanField.value.trim();
                         setButtonState(copyBtn, shouldEnable);
                     }
-                    
+
                     // Update add button - show only on last row when both fields are filled (and not in read-only mode)
                     if (addBtn) {
                         if (!readOnly && rowIndex === lastRowIndex && currencyField.value.trim() && ibanField.value.trim()) {
@@ -529,7 +486,7 @@
                             addBtn.classList.add('hidden');
                         }
                     }
-                    
+
                     // Update delete button - show only on last row, never on first row (and not in read-only mode)
                     if (deleteBtn) {
                         if (!readOnly && rowIndex === lastRowIndex && rowIndex > 1) {
@@ -542,7 +499,7 @@
                     }
                 }
             });
-            
+
             // Update copy buttons for other fields
             ['swift', 'name', 'address', 'details'].forEach(fieldId => {
                 const field = document.getElementById(fieldId);
@@ -552,11 +509,11 @@
                     setButtonState(btn, hasValue);
                 }
             });
-            
+
             // Update footer buttons (edit/permalink) - mutually exclusive
             const editBtn = document.getElementById('edit-btn');
             const permalinkBtn = document.getElementById('permalink-btn');
-            
+
             if (readOnly) {
                 // Read-only mode: show edit button, hide permalink button
                 if (editBtn) {
@@ -576,7 +533,7 @@
                 if (permalinkBtn) {
                     permalinkBtn.classList.remove('hidden');
                     permalinkBtn.classList.add('flex');
-                    
+
                     // Disable permalink button if there's no meaningful data to share
                     const hasData = hasDataToShare();
                     setButtonState(permalinkBtn, hasData, 'hover:bg-blue-600');
@@ -590,33 +547,33 @@
             const currencySymbolRegex = /^[\p{Sc}]$/u;
             return currencySymbolRegex.test(char);
         }
-        
+
         function isLetter(char) {
             const letterRegex = /^[A-Za-z]$/;
             return letterRegex.test(char);
         }
-        
+
         function validateAndFormatCurrency(value) {
             if (!value) return '';
-            
+
             // Remove all whitespace
             value = value.replace(/\s/g, '');
-            
+
             // Separate letters and symbols
             const letters = value.match(/[A-Za-z]/g) || [];
             const symbols = [];
-            
+
             // Extract currency symbols using Unicode property
             for (const char of value) {
                 if (isCurrencySymbol(char)) {
                     symbols.push(char);
                 }
             }
-            
+
             // Apply validation rules based on what comes first in the input
             let firstSymbolIndex = -1;
             let firstLetterIndex = -1;
-            
+
             for (let i = 0; i < value.length; i++) {
                 const char = value[i];
                 if (isCurrencySymbol(char) && firstSymbolIndex === -1) {
@@ -629,7 +586,7 @@
                     break;
                 }
             }
-            
+
             if (letters.length > 0 && symbols.length > 0) {
                 // Mixed content - prefer the type that appears first
                 if (firstSymbolIndex !== -1 && (firstLetterIndex === -1 || firstSymbolIndex < firstLetterIndex)) {
@@ -646,17 +603,17 @@
                 // Only symbols - take first 1
                 return symbols[0];
             }
-            
+
             return '';
         }
 
         // IBAN validation function
         function validateAndFormatIBAN(value) {
             if (!value) return '';
-            
+
             // Remove all whitespace and non-alphanumeric characters
             value = value.replace(/[^A-Za-z0-9]/g, '');
-            
+
             // Limit to 34 characters and convert to uppercase
             return value.slice(0, 34).toUpperCase();
         }
@@ -664,10 +621,10 @@
         // SWIFT validation function
         function validateAndFormatSWIFT(value) {
             if (!value) return '';
-            
+
             // Remove all whitespace and non-alphanumeric characters
             value = value.replace(/[^A-Za-z0-9]/g, '');
-            
+
             // Limit to 11 characters and convert to uppercase
             return value.slice(0, 11).toUpperCase();
         }
@@ -676,7 +633,7 @@
         const currencyField1 = document.getElementById('currency-1');
         const ibanField1 = document.getElementById('iban-1');
         const swiftField = document.getElementById('swift');
-        
+
         if (currencyField1) {
             currencyField1.addEventListener('input', (e) => {
                 // Apply currency validation and formatting
@@ -685,7 +642,7 @@
                 setAllButtonStates();
             });
         }
-        
+
         if (ibanField1) {
             ibanField1.addEventListener('input', (e) => {
                 // Apply IBAN validation and formatting
@@ -740,11 +697,11 @@
         function addNewIBANRow() {
             const container = document.getElementById('iban-rows-container');
             const currentRowIndex = getNextRowIndex();
-            
+
             const newRow = document.createElement('div');
             newRow.className = 'iban-row mt-4';
             newRow.setAttribute('data-row-index', currentRowIndex);
-            
+
             newRow.innerHTML = `
                 <div class="flex gap-2">
                     <input type="text" id="currency-${currentRowIndex}" name="currency-${currentRowIndex}"
@@ -761,35 +718,35 @@
                     </div>
                 </div>
             `;
-            
+
             container.appendChild(newRow);
-            
+
             // Enable tooltip transitions for the newly created tooltip
             const newTooltip = document.getElementById(`tooltip-iban-${currentRowIndex}`);
             if (newTooltip) {
                 enableTooltipTransitions(newTooltip);
             }
-            
+
             // Enable transitions for the newly created copy button
             const newCopyButton = document.querySelector(`.copy-btn[data-row-index="${currentRowIndex}"]`);
             if (newCopyButton) {
                 enableCopyButtonTransitions(newCopyButton);
             }
-            
+
             // Update all button states after adding the new row
             setAllButtonStates();
-            
+
             // Add event listeners for the new fields
             const currencyField = document.getElementById(`currency-${currentRowIndex}`);
             const ibanField = document.getElementById(`iban-${currentRowIndex}`);
-            
+
             currencyField.addEventListener('input', (e) => {
                 // Apply currency validation and formatting
                 const formatted = validateAndFormatCurrency(e.target.value);
                 e.target.value = formatted;
                 setAllButtonStates();
             });
-            
+
             ibanField.addEventListener('input', (e) => {
                 // Apply IBAN validation and formatting
                 const formatted = validateAndFormatIBAN(e.target.value);
@@ -803,12 +760,12 @@
         // Function to delete a row
         function deleteRow(rowIndex) {
             if (rowIndex === 1) return; // Never delete the first row
-            
+
             const row = document.querySelector(`.iban-row[data-row-index="${rowIndex}"]`);
             if (row) {
                 // Simply remove the row from DOM
                 row.remove();
-                
+
             // Update all button states
             setAllButtonStates();
             }
@@ -828,24 +785,24 @@
         });
         function setFieldsFromParams() {
             const params = new URLSearchParams(window.location.search);
-            
+
             // Handle legacy single IBAN parameter
             if (params.has('iban')) {
                 document.getElementById('iban-1').value = params.get('iban') || '';
             }
-            
+
             if (params.has('swift')) document.getElementById('swift').value = params.get('swift') || '';
             if (params.has('name')) document.getElementById('name').value = params.get('name') || '';
             if (params.has('address')) {
                 document.getElementById('address').value = params.get('address') || '';
             }
             if (params.has('details')) document.getElementById('details').value = params.get('details') || '';
-            
+
             // Handle currency field for row 1 (first row) - backwards compatibility with parameterless
             if (params.has('currency')) {
                 document.getElementById('currency-1').value = params.get('currency') || '';
             }
-            
+
             // Handle additional IBAN rows (starting from index 2)
             let rowIndex = 2;
             while (params.has(`currency-${rowIndex}`) || params.has(`iban-${rowIndex}`)) {
@@ -853,7 +810,7 @@
                 if (!document.getElementById(`iban-${rowIndex}`)) {
                     addNewIBANRow();
                 }
-                
+
                 if (params.has(`currency-${rowIndex}`)) {
                     document.getElementById(`currency-${rowIndex}`).value = params.get(`currency-${rowIndex}`) || '';
                 }
@@ -862,10 +819,10 @@
                 }
                 rowIndex++;
             }
-            
+
             // Update all button states after setting fields
             setAllButtonStates();
-            
+
             // Auto-resize any textareas that have content from URL parameters
             document.querySelectorAll("textarea").forEach(function(textarea) {
                 if (textarea.value) {
@@ -1065,10 +1022,10 @@
             }
 
             setFieldsFromParams();
-            
+
             // Apply read-only state if needed
             setFieldsReadOnly(isReadOnlyMode());
-            
+
             // Update all button states after loading from params
             setAllButtonStates();
         })();
@@ -1077,30 +1034,30 @@
         function generatePermalinkParams() {
             const params = new URLSearchParams();
             const langVal = document.getElementById('lang-select').value;
-            
+
             const swiftVal = document.getElementById('swift').value;
             const nameVal = document.getElementById('name').value;
             const addressVal = document.getElementById('address').value;
             const detailsVal = document.getElementById('details').value;
-            
+
             if (langVal) params.set(QUERY_PARAM_LANG, langVal);
             if (swiftVal) params.set('swift', swiftVal);
             if (nameVal) params.set('name', nameVal);
             if (addressVal) params.set('address', addressVal);
             if (detailsVal) params.set('details', detailsVal);
-            
+
             // Collect all existing rows data using their actual indices
             const allRows = document.querySelectorAll('.iban-row');
-            
+
             allRows.forEach(row => {
                 const rowIndex = parseInt(row.getAttribute('data-row-index'));
                 const currencyField = document.getElementById(`currency-${rowIndex}`);
                 const ibanField = document.getElementById(`iban-${rowIndex}`);
-                
+
                 if (currencyField && ibanField) {
                     const currencyValue = currencyField.value.trim();
                     const ibanValue = ibanField.value.trim();
-                    
+
                     // For first row (index 1), use parameterless names for backwards compatibility
                     if (rowIndex === 1) {
                         if (currencyValue) {
@@ -1120,7 +1077,7 @@
                     }
                 }
             });
-            
+
             return params;
         }
 
@@ -1134,7 +1091,7 @@
             navigator.clipboard.writeText(url).then(() => {
                 // Show tooltip feedback
                 showTooltip('tooltip-permalink');
-                
+
                 // Wait a moment for user to see the feedback, then execute callback
                 setTimeout(onSuccess, 1000);
             }).catch(() => {
@@ -1146,13 +1103,13 @@
         function redirectToPermalink() {
             const params = generatePermalinkParams();
             const permalinkUrl = generatePermalinkUrl(params);
-            
+
             copyToClipboardWithFeedback(permalinkUrl, () => {
                 redirectToUrl(params);
             });
         }
         document.getElementById('permalink-btn').addEventListener('click', redirectToPermalink);
-        
+
         // Edit button functionality
         document.getElementById('edit-btn').addEventListener('click', function() {
             const params = new URLSearchParams(window.location.search);
@@ -1165,7 +1122,7 @@
             if (currentParams.get(QUERY_PARAM_LANG) !== newLang) {
                 // Capture all current form field values to preserve user input
                 const params = generatePermalinkParams();
-                
+
                 // Preserve edit state from URL if present, or add it if user has entered data
                 if (currentParams.has(QUERY_PARAM_EDIT)) {
                     params.set(QUERY_PARAM_EDIT, currentParams.get(QUERY_PARAM_EDIT));
@@ -1173,7 +1130,7 @@
                     // If user has entered data but not explicitly in edit mode, preserve edit mode
                     params.set(QUERY_PARAM_EDIT, QUERY_PARAM_EDIT_VALUE);
                 }
-                
+
                 // Update language parameter (generatePermalinkParams already includes current language, but we need to override it)
                 params.set(QUERY_PARAM_LANG, newLang);
                 redirectToUrl(params);
@@ -1218,7 +1175,7 @@
         function enableTooltipTransitions(tooltip) {
             tooltip.classList.add('transition-all', 'duration-300');
         }
-        
+
         function enableCopyButtonTransitions(copyButton) {
             copyButton.classList.add('transition-colors');
         }
@@ -1227,17 +1184,17 @@
         window.addEventListener('load', function() {
             const tooltips = document.querySelectorAll('.tooltip');
             tooltips.forEach(enableTooltipTransitions);
-            
+
             // Enable transition for language dropdown to prevent flash during initial render
             const langSelect = document.getElementById('lang-select');
             if (langSelect) {
                 langSelect.classList.add('transition');
             }
-            
+
             // Enable transitions for copy buttons and permalink button to prevent flash during initial render
             const copyButtons = document.querySelectorAll('.copy-btn');
             copyButtons.forEach(enableCopyButtonTransitions);
-            
+
             const permalinkButton = document.getElementById('permalink-btn');
             if (permalinkButton) {
                 enableCopyButtonTransitions(permalinkButton);

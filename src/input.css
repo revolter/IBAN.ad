@@ -1,0 +1,26 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-primary: #007bff;
+  --color-primary-dark: #0056b3;
+}
+
+/* Remove Safari default arrow */
+select#lang-select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-position: right 0.75rem center;
+    background-repeat: no-repeat;
+}
+
+/* Tooltip arrow - requires custom CSS as Tailwind doesn't have built-in arrow utilities */
+.tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: #374151;
+}
