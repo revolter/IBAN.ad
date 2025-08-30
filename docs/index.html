@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IBAN Advertiser</title>
     <meta name="description" content="The easiest way for NGOs, freelancers, and clubs to share their bank details for donations, payments, or memberships.">
-    <link rel="stylesheet" href="styles.css?v=701dff74">
+    <link rel="stylesheet" href="styles.css?v=ca6c50af">
 </head>
 <body class="bg-gray-50 text-gray-900 font-sans">
     <a id="skip-link" href="#iban-info-title" class="sr-only focus:not-sr-only absolute top-2 left-2 bg-blue-500 text-white px-3 py-1 rounded z-50">Skip to main content</a>
@@ -1123,10 +1123,10 @@
                 // Capture all current form field values to preserve user input
                 const params = generatePermalinkParams();
 
-                // Preserve edit state from URL if present, or add it if user has entered data
+                // Preserve edit state from URL if present, or add it if user has entered data AND we're not in read-only mode
                 if (currentParams.has(QUERY_PARAM_EDIT)) {
                     params.set(QUERY_PARAM_EDIT, currentParams.get(QUERY_PARAM_EDIT));
-                } else if (hasDataToShare()) {
+                } else if (hasDataToShare() && !isReadOnlyMode()) {
                     // If user has entered data but not explicitly in edit mode, preserve edit mode
                     params.set(QUERY_PARAM_EDIT, QUERY_PARAM_EDIT_VALUE);
                 }
