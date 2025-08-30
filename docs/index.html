@@ -559,6 +559,18 @@
             // Remove all whitespace
             value = value.replace(/\s/g, '');
 
+            // For short inputs (≤ 3 chars) containing both letters and currency symbols,
+            // preserve them as-is since they're likely common representations like C$, A$, etc.
+            if (value.length <= 3) {
+                const hasLetters = /[\p{L}]/u.test(value);
+                const hasCurrencySymbols = /[\p{Sc}]/u.test(value);
+                
+                if (hasLetters && hasCurrencySymbols) {
+                    // Convert letters to uppercase but preserve the overall structure
+                    return value.replace(/[\p{L}]/gu, match => match.toUpperCase());
+                }
+            }
+
             // Separate letters and symbols
             const letters = value.match(/[\p{L}]/gu) || [];
             const symbols = [];
