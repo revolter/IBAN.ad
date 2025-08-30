@@ -549,7 +549,7 @@
         }
 
         function isLetter(char) {
-            const letterRegex = /^[A-Za-z]$/;
+            const letterRegex = /^[\p{L}]$/u;
             return letterRegex.test(char);
         }
 
@@ -559,8 +559,20 @@
             // Remove all whitespace
             value = value.replace(/\s/g, '');
 
+            // For short inputs (≤ 3 chars) containing both letters and currency symbols,
+            // preserve them as-is since they're likely common representations like C$, A$, etc.
+            if (value.length <= 3) {
+                const hasLetters = /[\p{L}]/u.test(value);
+                const hasCurrencySymbols = /[\p{Sc}]/u.test(value);
+                
+                if (hasLetters && hasCurrencySymbols) {
+                    // Convert letters to uppercase but preserve the overall structure
+                    return value.replace(/[\p{L}]/gu, match => match.toUpperCase());
+                }
+            }
+
             // Separate letters and symbols
-            const letters = value.match(/[A-Za-z]/g) || [];
+            const letters = value.match(/[\p{L}]/gu) || [];
             const symbols = [];
 
             // Extract currency symbols using Unicode property
