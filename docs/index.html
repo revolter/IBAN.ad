@@ -549,7 +549,7 @@
         }
 
         function isLetter(char) {
-            const letterRegex = /^[A-Za-z]$/;
+            const letterRegex = /^[\p{L}]$/u;
             return letterRegex.test(char);
         }
 
@@ -560,7 +560,7 @@
             value = value.replace(/\s/g, '');
 
             // Separate letters and symbols
-            const letters = value.match(/[A-Za-z]/g) || [];
+            const letters = value.match(/[\p{L}]/gu) || [];
             const symbols = [];
 
             // Extract currency symbols using Unicode property
