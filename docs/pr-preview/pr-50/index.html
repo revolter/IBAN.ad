@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IBAN Advertiser</title>
     <meta name="description" content="The easiest way for NGOs, freelancers, and clubs to share their bank details for donations, payments, or memberships.">
-    <link rel="stylesheet" href="styles.css?v=61a327c0">
+    <link rel="stylesheet" href="styles.css?v=e9f51668">
 </head>
 <body class="bg-gray-50 text-gray-900 font-sans">
     <a id="skip-link" href="#iban-info-title" class="sr-only focus:not-sr-only absolute top-2 left-2 bg-blue-500 text-white px-3 py-1 rounded z-50">Skip to main content</a>
@@ -558,6 +558,18 @@
 
             // Remove all whitespace
             value = value.replace(/\s/g, '');
+
+            // For short inputs (≤ 3 chars) containing both letters and currency symbols,
+            // preserve them as-is since they're likely common representations like C$, A$, etc.
+            if (value.length <= 3) {
+                const hasLetters = /[\p{L}]/u.test(value);
+                const hasCurrencySymbols = /[\p{Sc}]/u.test(value);
+                
+                if (hasLetters && hasCurrencySymbols) {
+                    // Convert letters to uppercase but preserve the overall structure
+                    return value.replace(/[\p{L}]/gu, match => match.toUpperCase());
+                }
+            }
 
             // Separate letters and symbols
             const letters = value.match(/[\p{L}]/gu) || [];
