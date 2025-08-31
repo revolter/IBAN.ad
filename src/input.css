@@ -1,5 +1,8 @@
 @import 'tailwindcss';
 
+@custom-variant dark (&:where(.dark, .dark *));
+@custom-variant data-checked (&[data-checked]);
+
 @theme {
   --color-primary: #007bff;
   --color-primary-dark: #0056b3;
@@ -23,4 +26,8 @@ select#lang-select {
     transform: translateX(-50%);
     border: 5px solid transparent;
     border-top-color: #374151;
+}
+
+.dark .tooltip::after {
+    border-top-color: #4B5563;
 }
