@@ -49,7 +49,7 @@
                                 <label for="currency-1" class="block text-sm font-medium text-gray-700 mb-1">Currency & IBAN</label>
                                 <div class="flex gap-2">
                                     <input type="text" id="currency-1" name="currency-1"
-                                        class="w-16 rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark text-center" aria-label="Currency (optional)" />
+                                        class="w-20 rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark text-center" aria-label="Currency (optional)" />
                                     <input type="text" id="iban-1" name="iban-1" value=""
                                         class="w-full rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark" aria-label="IBAN" />
                                     <div class="flex gap-2">
@@ -542,69 +542,16 @@
         }
 
         // Currency validation functions
-        function isCurrencySymbol(char) {
-            // Use Unicode property classes to match currency symbols
-            const currencySymbolRegex = /^[\p{Sc}]$/u;
-            return currencySymbolRegex.test(char);
-        }
-
-        function isLetter(char) {
-            const letterRegex = /^[A-Za-z]$/;
-            return letterRegex.test(char);
-        }
-
         function validateAndFormatCurrency(value) {
             if (!value) return '';
 
-            // Remove all whitespace
-            value = value.replace(/\s/g, '');
+            let v = value.normalize('NFKC');
 
-            // Separate letters and symbols
-            const letters = value.match(/[A-Za-z]/g) || [];
-            const symbols = [];
+            // Strip everything except letters, marks, currency symbols, punctuation
+            v = v.replace(/[^\p{L}\p{M}\p{Sc}\p{P}]+/gu, '');
 
-            // Extract currency symbols using Unicode property
-            for (const char of value) {
-                if (isCurrencySymbol(char)) {
-                    symbols.push(char);
-                }
-            }
-
-            // Apply validation rules based on what comes first in the input
-            let firstSymbolIndex = -1;
-            let firstLetterIndex = -1;
-
-            for (let i = 0; i < value.length; i++) {
-                const char = value[i];
-                if (isCurrencySymbol(char) && firstSymbolIndex === -1) {
-                    firstSymbolIndex = i;
-                }
-                if (isLetter(char) && firstLetterIndex === -1) {
-                    firstLetterIndex = i;
-                }
-                if (firstSymbolIndex !== -1 && firstLetterIndex !== -1) {
-                    break;
-                }
-            }
-
-            if (letters.length > 0 && symbols.length > 0) {
-                // Mixed content - prefer the type that appears first
-                if (firstSymbolIndex !== -1 && (firstLetterIndex === -1 || firstSymbolIndex < firstLetterIndex)) {
-                    // Symbol appears first, return first symbol
-                    return symbols[0];
-                } else {
-                    // Letter appears first, return first 3 letters
-                    return letters.slice(0, 3).join('').toUpperCase();
-                }
-            } else if (letters.length > 0) {
-                // Only letters - take first 3, uppercase
-                return letters.slice(0, 3).join('').toUpperCase();
-            } else if (symbols.length > 0) {
-                // Only symbols - take first 1
-                return symbols[0];
-            }
-
-            return '';
+            // Max 5 visible characters
+            return [...v].slice(0, 5).join('');
         }
 
         // IBAN validation function
@@ -705,7 +652,7 @@
             newRow.innerHTML = `
                 <div class="flex gap-2">
                     <input type="text" id="currency-${currentRowIndex}" name="currency-${currentRowIndex}"
-                        class="w-16 rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark text-center" aria-label="Currency (optional)" />
+                        class="w-20 rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark text-center" aria-label="Currency (optional)" />
                     <input type="text" id="iban-${currentRowIndex}" name="iban-${currentRowIndex}" value=""
                         class="w-full rounded-md border border-gray-300 bg-gray-100 text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark" aria-label="IBAN" />
                     <div class="flex gap-2">
