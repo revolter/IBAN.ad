@@ -286,6 +286,9 @@
                 copied: 'Copied!',
                 specialCharactersSuggestion: 'Tip: Avoid special characters (á, é, ñ, ü, ç, etc.) for maximum compatibility with all banks.',
                 skipToMain: 'Skip to main content',
+                themeSystem: 'System theme',
+                themeLight: 'Light theme',
+                themeDark: 'Dark theme',
                 langChanged: 'Language changed to English.',
                 formReset: 'Form has been reset.',
                 disclaimer: 'Disclaimer: This website does not process payments or donations. It only helps you copy IBAN information to use in your banking app or other payment methods for actual transfers.'
@@ -312,6 +315,9 @@
                 copied: 'Copiat!',
                 specialCharactersSuggestion: 'Sfat: Evită caracterele speciale (ă, ș, ț, etc.) pentru compatibilitate maximă cu toate băncile.',
                 skipToMain: 'Sari la conținutul principal',
+                themeSystem: 'Temă sistem',
+                themeLight: 'Temă deschisă',
+                themeDark: 'Temă întunecată',
                 langChanged: 'Limba a fost schimbată în română.',
                 formReset: 'Formularul a fost resetat.',
                 disclaimer: 'Precizare: Acest site nu procesează plăți sau donații. Te ajută doar să copiezi informațiile IBAN pentru a le folosi în aplicația ta bancară sau alte metode de plată pentru transferuri reale.'
@@ -350,6 +356,10 @@
             document.documentElement.setAttribute('lang', lang);
             // Localize skip to main content link
             document.getElementById('skip-link').textContent = t.skipToMain;
+            // Localize theme button aria-labels
+            document.getElementById('theme-system').setAttribute('aria-label', t.themeSystem);
+            document.getElementById('theme-light').setAttribute('aria-label', t.themeLight);
+            document.getElementById('theme-dark').setAttribute('aria-label', t.themeDark);
             // Announce language change for screen readers
             announceA11y(t.langChanged);
             document.getElementById('iban-info-title').textContent = t.title;
