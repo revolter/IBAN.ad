@@ -1,6 +1,7 @@
 @import 'tailwindcss';
 
 @custom-variant dark (&:where(.dark, .dark *));
+@custom-variant data-checked (&[data-checked]);
 
 @theme {
   --color-primary: #007bff;
