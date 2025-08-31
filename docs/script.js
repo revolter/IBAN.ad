@@ -369,17 +369,10 @@ function getLastRowIndex() {
 }
 
 // Helper function to set button state (enabled/disabled) with consistent styling
-function setButtonState(button, enabled, hoverClass = 'hover:bg-blue-100') {
+function setButtonState(button, enabled) {
     if (!button) return;
 
     button.disabled = !enabled;
-    if (!enabled) {
-        button.classList.add('opacity-50', 'cursor-not-allowed');
-        button.classList.remove(hoverClass, 'cursor-pointer');
-    } else {
-        button.classList.remove('opacity-50', 'cursor-not-allowed');
-        button.classList.add(hoverClass, 'cursor-pointer');
-    }
 }
 
 // Unified button state management for all buttons
@@ -464,7 +457,7 @@ function setAllButtonStates() {
 
             // Disable permalink button if there's no meaningful data to share
             const hasData = hasDataToShare();
-            setButtonState(permalinkBtn, hasData, 'hover:bg-blue-600');
+            setButtonState(permalinkBtn, hasData);
         }
     }
 }
@@ -587,7 +580,7 @@ function addNewIBANRow() {
                 <button type="button" class="add-row-btn w-[42px] h-[42px] hidden items-center justify-center bg-green-200 hover:bg-green-300 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-all duration-200 cursor-pointer" data-row-index="${currentRowIndex}" aria-label="Add new row">💱</button>
                 <button type="button" class="delete-row-btn w-[42px] h-[42px] hidden items-center justify-center bg-red-200 hover:bg-red-300 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-colors cursor-pointer" data-row-index="${currentRowIndex}" aria-label="Delete row">🗑️</button>
                 <div class="relative">
-                    <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 dark:bg-gray-600 hover:bg-blue-100 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg cursor-pointer opacity-50 cursor-not-allowed" data-copytarget="iban-${currentRowIndex}" data-row-index="${currentRowIndex}" disabled>📋</button>
+                    <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 dark:bg-gray-600 hover:not-disabled:bg-blue-100 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed" data-copytarget="iban-${currentRowIndex}" data-row-index="${currentRowIndex}" disabled>📋</button>
                     <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 dark:bg-gray-600 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 pointer-events-none z-50 mb-1" id="tooltip-iban-${currentRowIndex}">Copied!</div>
                 </div>
             </div>
