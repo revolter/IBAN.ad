@@ -266,17 +266,13 @@ function setFieldsReadOnly(readOnly) {
     });
 }
 
-
-
 // Unified tooltip notification function
 function showTooltip(tooltipId) {
     const tooltip = document.getElementById(tooltipId);
     if (tooltip) {
-        tooltip.classList.remove('opacity-0', 'pointer-events-none');
-        tooltip.classList.add('opacity-100', 'pointer-events-auto');
+        tooltip.setAttribute('data-visible', '');
         setTimeout(() => {
-            tooltip.classList.remove('opacity-100', 'pointer-events-auto');
-            tooltip.classList.add('opacity-0', 'pointer-events-none');
+            tooltip.removeAttribute('data-visible');
         }, 2000);
     }
 }
@@ -577,7 +573,7 @@ function addNewIBANRow() {
                 <button type="button" class="delete-row-btn w-[42px] h-[42px] hidden items-center justify-center bg-red-200 hover:bg-red-300 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-colors cursor-pointer" data-row-index="${currentRowIndex}" aria-label="Delete row">🗑️</button>
                 <div class="relative">
                     <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 dark:bg-gray-600 hover:not-disabled:bg-blue-100 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed" data-copytarget="iban-${currentRowIndex}" data-row-index="${currentRowIndex}" disabled>📋</button>
-                    <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 dark:bg-gray-600 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 pointer-events-none z-50 mb-1" id="tooltip-iban-${currentRowIndex}">Copied!</div>
+                    <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 dark:bg-gray-600 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 pointer-events-none data-visible:opacity-100 data-visible:pointer-events-auto z-50 mb-1" id="tooltip-iban-${currentRowIndex}">Copied!</div>
                 </div>
             </div>
         </div>
