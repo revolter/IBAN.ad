@@ -259,12 +259,8 @@ function setFieldsReadOnly(readOnly) {
 
         // Update visual styling
         if (readOnly) {
-            field.classList.remove('bg-gray-100', 'dark:bg-gray-700', 'text-gray-900', 'dark:text-gray-100', 'focus:ring-2', 'focus:ring-primary-dark');
-            field.classList.add('bg-gray-50', 'dark:bg-gray-800', 'text-gray-500', 'dark:text-gray-400', 'cursor-default', 'focus:ring-0');
             field.setAttribute('tabindex', '-1');
         } else {
-            field.classList.remove('bg-gray-50', 'dark:bg-gray-800', 'text-gray-500', 'dark:text-gray-400', 'cursor-default', 'focus:ring-0');
-            field.classList.add('bg-gray-100', 'dark:bg-gray-700', 'text-gray-900', 'dark:text-gray-100', 'focus:ring-2', 'focus:ring-primary-dark');
             field.removeAttribute('tabindex');
         }
     });
@@ -573,9 +569,9 @@ function addNewIBANRow() {
     newRow.innerHTML = `
         <div class="flex gap-2">
             <input type="text" id="currency-${currentRowIndex}" name="currency-${currentRowIndex}"
-                class="w-20 rounded-md border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark text-center" aria-label="Currency (optional)" />
+                class="w-20 rounded-md border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark read-only:bg-gray-50 read-only:dark:bg-gray-800 read-only:text-gray-500 read-only:dark:text-gray-400 read-only:cursor-default read-only:focus:ring-0 text-center" aria-label="Currency (optional)" />
             <input type="text" id="iban-${currentRowIndex}" name="iban-${currentRowIndex}" value=""
-                class="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark" aria-label="IBAN" />
+                class="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark read-only:bg-gray-50 read-only:dark:bg-gray-800 read-only:text-gray-500 read-only:dark:text-gray-400 read-only:cursor-default read-only:focus:ring-0" aria-label="IBAN" />
             <div class="flex gap-2">
                 <button type="button" class="add-row-btn w-[42px] h-[42px] hidden items-center justify-center bg-green-200 hover:bg-green-300 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-all duration-200 cursor-pointer" data-row-index="${currentRowIndex}" aria-label="Add new row">💱</button>
                 <button type="button" class="delete-row-btn w-[42px] h-[42px] hidden items-center justify-center bg-red-200 hover:bg-red-300 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-colors cursor-pointer" data-row-index="${currentRowIndex}" aria-label="Delete row">🗑️</button>
