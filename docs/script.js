@@ -259,28 +259,20 @@ function setFieldsReadOnly(readOnly) {
 
         // Update visual styling
         if (readOnly) {
-            field.classList.remove('bg-gray-100', 'dark:bg-gray-700', 'text-gray-900', 'dark:text-gray-100', 'focus:ring-2', 'focus:ring-primary-dark');
-            field.classList.add('bg-gray-50', 'dark:bg-gray-800', 'text-gray-500', 'dark:text-gray-400', 'cursor-default', 'focus:ring-0');
             field.setAttribute('tabindex', '-1');
         } else {
-            field.classList.remove('bg-gray-50', 'dark:bg-gray-800', 'text-gray-500', 'dark:text-gray-400', 'cursor-default', 'focus:ring-0');
-            field.classList.add('bg-gray-100', 'dark:bg-gray-700', 'text-gray-900', 'dark:text-gray-100', 'focus:ring-2', 'focus:ring-primary-dark');
             field.removeAttribute('tabindex');
         }
     });
 }
 
-
-
 // Unified tooltip notification function
 function showTooltip(tooltipId) {
     const tooltip = document.getElementById(tooltipId);
     if (tooltip) {
-        tooltip.classList.remove('opacity-0', 'pointer-events-none');
-        tooltip.classList.add('opacity-100', 'pointer-events-auto');
+        tooltip.setAttribute('data-visible', '');
         setTimeout(() => {
-            tooltip.classList.remove('opacity-100', 'pointer-events-auto');
-            tooltip.classList.add('opacity-0', 'pointer-events-none');
+            tooltip.removeAttribute('data-visible');
         }, 2000);
     }
 }
@@ -369,17 +361,10 @@ function getLastRowIndex() {
 }
 
 // Helper function to set button state (enabled/disabled) with consistent styling
-function setButtonState(button, enabled, hoverClass = 'hover:bg-blue-100') {
+function setButtonState(button, enabled) {
     if (!button) return;
 
     button.disabled = !enabled;
-    if (!enabled) {
-        button.classList.add('opacity-50', 'cursor-not-allowed');
-        button.classList.remove(hoverClass, 'cursor-pointer');
-    } else {
-        button.classList.remove('opacity-50', 'cursor-not-allowed');
-        button.classList.add(hoverClass, 'cursor-pointer');
-    }
 }
 
 // Unified button state management for all buttons
@@ -464,7 +449,7 @@ function setAllButtonStates() {
 
             // Disable permalink button if there's no meaningful data to share
             const hasData = hasDataToShare();
-            setButtonState(permalinkBtn, hasData, 'hover:bg-blue-600');
+            setButtonState(permalinkBtn, hasData);
         }
     }
 }
@@ -580,15 +565,15 @@ function addNewIBANRow() {
     newRow.innerHTML = `
         <div class="flex gap-2">
             <input type="text" id="currency-${currentRowIndex}" name="currency-${currentRowIndex}"
-                class="w-20 rounded-md border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark text-center" aria-label="Currency (optional)" />
+                class="w-20 rounded-md border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark read-only:bg-gray-50 read-only:dark:bg-gray-800 read-only:text-gray-500 read-only:dark:text-gray-400 read-only:cursor-default read-only:focus:ring-0 text-center" aria-label="Currency (optional)" />
             <input type="text" id="iban-${currentRowIndex}" name="iban-${currentRowIndex}" value=""
-                class="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark" aria-label="IBAN" />
+                class="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark read-only:bg-gray-50 read-only:dark:bg-gray-800 read-only:text-gray-500 read-only:dark:text-gray-400 read-only:cursor-default read-only:focus:ring-0" aria-label="IBAN" />
             <div class="flex gap-2">
-                <button type="button" class="add-row-btn w-[42px] h-[42px] hidden items-center justify-center bg-green-200 hover:bg-green-300 text-gray-700 dark:text-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-all duration-200 cursor-pointer" data-row-index="${currentRowIndex}" aria-label="Add new row">💱</button>
-                <button type="button" class="delete-row-btn w-[42px] h-[42px] hidden items-center justify-center bg-red-200 hover:bg-red-300 text-gray-700 dark:text-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-colors cursor-pointer" data-row-index="${currentRowIndex}" aria-label="Delete row">🗑️</button>
+                <button type="button" class="add-row-btn w-[42px] h-[42px] hidden items-center justify-center bg-green-200 hover:bg-green-300 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-all duration-200 cursor-pointer" data-row-index="${currentRowIndex}" aria-label="Add new row">💱</button>
+                <button type="button" class="delete-row-btn w-[42px] h-[42px] hidden items-center justify-center bg-red-200 hover:bg-red-300 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-colors cursor-pointer" data-row-index="${currentRowIndex}" aria-label="Delete row">🗑️</button>
                 <div class="relative">
-                    <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 dark:bg-gray-600 hover:bg-blue-100 text-gray-700 dark:text-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg cursor-pointer opacity-50 cursor-not-allowed" data-copytarget="iban-${currentRowIndex}" data-row-index="${currentRowIndex}" disabled>📋</button>
-                    <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 dark:bg-gray-600 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 pointer-events-none z-50 mb-1" id="tooltip-iban-${currentRowIndex}">Copied!</div>
+                    <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 dark:bg-gray-600 hover:not-disabled:bg-blue-100 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed" data-copytarget="iban-${currentRowIndex}" data-row-index="${currentRowIndex}" disabled>📋</button>
+                    <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 dark:bg-gray-600 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 pointer-events-none data-visible:opacity-100 data-visible:pointer-events-auto z-50 mb-1" id="tooltip-iban-${currentRowIndex}">Copied!</div>
                 </div>
             </div>
         </div>
