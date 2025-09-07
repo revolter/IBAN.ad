@@ -2,6 +2,7 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 @custom-variant data-checked (&[data-checked]);
+@custom-variant data-visible (&[data-visible]);
 
 @theme {
   --color-primary: #007bff;
