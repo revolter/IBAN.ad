@@ -266,6 +266,131 @@ function setFieldsReadOnly(readOnly) {
     });
 }
 
+// Function to hide empty fields in read-only mode
+function setFieldVisibility(readOnly) {
+    if (!readOnly) {
+        // In edit mode, show all fields
+        showAllFields();
+        return;
+    }
+
+    // Hide empty individual fields in read-only mode
+    const fieldsToCheck = ['swift', 'name', 'address', 'details'];
+    fieldsToCheck.forEach(fieldId => {
+        const field = document.getElementById(fieldId);
+        if (field) {
+            const hasValue = field.value.trim();
+            const fieldContainer = field.closest('div').parentElement; // Get the label + input container
+            
+            if (hasValue) {
+                fieldContainer.classList.remove('hidden');
+            } else {
+                fieldContainer.classList.add('hidden');
+            }
+        }
+    });
+
+    // Handle IBAN rows - hide empty rows except the first one
+    const allRows = document.querySelectorAll('.iban-row');
+    allRows.forEach(row => {
+        const rowIndex = parseInt(row.getAttribute('data-row-index'));
+        const currencyField = document.getElementById(`currency-${rowIndex}`);
+        const ibanField = document.getElementById(`iban-${rowIndex}`);
+        
+        if (currencyField && ibanField) {
+            const currencyValue = currencyField.value.trim();
+            const ibanValue = ibanField.value.trim();
+            
+            // Always show the first row, even if empty (for context)
+            if (rowIndex === 1) {
+                row.classList.remove('hidden');
+                // But hide the currency field if it's empty and IBAN has content
+                if (!currencyValue && ibanValue) {
+                    currencyField.classList.add('hidden');
+                } else {
+                    currencyField.classList.remove('hidden');
+                }
+            } else {
+                // Hide additional rows if they are completely empty
+                if (!currencyValue && !ibanValue) {
+                    row.classList.add('hidden');
+                } else {
+                    row.classList.remove('hidden');
+                    // Hide currency field if empty but IBAN has content
+                    if (!currencyValue && ibanValue) {
+                        currencyField.classList.add('hidden');
+                    } else {
+                        currencyField.classList.remove('hidden');
+                    }
+                }
+            }
+        }
+    });
+
+    // Hide SWIFT field if empty
+    const swiftField = document.getElementById('swift');
+    const swiftContainer = swiftField ? swiftField.closest('div').parentElement : null;
+    if (swiftContainer) {
+        if (swiftField.value.trim()) {
+            swiftContainer.classList.remove('hidden');
+        } else {
+            swiftContainer.classList.add('hidden');
+        }
+    }
+
+    // Check if Account Holder fieldset should be hidden (if both name and address are empty)
+    const nameField = document.getElementById('name');
+    const addressField = document.getElementById('address');
+    const accountHolderFieldset = document.querySelector('fieldset[aria-labelledby="account-holder-section"]');
+    
+    if (accountHolderFieldset && nameField && addressField) {
+        const hasNameValue = nameField.value.trim();
+        const hasAddressValue = addressField.value.trim();
+        
+        if (!hasNameValue && !hasAddressValue) {
+            accountHolderFieldset.classList.add('hidden');
+        } else {
+            accountHolderFieldset.classList.remove('hidden');
+        }
+    }
+}
+
+function showAllFields() {
+    // Show all field containers
+    const fieldsToShow = ['swift', 'name', 'address', 'details'];
+    fieldsToShow.forEach(fieldId => {
+        const field = document.getElementById(fieldId);
+        if (field) {
+            const fieldContainer = field.closest('div').parentElement;
+            fieldContainer.classList.remove('hidden');
+        }
+    });
+
+    // Show all IBAN rows and currency fields
+    const allRows = document.querySelectorAll('.iban-row');
+    allRows.forEach(row => {
+        row.classList.remove('hidden');
+        const rowIndex = parseInt(row.getAttribute('data-row-index'));
+        const currencyField = document.getElementById(`currency-${rowIndex}`);
+        if (currencyField) {
+            currencyField.classList.remove('hidden');
+        }
+    });
+
+    // Show SWIFT field
+    const swiftField = document.getElementById('swift');
+    const swiftContainer = swiftField ? swiftField.closest('div').parentElement : null;
+    if (swiftContainer) {
+        swiftContainer.classList.remove('hidden');
+    }
+
+    // Show Account Holder fieldset
+    const accountHolderFieldset = document.querySelector('fieldset[aria-labelledby="account-holder-section"]');
+    if (accountHolderFieldset) {
+        accountHolderFieldset.classList.remove('hidden');
+    }
+}
+
 // Unified tooltip notification function
 function showTooltip(tooltipId) {
     const tooltip = document.getElementById(tooltipId);
@@ -452,6 +577,9 @@ function setAllButtonStates() {
             setButtonState(permalinkBtn, hasData);
         }
     }
+
+    // Update field visibility based on read-only mode and field content
+    setFieldVisibility(readOnly);
 }
 
 // Currency validation functions
@@ -885,6 +1013,9 @@ function redirectFromEmptySecondRows() {
 
     // Apply read-only state if needed
     setFieldsReadOnly(isReadOnlyMode());
+    
+    // Apply field visibility based on read-only mode
+    setFieldVisibility(isReadOnlyMode());
 
     // Update all button states after loading from params
     setAllButtonStates();
