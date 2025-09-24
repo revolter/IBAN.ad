@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IBAN Advertiser</title>
     <meta name="description" content="The easiest way for NGOs, freelancers, and clubs to share their bank details for donations, payments, or memberships.">
-    <link rel="stylesheet" href="styles.css?v=a339a619">
+    <link rel="stylesheet" href="styles.css?v=63a491eb">
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans">
     <a id="skip-link" href="#iban-info-title" class="sr-only focus:not-sr-only absolute top-2 left-2 bg-blue-500 text-white px-3 py-1 rounded z-50">Skip to main content</a>
@@ -111,8 +111,8 @@
                     </fieldset>
                     <fieldset class="border border-gray-300 dark:border-gray-600 rounded-lg p-4 md:p-6 bg-white dark:bg-gray-800" aria-labelledby="account-holder-section">
                         <legend id="account-holder-section" class="text-lg font-bold text-gray-800 dark:text-gray-200 px-2 bg-white dark:bg-gray-800 rounded">Account Holder</legend>
-                        <div class="space-y-6">
-                            <div>
+                        <div>
+                            <div class="mb-6">
                                 <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Name</label>
                                 <div class="flex gap-2">
                                     <input type="text" id="name" name="name" value=""
@@ -124,7 +124,7 @@
                                 </div>
                                 <p id="name-suggestion" class="text-xs text-gray-500 dark:text-gray-400 mt-1">Tip: Avoid special characters (ă, ș, ț, etc.) for maximum compatibility with all banks.</p>
                             </div>
-                            <div>
+                            <div class="mt-6">
                                 <label for="address" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Address</label>
                                 <div class="flex gap-2">
                                     <textarea id="address" name="address" rows="1"
@@ -183,6 +183,6 @@
                 </p>
             </footer>
     </div>
-    <script src="script.js?v=a339a619"></script>
+    <script src="script.js?v=63a491eb"></script>
 </body>
 </html>
