@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IBAN Advertiser</title>
+    <meta name="description" content="The easiest way for NGOs, freelancers, and clubs to share their bank details for donations, payments, or memberships.">
+    <link rel="stylesheet" href="styles.css?v=a339a619">
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans">
+    <a id="skip-link" href="#iban-info-title" class="sr-only focus:not-sr-only absolute top-2 left-2 bg-blue-500 text-white px-3 py-1 rounded z-50">Skip to main content</a>
+    <div id="a11y-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+    <div class="container mx-auto px-4 py-8 min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans flex flex-col">
+        <header class="mb-12 w-full max-w-2xl mx-auto" aria-label="Site header">
+            <div class="flex flex-col">
+                <div class="flex flex-col sm:flex-row items-center justify-between w-full">
+                    <button id="clear-form-btn" type="button" class="block text-4xl font-bold text-primary mb-2 sm:mb-0 focus:outline-none focus:ring-2 focus:ring-primary-dark rounded text-center cursor-pointer bg-transparent border-none p-0" aria-label="Reset form and fields (keep language)">IBAN.ad</button>
+                    <div class="flex gap-4 justify-end w-full sm:w-auto mt-2 sm:mt-0">
+                        <!-- Theme Toggle -->
+                        <div class="flex items-center">
+                            <div id="theme-toggle" class="relative z-0 inline-grid grid-cols-3 gap-0.5 rounded-full bg-gray-950/5 p-0.5 text-gray-950 dark:bg-white/10 dark:text-white" role="radiogroup" aria-label="Theme selection">
+                                <button type="button" id="theme-system" class="theme-btn rounded-full p-1.5 *:size-7 data-checked:bg-white data-checked:ring data-checked:inset-ring data-checked:ring-gray-950/10 data-checked:inset-ring-white/10 sm:p-0 dark:data-checked:bg-gray-700 dark:data-checked:text-white dark:data-checked:ring-transparent transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-dark" role="radio" aria-checked="true" data-theme="system" aria-label="System theme">
+                                    <svg viewBox="0 0 28 28" fill="none" class="size-7">
+                                        <path d="M7.5 8.5C7.5 7.94772 7.94772 7.5 8.5 7.5H19.5C20.0523 7.5 20.5 7.94772 20.5 8.5V16.5C20.5 17.0523 20.0523 17.5 19.5 17.5H8.5C7.94772 17.5 7.5 17.0523 7.5 16.5V8.5Z" stroke="currentColor"></path>
+                                        <path d="M7.5 8.5C7.5 7.94772 7.94772 7.5 8.5 7.5H19.5C20.0523 7.5 20.5 7.94772 20.5 8.5V14.5C20.5 15.0523 20.0523 15.5 19.5 15.5H8.5C7.94772 15.5 7.5 15.0523 7.5 14.5V8.5Z" stroke="currentColor"></path>
+                                        <path d="M16.5 20.5V17.5H11.5V20.5M16.5 20.5H11.5M16.5 20.5H17.5M11.5 20.5H10.5" stroke="currentColor" stroke-linecap="round"></path>
+                                    </svg>
+                                </button>
+                                <button type="button" id="theme-light" class="theme-btn rounded-full p-1.5 *:size-7 data-checked:bg-white data-checked:ring data-checked:inset-ring data-checked:ring-gray-950/10 data-checked:inset-ring-white/10 sm:p-0 dark:data-checked:bg-gray-700 dark:data-checked:text-white dark:data-checked:ring-transparent transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-dark" role="radio" aria-checked="false" data-theme="light" aria-label="Light theme">
+                                    <svg viewBox="0 0 28 28" fill="none" class="size-7">
+                                        <circle cx="14" cy="14" r="3.5" stroke="currentColor"></circle>
+                                        <path d="M14 8.5V6.5" stroke="currentColor" stroke-linecap="round"></path>
+                                        <path d="M17.889 10.1115L19.3032 8.69727" stroke="currentColor" stroke-linecap="round"></path>
+                                        <path d="M19.5 14L21.5 14" stroke="currentColor" stroke-linecap="round"></path>
+                                        <path d="M17.889 17.8885L19.3032 19.3027" stroke="currentColor" stroke-linecap="round"></path>
+                                        <path d="M14 21.5V19.5" stroke="currentColor" stroke-linecap="round"></path>
+                                        <path d="M8.69663 19.3029L10.1108 17.8887" stroke="currentColor" stroke-linecap="round"></path>
+                                        <path d="M6.5 14L8.5 14" stroke="currentColor" stroke-linecap="round"></path>
+                                        <path d="M8.69663 8.69711L10.1108 10.1113" stroke="currentColor" stroke-linecap="round"></path>
+                                    </svg>
+                                </button>
+                                <button type="button" id="theme-dark" class="theme-btn rounded-full p-1.5 *:size-7 data-checked:bg-white data-checked:ring data-checked:inset-ring data-checked:ring-gray-950/10 data-checked:inset-ring-white/10 sm:p-0 dark:data-checked:bg-gray-700 dark:data-checked:text-white dark:data-checked:ring-transparent transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-dark" role="radio" aria-checked="false" data-theme="dark" aria-label="Dark theme">
+                                    <svg viewBox="0 0 28 28" fill="none" class="size-7">
+                                        <path d="M10.5 9.99914C10.5 14.1413 13.8579 17.4991 18 17.4991C19.0332 17.4991 20.0176 17.2902 20.9132 16.9123C19.7761 19.6075 17.109 21.4991 14 21.4991C9.85786 21.4991 6.5 18.1413 6.5 13.9991C6.5 10.8902 8.39167 8.22304 11.0868 7.08594C10.7089 7.98159 10.5 8.96597 10.5 9.99914Z" stroke="currentColor" stroke-linejoin="round"></path>
+                                        <path d="M16.3561 6.50754L16.5 5.5L16.6439 6.50754C16.7068 6.94752 17.0525 7.29321 17.4925 7.35607L18.5 7.5L17.4925 7.64393C17.0525 7.70679 16.7068 8.05248 16.6439 8.49246L16.5 9.5L16.3561 8.49246C16.2932 8.05248 15.9475 7.70679 15.5075 7.64393L14.5 7.5L15.5075 7.35607C15.9475 7.29321 16.2932 6.94752 16.3561 6.50754Z" fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
+                                        <path d="M20.3561 11.5075L20.5 10.5L20.6439 11.5075C20.7068 11.9475 21.0525 12.2932 21.4925 12.3561L22.5 12.5L21.4925 12.6439C21.0525 12.7068 20.7068 13.0525 20.6439 13.4925L20.5 14.5L20.3561 13.4925C20.2932 13.0525 19.9475 12.7068 19.5075 12.6439L18.5 12.5L19.5075 12.3561C19.9475 12.2932 20.2932 11.9475 20.3561 11.5075Z" fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- Language Select -->
+                        <div>
+                            <label for="lang-select" class="sr-only">Language</label>
+                            <div class="relative w-40">
+                                <select id="lang-select" name="lang-select"
+                                    class="appearance-none w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-primary-dark shadow-sm"
+                                    aria-label="Select language">
+                                    <option value="en">English</option>
+                                    <option value="ro">Română</option>
+                                </select>
+                                <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                                    <svg class="h-4 w-4 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-full">
+                    <p id="site-tagline" class="text-xl text-gray-600 dark:text-gray-400 mt-4 text-center w-full">The easiest way for NGOs, freelancers, and clubs to share their bank details for donations, payments, or memberships.</p>
+                </div>
+            </div>
+        </header>
+        <main class="flex-1 flex flex-col justify-center">
+            <div class="w-full max-w-2xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 md:p-6 flex flex-col justify-center" aria-labelledby="iban-info-title">
+                <h1 id="iban-info-title" class="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">IBAN Advertiser</h1>
+                <form class="space-y-6" aria-describedby="iban-info-desc" autocomplete="off">
+                    <p id="iban-info-desc" class="sr-only">Readonly form displaying IBAN and related transaction details.</p>
+                    <fieldset class="border border-gray-300 dark:border-gray-600 rounded-lg p-4 md:p-6 bg-white dark:bg-gray-800" aria-labelledby="banking-info-section">
+                        <legend id="banking-info-section" class="text-lg font-bold text-gray-800 dark:text-gray-200 px-2 bg-white dark:bg-gray-800 rounded">Banking Information</legend>
+                        <div id="iban-rows-container">
+                            <div class="iban-row" data-row-index="1">
+                                <label for="currency-1" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Currency & IBAN</label>
+                                <div class="flex gap-2">
+                                    <input type="text" id="currency-1" name="currency-1"
+                                        class="w-20 rounded-md border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark read-only:bg-gray-50 read-only:dark:bg-gray-800 read-only:text-gray-500 read-only:dark:text-gray-400 read-only:cursor-default read-only:focus:ring-0 text-center" aria-label="Currency (optional)" />
+                                    <input type="text" id="iban-1" name="iban-1" value=""
+                                        class="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark read-only:bg-gray-50 read-only:dark:bg-gray-800 read-only:text-gray-500 read-only:dark:text-gray-400 read-only:cursor-default read-only:focus:ring-0" aria-label="IBAN" />
+                                    <div class="flex gap-2">
+                                        <button type="button" class="add-row-btn w-[42px] h-[42px] hidden items-center justify-center bg-green-200 hover:not-disabled:bg-green-300 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg transition-all duration-200 cursor-pointer" data-row-index="1" aria-label="Add new row">💱</button>
+                                        <div class="relative">
+                                            <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 dark:bg-gray-600 hover:not-disabled:bg-blue-100 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed" data-copytarget="iban-1" data-row-index="1" disabled>📋</button>
+                                            <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 dark:bg-gray-600 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 pointer-events-none data-visible:opacity-100 data-visible:pointer-events-auto z-50 mb-1" id="tooltip-iban-1">Copied!</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-6">
+                            <label for="swift" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">SWIFT/BIC</label>
+                            <div class="flex gap-2">
+                                <input type="text" id="swift" name="swift" value=""
+                                    class="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark read-only:bg-gray-50 read-only:dark:bg-gray-800 read-only:text-gray-500 read-only:dark:text-gray-400 read-only:cursor-default read-only:focus:ring-0" aria-label="SWIFT/BIC (optional)" />
+                                <div class="relative">
+                                    <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 dark:bg-gray-600 hover:not-disabled:bg-blue-100 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed" data-copytarget="swift" disabled>📋</button>
+                                    <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 dark:bg-gray-600 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 pointer-events-none data-visible:opacity-100 data-visible:pointer-events-auto z-50 mb-1" id="tooltip-swift">Copied!</div>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset class="border border-gray-300 dark:border-gray-600 rounded-lg p-4 md:p-6 bg-white dark:bg-gray-800" aria-labelledby="account-holder-section">
+                        <legend id="account-holder-section" class="text-lg font-bold text-gray-800 dark:text-gray-200 px-2 bg-white dark:bg-gray-800 rounded">Account Holder</legend>
+                        <div class="space-y-6">
+                            <div>
+                                <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Name</label>
+                                <div class="flex gap-2">
+                                    <input type="text" id="name" name="name" value=""
+                                        class="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark read-only:bg-gray-50 read-only:dark:bg-gray-800 read-only:text-gray-500 read-only:dark:text-gray-400 read-only:cursor-default read-only:focus:ring-0" aria-label="Name" />
+                                    <div class="relative">
+                                        <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 dark:bg-gray-600 hover:not-disabled:bg-blue-100 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed" data-copytarget="name" disabled>📋</button>
+                                        <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 dark:bg-gray-600 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 pointer-events-none data-visible:opacity-100 data-visible:pointer-events-auto z-50 mb-1" id="tooltip-name">Copied!</div>
+                                    </div>
+                                </div>
+                                <p id="name-suggestion" class="text-xs text-gray-500 dark:text-gray-400 mt-1">Tip: Avoid special characters (ă, ș, ț, etc.) for maximum compatibility with all banks.</p>
+                            </div>
+                            <div>
+                                <label for="address" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Address</label>
+                                <div class="flex gap-2">
+                                    <textarea id="address" name="address" rows="1"
+                                        class="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark read-only:bg-gray-50 read-only:dark:bg-gray-800 read-only:text-gray-500 read-only:dark:text-gray-400 read-only:cursor-default read-only:focus:ring-0 resize-none overflow-hidden"
+                                        aria-label="Address"></textarea>
+                                    <div class="relative">
+                                        <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 dark:bg-gray-600 hover:not-disabled:bg-blue-100 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed" data-copytarget="address" disabled>📋</button>
+                                        <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 dark:bg-gray-600 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 pointer-events-none data-visible:opacity-100 data-visible:pointer-events-auto z-50 mb-1" id="tooltip-address">Copied!</div>
+                                    </div>
+                                </div>
+                                <p id="address-suggestion" class="text-xs text-gray-500 dark:text-gray-400 mt-1">Tip: Avoid special characters (ă, ș, ț, etc.) for maximum compatibility with all banks.</p>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <div>
+                        <label for="details" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Transaction Details</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="details" name="details" value=""
+                                class="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-dark read-only:bg-gray-50 read-only:dark:bg-gray-800 read-only:text-gray-500 read-only:dark:text-gray-400 read-only:cursor-default read-only:focus:ring-0" aria-label="Transaction Details" />
+                            <div class="relative">
+                                <button type="button" class="copy-btn w-[42px] h-[42px] flex items-center justify-center bg-gray-200 dark:bg-gray-600 hover:not-disabled:bg-blue-100 rounded focus:outline-none focus:ring-2 focus:ring-primary-dark text-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed" data-copytarget="details" disabled>📋</button>
+                                <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 dark:bg-gray-600 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 pointer-events-none data-visible:opacity-100 data-visible:pointer-events-auto z-50 mb-1" id="tooltip-details">Copied!</div>
+                            </div>
+                        </div>
+                        <p id="details-suggestion" class="text-xs text-gray-500 dark:text-gray-400 mt-1">Tip: Avoid special characters (ă, ș, ț, etc.) for maximum compatibility with all banks.</p>
+                    </div>
+                    <div class="flex justify-end mt-8">
+                        <div class="relative">
+                            <button type="button" id="edit-btn" class="hidden items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded hover:not-disabled:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-primary-dark font-semibold text-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+                                <span aria-hidden="true">✏️</span> <span id="edit-btn-label">Edit</span>
+                            </button>
+                        </div>
+                        <div class="relative">
+                            <button type="button" id="permalink-btn" class="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded hover:not-disabled:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-primary-dark font-semibold text-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+                                <span aria-hidden="true">🔗</span> <span id="permalink-btn-label">Share</span>
+                            </button>
+                            <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 bg-gray-700 dark:bg-gray-600 text-white px-2 py-1 rounded text-sm whitespace-nowrap opacity-0 pointer-events-none data-visible:opacity-100 data-visible:pointer-events-auto z-50 mb-1" id="tooltip-permalink">Copied!</div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="w-full max-w-2xl mx-auto mt-6">
+                <p id="disclaimer-text" class="text-sm mb-4 text-gray-700 dark:text-yellow-200 bg-yellow-50 dark:bg-yellow-900 border border-yellow-200 dark:border-yellow-700 rounded-md p-3 text-center">
+                    Disclaimer: This website does not process payments or donations. It only helps you copy IBAN information to use in your banking app or other payment methods for actual transfers.
+                </p>
+            </div>
+        </main>
+            <footer class="w-full max-w-2xl mx-auto text-center mt-6 pt-8 border-t border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400">
+                <p>
+                    <a href="https://github.com/revolter/IBAN.ad"
+                       class="text-blue-600 hover:underline"
+                       target="_blank"
+                       rel="noopener noreferrer">
+                        GitHub
+                    </a>
+                </p>
+            </footer>
+    </div>
+    <script src="script.js?v=a339a619"></script>
+</body>
+</html>
