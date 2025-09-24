@@ -327,17 +327,6 @@ function setFieldVisibility(readOnly) {
         }
     });
 
-    // Hide SWIFT field if empty
-    const swiftField = document.getElementById('swift');
-    const swiftContainer = swiftField ? swiftField.closest('div').parentElement : null;
-    if (swiftContainer) {
-        if (swiftField.value.trim()) {
-            swiftContainer.classList.remove('hidden');
-        } else {
-            swiftContainer.classList.add('hidden');
-        }
-    }
-
     // Check if Account Holder fieldset should be hidden (if both name and address are empty)
     const nameField = document.getElementById('name');
     const addressField = document.getElementById('address');
@@ -376,13 +365,6 @@ function showAllFields() {
             currencyField.classList.remove('hidden');
         }
     });
-
-    // Show SWIFT field
-    const swiftField = document.getElementById('swift');
-    const swiftContainer = swiftField ? swiftField.closest('div').parentElement : null;
-    if (swiftContainer) {
-        swiftContainer.classList.remove('hidden');
-    }
 
     // Show Account Holder fieldset
     const accountHolderFieldset = document.querySelector('fieldset[aria-labelledby="account-holder-section"]');
