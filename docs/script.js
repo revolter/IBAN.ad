@@ -84,7 +84,7 @@ const TRANSLATIONS = {
         title: 'IBAN Advertiser',
         formDesc: 'Readonly form displaying IBAN and related transaction details.',
         bankingInformationSection: 'Banking Information',
-        ibanLabel: 'Currency & IBAN',
+        currencyAndIBANLabel: 'Currency & IBAN',
         copyIBAN: 'Copy IBAN',
         swiftLabel: 'SWIFT/BIC',
         copySWIFT: 'Copy SWIFT/BIC',
@@ -113,7 +113,7 @@ const TRANSLATIONS = {
         title: 'Promotor IBAN',
         formDesc: 'Formular doar pentru citire care afișează IBAN-ul și detaliile tranzacției.',
         bankingInformationSection: 'Informații bancare',
-        ibanLabel: 'Monedă și IBAN',
+        currencyAndIBANLabel: 'Monedă și IBAN',
         copyIBAN: 'Copiază IBAN',
         swiftLabel: 'SWIFT/BIC',
         copySWIFT: 'Copiază SWIFT/BIC',
@@ -177,7 +177,7 @@ function setLanguage(lang) {
     // Announce language change for screen readers
     announceA11y(t.langChanged);
     document.getElementById('iban-info-title').textContent = t.title;
-    document.querySelector('label[for="currency-1"]').textContent = t.ibanLabel;
+    document.querySelector('label[for="currency-1"]').textContent = t.currencyAndIBANLabel;
     document.getElementById('banking-info-section').textContent = t.bankingInformationSection;
     document.getElementById('account-holder-section').textContent = t.accountHolderSection;
     document.querySelector('label[for="name"]').textContent = t.nameLabel;
