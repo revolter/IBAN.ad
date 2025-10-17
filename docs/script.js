@@ -84,7 +84,8 @@ const TRANSLATIONS = {
         title: 'IBAN Advertiser',
         formDesc: 'Readonly form displaying IBAN and related transaction details.',
         bankingInformationSection: 'Banking Information',
-        ibanLabel: 'Currency & IBAN',
+        currencyAndIBANLabel: 'Currency & IBAN',
+        ibanLabel: 'IBAN',
         copyIBAN: 'Copy IBAN',
         swiftLabel: 'SWIFT/BIC',
         copySWIFT: 'Copy SWIFT/BIC',
@@ -113,7 +114,8 @@ const TRANSLATIONS = {
         title: 'Promotor IBAN',
         formDesc: 'Formular doar pentru citire care afișează IBAN-ul și detaliile tranzacției.',
         bankingInformationSection: 'Informații bancare',
-        ibanLabel: 'Monedă și IBAN',
+        currencyAndIBANLabel: 'Monedă și IBAN',
+        ibanLabel: 'IBAN',
         copyIBAN: 'Copiază IBAN',
         swiftLabel: 'SWIFT/BIC',
         copySWIFT: 'Copiază SWIFT/BIC',
@@ -177,7 +179,7 @@ function setLanguage(lang) {
     // Announce language change for screen readers
     announceA11y(t.langChanged);
     document.getElementById('iban-info-title').textContent = t.title;
-    document.querySelector('label[for="currency-1"]').textContent = t.ibanLabel;
+    document.querySelector('label[for="currency-1"]').textContent = t.currencyAndIBANLabel;
     document.getElementById('banking-info-section').textContent = t.bankingInformationSection;
     document.getElementById('account-holder-section').textContent = t.accountHolderSection;
     document.querySelector('label[for="name"]').textContent = t.nameLabel;
@@ -189,6 +191,8 @@ function setLanguage(lang) {
     document.getElementById('name-suggestion').textContent = t.specialCharactersSuggestion;
     document.getElementById('address-suggestion').textContent = t.specialCharactersSuggestion;
     document.getElementById('details-suggestion').textContent = t.specialCharactersSuggestion;
+
+    updateIBANRowLabel();
 }
 
 document.getElementById('lang-select').addEventListener('change', function(e) {
@@ -264,6 +268,33 @@ function setFieldsReadOnly(readOnly) {
             field.removeAttribute('tabindex');
         }
     });
+}
+
+// Function to update IBAN row label based on currency fields visibility
+function updateIBANRowLabel() {
+    const allRows = document.querySelectorAll('.iban-row');
+    let isAnyCurrencyFieldVisible = false;
+    allRows.forEach(row => {
+        const rowIndex = parseInt(row.getAttribute('data-row-index'));
+        const currencyField = document.getElementById(`currency-${rowIndex}`);
+
+        if (currencyField) {
+            if (isAnyCurrencyFieldVisible == false && !currencyField.classList.contains('hidden')) {
+                isAnyCurrencyFieldVisible = true;
+            }
+        }
+    });
+
+    const label = document.querySelector(`label[for="currency-1"]`);
+    const langVal = document.getElementById('lang-select').value;
+    const t = getTranslations(langVal);
+
+    // If any currency field is visible, use "Currency & IBAN" label, otherwise use "IBAN"
+    if (isAnyCurrencyFieldVisible) {
+        label.textContent = t.currencyAndIBANLabel;
+    } else {
+        label.textContent = t.ibanLabel;
+    }
 }
 
 // Function to hide empty fields in read-only mode
@@ -342,6 +373,8 @@ function setFieldVisibility(readOnly) {
             accountHolderFieldset.classList.remove('hidden');
         }
     }
+
+    updateIBANRowLabel();
 }
 
 function showAllFields() {
