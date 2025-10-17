@@ -281,7 +281,7 @@ function setFieldVisibility(readOnly) {
         if (field) {
             const hasValue = field.value.trim();
             const fieldContainer = field.closest('div').parentElement; // Get the label + input container
-            
+
             if (hasValue) {
                 fieldContainer.classList.remove('hidden');
             } else {
@@ -296,11 +296,11 @@ function setFieldVisibility(readOnly) {
         const rowIndex = parseInt(row.getAttribute('data-row-index'));
         const currencyField = document.getElementById(`currency-${rowIndex}`);
         const ibanField = document.getElementById(`iban-${rowIndex}`);
-        
+
         if (currencyField && ibanField) {
             const currencyValue = currencyField.value.trim();
             const ibanValue = ibanField.value.trim();
-            
+
             // Always show the first row, even if empty (for context)
             if (rowIndex === 1) {
                 row.classList.remove('hidden');
@@ -331,11 +331,11 @@ function setFieldVisibility(readOnly) {
     const nameField = document.getElementById('name');
     const addressField = document.getElementById('address');
     const accountHolderFieldset = document.querySelector('fieldset[aria-labelledby="account-holder-section"]');
-    
+
     if (accountHolderFieldset && nameField && addressField) {
         const hasNameValue = nameField.value.trim();
         const hasAddressValue = addressField.value.trim();
-        
+
         if (!hasNameValue && !hasAddressValue) {
             accountHolderFieldset.classList.add('hidden');
         } else {
@@ -995,7 +995,7 @@ function redirectFromEmptySecondRows() {
 
     // Apply read-only state if needed
     setFieldsReadOnly(isReadOnlyMode());
-    
+
     // Apply field visibility based on read-only mode
     setFieldVisibility(isReadOnlyMode());
 
@@ -1008,16 +1008,7 @@ function generatePermalinkParams() {
     const params = new URLSearchParams();
     const langVal = document.getElementById('lang-select').value;
 
-    const swiftVal = document.getElementById('swift').value;
-    const nameVal = document.getElementById('name').value;
-    const addressVal = document.getElementById('address').value;
-    const detailsVal = document.getElementById('details').value;
-
     if (langVal) params.set(QUERY_PARAM_LANG, langVal);
-    if (swiftVal) params.set('swift', swiftVal);
-    if (nameVal) params.set('name', nameVal);
-    if (addressVal) params.set('address', addressVal);
-    if (detailsVal) params.set('details', detailsVal);
 
     // Collect all existing rows data using their actual indices
     const allRows = document.querySelectorAll('.iban-row');
@@ -1050,6 +1041,16 @@ function generatePermalinkParams() {
             }
         }
     });
+
+    const swiftVal = document.getElementById('swift').value;
+    const nameVal = document.getElementById('name').value;
+    const addressVal = document.getElementById('address').value;
+    const detailsVal = document.getElementById('details').value;
+
+    if (swiftVal) params.set('swift', swiftVal);
+    if (nameVal) params.set('name', nameVal);
+    if (addressVal) params.set('address', addressVal);
+    if (detailsVal) params.set('details', detailsVal);
 
     return params;
 }
