@@ -375,6 +375,15 @@ function setFieldVisibility(readOnly) {
     }
 
     updateIBANRowLabel();
+
+    // Hide special character tips in read-only mode
+    const tipElements = ['name-suggestion', 'address-suggestion', 'details-suggestion'];
+    tipElements.forEach(tipId => {
+        const tip = document.getElementById(tipId);
+        if (tip) {
+            tip.classList.add('hidden');
+        }
+    });
 }
 
 function showAllFields() {
@@ -404,6 +413,15 @@ function showAllFields() {
     if (accountHolderFieldset) {
         accountHolderFieldset.classList.remove('hidden');
     }
+
+    // Show special character tips in edit mode
+    const tipElements = ['name-suggestion', 'address-suggestion', 'details-suggestion'];
+    tipElements.forEach(tipId => {
+        const tip = document.getElementById(tipId);
+        if (tip) {
+            tip.classList.remove('hidden');
+        }
+    });
 }
 
 // Unified tooltip notification function
