@@ -9,6 +9,9 @@ const QUERY_PARAM_EDIT_VALUE = 'true';
 // Query parameters that don't represent permalink data
 const NON_PERMALINK_QUERY_PARAMS = [QUERY_PARAM_LANG, QUERY_PARAM_EDIT];
 
+// Special character tip element IDs
+const TIP_ELEMENT_IDS = ['name-suggestion', 'address-suggestion', 'details-suggestion'];
+
 // Theme management
 const THEME_STORAGE_KEY = 'iban-ad-theme';
 const THEME_SYSTEM = 'system';
@@ -297,6 +300,20 @@ function updateIBANRowLabel() {
     }
 }
 
+// Helper function to show or hide special character tips
+function toggleTipVisibility(show) {
+    TIP_ELEMENT_IDS.forEach(tipId => {
+        const tip = document.getElementById(tipId);
+        if (tip) {
+            if (show) {
+                tip.classList.remove('hidden');
+            } else {
+                tip.classList.add('hidden');
+            }
+        }
+    });
+}
+
 // Function to hide empty fields in read-only mode
 function setFieldVisibility(readOnly) {
     if (!readOnly) {
@@ -377,13 +394,7 @@ function setFieldVisibility(readOnly) {
     updateIBANRowLabel();
 
     // Hide special character tips in read-only mode
-    const tipElements = ['name-suggestion', 'address-suggestion', 'details-suggestion'];
-    tipElements.forEach(tipId => {
-        const tip = document.getElementById(tipId);
-        if (tip) {
-            tip.classList.add('hidden');
-        }
-    });
+    toggleTipVisibility(false);
 }
 
 function showAllFields() {
@@ -415,13 +426,7 @@ function showAllFields() {
     }
 
     // Show special character tips in edit mode
-    const tipElements = ['name-suggestion', 'address-suggestion', 'details-suggestion'];
-    tipElements.forEach(tipId => {
-        const tip = document.getElementById(tipId);
-        if (tip) {
-            tip.classList.remove('hidden');
-        }
-    });
+    toggleTipVisibility(true);
 }
 
 // Unified tooltip notification function
