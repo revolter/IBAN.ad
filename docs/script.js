@@ -150,7 +150,7 @@ function getTranslations(lang) {
 function setLanguage(lang) {
     const t = getTranslations(lang);
     document.title = t.title;
-    document.getElementById('clear-form-btn').textContent = t.siteName;
+    document.getElementById('site-name-text').textContent = t.siteName;
     document.getElementById('site-tagline').textContent = t.tagline;
     // Localize aria-labels for copy buttons
     document.querySelector('.copy-btn[data-row-index="1"]').setAttribute('aria-label', t.copyIBAN);

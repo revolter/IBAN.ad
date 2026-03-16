@@ -5,7 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IBAN Advertiser</title>
     <meta name="description" content="The easiest way for NGOs, freelancers, and clubs to share their bank details for donations, payments, or memberships.">
-    <link rel="stylesheet" href="styles.css?v=a8270bd4">
+    <!-- FAVICONS_START -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="/apple-touch-icon-167x167.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png">
+    <link rel="apple-touch-icon" sizes="1024x1024" href="/apple-touch-icon-1024x1024.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="IBAN.ad">
+    <!-- FAVICONS_END -->
+    <link rel="stylesheet" href="styles.css?v=1324e90c">
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans">
     <a id="skip-link" href="#iban-info-title" class="sr-only focus:not-sr-only absolute top-2 left-2 bg-blue-500 text-white px-3 py-1 rounded z-50">Skip to main content</a>
@@ -14,7 +34,10 @@
         <header class="mb-12 w-full max-w-2xl mx-auto" aria-label="Site header">
             <div class="flex flex-col">
                 <div class="flex flex-col sm:flex-row items-center justify-between w-full">
-                    <button id="clear-form-btn" type="button" class="block text-4xl font-bold text-primary mb-2 sm:mb-0 focus:outline-none focus:ring-2 focus:ring-primary-dark rounded text-center cursor-pointer bg-transparent border-none p-0" aria-label="Reset form and fields (keep language)">IBAN.ad</button>
+                    <button id="clear-form-btn" type="button" class="flex items-center gap-2 text-4xl font-bold text-primary mb-2 sm:mb-0 focus:outline-none focus:ring-2 focus:ring-primary-dark rounded text-center cursor-pointer bg-transparent border-none p-0" aria-label="Reset form and fields (keep language)">
+                        <img src="logo.svg" alt="IBAN.ad logo" class="h-[1em] w-auto object-contain block shrink-0" width="32" height="32">
+                        <span id="site-name-text">IBAN.ad</span>
+                    </button>
                     <div class="flex gap-4 justify-end w-full sm:w-auto mt-2 sm:mt-0">
                         <!-- Theme Toggle -->
                         <div class="flex items-center">
@@ -183,6 +206,6 @@
                 </p>
             </footer>
     </div>
-    <script src="script.js?v=a8270bd4"></script>
+    <script src="script.js?v=1324e90c"></script>
 </body>
 </html>
