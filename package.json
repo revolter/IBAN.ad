@@ -2,11 +2,13 @@
   "name": "IBAN.ad",
   "version": "1.0.0",
   "scripts": {
+    "generate:favicons": "node generate-favicons.mjs",
     "build-css:dev": "npx @tailwindcss/cli -i ./src/input.css -o ./docs/styles.css --watch",
     "build-css:prod": "npx @tailwindcss/cli -i ./src/input.css -o ./docs/styles.css --minify"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.1.12",
-    "tailwindcss": "^4.1.12"
+    "tailwindcss": "^4.1.12",
+    "favicons": "^7.2.0"
   }
 }
